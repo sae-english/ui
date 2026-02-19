@@ -86,6 +86,12 @@ function onAddClick() {
   width: 100%;
 }
 
+@media (max-width: 480px) {
+  .episode-script__blocks {
+    gap: 6px !important;
+  }
+}
+
 .episode-script__add-fab {
   position: fixed;
   bottom: 24px;
@@ -98,6 +104,19 @@ function onAddClick() {
 
 .episode-script__add-fab :deep(.el-icon) {
   font-size: 24px;
+}
+
+@media (max-width: 480px) {
+  .episode-script__add-fab {
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .episode-script__add-fab :deep(.el-icon) {
+    font-size: 20px;
+  }
 }
 
 .script-add-fab-enter-active,

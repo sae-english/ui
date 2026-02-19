@@ -170,16 +170,16 @@ const blockIdAttr = computed(() => {
 
 .episode-block__dialogue-text {
   margin: 0;
-  font-size: 1.1rem;
-  line-height: 1.7;
+  font-size: clamp(0.9375rem, 2.2vw + 0.85rem, 1.1rem);
+  line-height: 1.65;
   color: var(--fe-text-primary);
   max-width: 65ch;
 }
 
 .episode-block__action {
   margin: 0;
-  padding: 10px 14px;
-  font-size: 1.05rem;
+  padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 14px);
+  font-size: clamp(0.9rem, 1.8vw + 0.8rem, 1.05rem);
   color: var(--fe-text-secondary);
   font-style: italic;
   line-height: 1.6;
@@ -188,20 +188,138 @@ const blockIdAttr = computed(() => {
 
 .episode-block__transition {
   margin: 0;
-  padding: 10px 14px;
-  font-size: 1rem;
+  padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 14px);
+  font-size: clamp(0.875rem, 1.5vw + 0.75rem, 1rem);
   color: var(--fe-text-muted);
   font-style: italic;
   line-height: 1.6;
 }
 
+/* Планшет / узкий экран */
 @media (max-width: 600px) {
+  .episode-block--section :deep(.el-divider__text) {
+    font-size: 0.875rem;
+  }
+
+  .episode-block__scene-card :deep(.el-card__body) {
+    padding: 8px 12px !important;
+  }
+
+  .episode-block__scene-label {
+    font-size: 0.8rem;
+  }
+
+  .episode-block__scene-desc {
+    font-size: 0.95rem;
+  }
+
   .episode-block__dialogue {
-    padding: 14px 16px;
+    border-radius: 10px;
+  }
+
+  .episode-block__dialogue :deep(.el-card__body) {
+    padding: 12px 14px !important;
+  }
+
+  .episode-block__dialogue-head {
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .episode-block__dialogue-speaker {
+    font-size: 0.875rem !important;
+  }
+
+  .episode-block__dialogue-uncut-flag {
+    font-size: 0.75rem;
+  }
+
+  .episode-block__dialogue-parenthetical {
+    font-size: 0.9rem;
   }
 
   .episode-block__dialogue-text {
-    font-size: 1.05rem;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .episode-block__action {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+  }
+
+  .episode-block__transition {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+}
+
+/* Телефон / Telegram — максимально компактно */
+@media (max-width: 480px) {
+  .episode-block--section :deep(.el-divider__text) {
+    font-size: 0.8125rem;
+  }
+
+  .episode-block__scene-card {
+    border-radius: 8px;
+  }
+
+  .episode-block__scene-card :deep(.el-card__body) {
+    padding: 6px 10px !important;
+  }
+
+  .episode-block__scene-label {
+    font-size: 0.75rem;
+    margin-right: 6px;
+  }
+
+  .episode-block__scene-desc {
+    font-size: 0.875rem;
+  }
+
+  .episode-block__dialogue {
+    border-radius: 8px;
+    border-left-width: 2px;
+  }
+
+  .episode-block__dialogue :deep(.el-card__body) {
+    padding: 10px 12px !important;
+  }
+
+  .episode-block__dialogue:hover {
+    transform: none;
+  }
+
+  .episode-block__dialogue-head {
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .episode-block__dialogue-speaker {
+    font-size: 0.8125rem !important;
+  }
+
+  .episode-block__dialogue-uncut-flag {
+    font-size: 0.7rem;
+  }
+
+  .episode-block__dialogue-parenthetical {
+    font-size: 0.8125rem;
+  }
+
+  .episode-block__dialogue-text {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .episode-block__action {
+    font-size: 0.875rem;
+    padding: 6px 10px;
+  }
+
+  .episode-block__transition {
+    font-size: 0.8125rem;
+    padding: 6px 10px;
   }
 }
 </style>

@@ -192,4 +192,28 @@ watch(movieId, loadContent);
   padding: 0 !important;
 }
 
+@media (max-width: 600px) {
+  .movie-content {
+    padding: 16px 12px;
+  }
+
+  .movie-content__header {
+    margin-bottom: 16px;
+  }
+
+  .movie-content__content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-content {
+    padding: 12px 10px;
+  }
+
+  .movie-content__header {
+    margin-bottom: 12px;
+  }
+}
+
 </style>

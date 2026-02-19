@@ -199,6 +199,35 @@ watch(episodeId, loadEpisode)
 @media (max-width: 600px) {
   .episode {
     padding: 16px;
+    padding-bottom: 52px;
+  }
+
+  .episode__content {
+    max-width: 100%;
+  }
+
+  .episode__header {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .episode {
+    padding: 12px 10px;
+    padding-bottom: 48px;
+    font-size: 0.9375rem;
+  }
+
+  .episode__header {
+    margin-bottom: 12px;
+  }
+
+  .episode__back {
+    font-size: 0.9375rem;
+  }
+
+  .episode__loading {
+    padding: 40px 16px;
   }
 }
 </style>
