@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '@/constants/api'
+import { apiFetch } from '@/utils/apiFetch'
 import type {
   TitleDto,
   EpisodeListDto,
@@ -6,10 +8,8 @@ import type {
   TranscriptBlock,
 } from '@/types/movie'
 
-const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE ?? 'http://localhost:8080')
-
 function baseUrl(): string {
-  return API_BASE.replace(/\/$/, '')
+  return API_BASE_URL.replace(/\/$/, '')
 }
 
 function apiUrl(path: string): string {
@@ -40,21 +40,21 @@ export interface EpisodeTranscript {
 
 /** Получить список фильмов и сериалов */
 export async function getTitles(): Promise<TitleDto[]> {
-  const res = await fetch(apiUrl('/titles'))
+  const res = await apiFetch(apiUrl('/titles'))
   if (!res.ok) throw new Error('Не удалось загрузить каталог')
   return res.json()
 }
 
 /** Получить список эпизодов для title */
 export async function getEpisodesByTitleId(titleId: number): Promise<EpisodeListDto[]> {
-  const res = await fetch(apiUrl(`/titles/${titleId}/episodes`))
+  const res = await apiFetch(apiUrl(`/titles/${titleId}/episodes`))
   if (!res.ok) throw new Error(`Не удалось загрузить эпизоды`)
   return res.json()
 }
 
 /** Получить эпизод с контентом по id */
 export async function getEpisodeById(id: number): Promise<EpisodeDto> {
-  const res = await fetch(apiUrl(`/episodes/${id}`))
+  const res = await apiFetch(apiUrl(`/episodes/${id}`))
   if (!res.ok) throw new Error('Эпизод не найден')
   return res.json()
 }
@@ -81,7 +81,7 @@ export type SendMessageResult = { ok: boolean; message?: string }
 
 export async function sendMessage(payload: MessagePayload): Promise<SendMessageResult> {
   const url = `${baseUrl()}/messages`
-  const res = await fetch(url, {
+  const res = await apiFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -122,7 +122,7 @@ export interface DictionaryRequestDto {
 }
 
 export async function getDictionaryEntries(): Promise<DictionaryDto[]> {
-  const res = await fetch(dictionaryApiUrl(''))
+  const res = await apiFetch(dictionaryApiUrl(''))
   if (!res.ok) throw new Error('Не удалось загрузить словарь')
   return res.json()
 }
@@ -139,7 +139,7 @@ export async function saveDictionaryEntry(
   if (payload.contentKey != null) body.contentKey = payload.contentKey
   if (payload.contentType != null) body.contentType = payload.contentType
   if (payload.blockId != null) body.blockId = payload.blockId
-  const res = await fetch(dictionaryApiUrl(''), {
+  const res = await apiFetch(dictionaryApiUrl(''), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -149,13 +149,13 @@ export async function saveDictionaryEntry(
 }
 
 export async function deleteDictionaryEntry(id: number): Promise<void> {
-  const res = await fetch(dictionaryApiUrl(`/${id}`), { method: 'DELETE' })
+  const res = await apiFetch(dictionaryApiUrl(`/${id}`), { method: 'DELETE' })
   if (!res.ok) throw new Error('Не удалось удалить')
 }
 
 export async function translate(text: string): Promise<TranslateResult> {
   const url = `${baseUrl()}/translate`
-  const res = await fetch(url, {
+  const res = await apiFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: text?.trim() ?? '' }),

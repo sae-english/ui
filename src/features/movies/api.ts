@@ -1,10 +1,10 @@
+import { API_BASE_URL } from '@/constants/api'
+import { apiFetch } from '@/utils/apiFetch'
 import type { MovieDto, MovieContentDto, ContentBlockDto } from '@/features/movies/types'
 import type { TranscriptBlock } from '@/types/movie'
 
-const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE ?? 'http://localhost:8080')
-
 function baseUrl(): string {
-  return API_BASE.replace(/\/$/, '')
+  return API_BASE_URL.replace(/\/$/, '')
 }
 
 function moviesApiUrl(path: string): string {
@@ -13,13 +13,13 @@ function moviesApiUrl(path: string): string {
 }
 
 export async function getLimitedMovies(limit: number): Promise<MovieDto[]> {
-  const res = await fetch(moviesApiUrl(`/titles?limit=${limit}`))
+  const res = await apiFetch(moviesApiUrl(`/titles?limit=${limit}`))
   if (!res.ok) throw new Error('Не удалось загрузить фильмы')
   return res.json()
 }
 
 export async function getMovieContentById(id: number): Promise<MovieContentDto | null> {
-  const res = await fetch(moviesApiUrl(`/movie-content/${id}`))
+  const res = await apiFetch(moviesApiUrl(`/movie-content/${id}`))
   if (res.status === 404) return null
   if (!res.ok) throw new Error('Не удалось загрузить контент фильма')
   return res.json()
