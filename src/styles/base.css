@@ -1,0 +1,128 @@
+/* Design tokens, reset, base typography */
+
+:root {
+  /* Typography */
+  --fe-font-heading: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --fe-font-body: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+  font-family: var(--fe-font-body);
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 400;
+
+  /* Cinema-inspired dark palette */
+  --fe-bg-base: #0f1218;
+  --fe-bg-soft: #151a22;
+  --fe-bg-card: #1a1f28;
+  --fe-bg-elevated: #222830;
+  --fe-bg-hover: #2a3140;
+
+  /* Text hierarchy */
+  --fe-text-primary: #f1f5f9;
+  --fe-text-secondary: #94a3b8;
+  --fe-text-muted: #64748b;
+
+  /* Accent */
+  --fe-accent: #4f9cf9;
+  --fe-accent-hover: #3b82f6;
+  --fe-accent-soft: rgba(79, 156, 249, 0.2);
+
+  /* Success, Warning */
+  --fe-success: #10b981;
+  --fe-success-soft: rgba(16, 185, 129, 0.2);
+  --fe-warning: #f59e0b;
+  --fe-warning-soft: rgba(245, 158, 11, 0.2);
+
+  /* Borders, Shadows, Transitions */
+  --fe-border: rgba(148, 163, 184, 0.15);
+  --fe-border-strong: rgba(148, 163, 184, 0.3);
+  --fe-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --fe-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --fe-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --fe-transition-fast: 0.15s ease;
+  --fe-transition-normal: 0.25s ease;
+  --fe-transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  color-scheme: dark;
+  color: var(--fe-text-primary);
+  background-color: var(--fe-bg-base);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+}
+
+a {
+  font-weight: 500;
+  color: var(--fe-accent);
+  text-decoration: inherit;
+  transition: color var(--fe-transition-fast);
+}
+a:hover {
+  color: var(--fe-accent-hover);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  width: 100%;
+}
+
+h1, h2, h3 {
+  font-family: var(--fe-font-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--fe-text-primary);
+}
+h1 { font-size: 2rem; line-height: 1.25; }
+h2 { font-size: 1.5rem; line-height: 1.3; }
+h3 { font-size: 1.2rem; line-height: 1.4; }
+
+button {
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--fe-bg-elevated);
+  color: var(--fe-text-primary);
+  cursor: pointer;
+  transition: all var(--fe-transition-fast);
+}
+button:hover {
+  border-color: var(--fe-border-strong);
+  background-color: var(--fe-bg-hover);
+}
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--fe-accent);
+  outline-offset: 2px;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+html.dark {
+  --el-bg-color-page: var(--fe-bg-base);
+  --el-bg-color: var(--fe-bg-card);
+  --el-bg-color-overlay: var(--fe-bg-elevated);
+  --el-text-color-primary: var(--fe-text-primary);
+  --el-text-color-regular: var(--fe-text-secondary);
+  --el-text-color-secondary: var(--fe-text-muted);
+  --el-border-color: var(--fe-border);
+  --el-color-primary: var(--fe-accent);
+  --el-color-primary-light-3: var(--fe-accent-soft);
+  --el-color-success: var(--fe-success);
+  --el-color-warning: var(--fe-warning);
+  --el-font-family: var(--fe-font-body);
+}

@@ -1,0 +1,25 @@
+/* Phrase drawer form */
+
+.phrase-drawer__body {
+  padding-right: 4px;
+}
+
+.phrase-drawer__translate-btn {
+  margin-top: 8px;
+}
+
+.phrase-drawer__form .el-form-item__label {
+  font-size: 0.9rem;
+  color: var(--fe-text-muted);
+}
+
+.phrase-drawer__form .el-textarea__inner,
+.phrase-drawer__form .el-input__inner {
+  font-size: 0.95rem;
+}
+
+.phrase-drawer__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}

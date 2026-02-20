@@ -1,16 +1,13 @@
 <template>
   <el-container class="episode" direction="vertical">
     <el-header class="episode__header" height="auto">
-      <el-button class="episode__back" :icon="ArrowLeftBold" text @click="goBack">
-        Назад
-      </el-button>
+      <BackButton label="Назад" @click="goBack" />
     </el-header>
 
     <el-main class="episode__main">
-      <el-space v-if="loading" direction="vertical" alignment="center" class="episode__loading">
-        <el-icon class="is-loading" :size="40"><VideoCameraFilled /></el-icon>
-        <el-text type="info">Загрузка эпизода...</el-text>
-      </el-space>
+      <div v-if="loading" class="content-loader-wrap">
+        <ContentLoader message="Загрузка эпизода..." />
+      </div>
 
       <el-empty v-else-if="error" description="Эпизод не найден">
         <el-button type="primary" @click="goBack">На главную</el-button>
@@ -45,7 +42,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowLeftBold, VideoCameraFilled } from '@element-plus/icons-vue'
+import BackButton from '@/components/ui/BackButton.vue'
 import {
   getEpisodeById,
   toEpisodeTranscript,
@@ -53,6 +50,7 @@ import {
   type EpisodeTranscript,
 } from '@/services/api'
 import type { PhraseFormModel } from '@/types/phrase'
+import ContentLoader from '@/components/ui/ContentLoader.vue'
 import EpisodeHero from '@/components/script/EpisodeHero.vue'
 import EpisodeScript from '@/components/script/EpisodeScript.vue'
 import PhraseDrawer, { type DictionaryContext } from '@/components/script/PhraseDrawer.vue'
@@ -151,83 +149,3 @@ async function handleDrawerSubmit(payload: {
 onMounted(loadEpisode)
 watch(episodeId, loadEpisode)
 </script>
-
-<style scoped>
-.episode {
-  min-height: 100vh;
-  padding: 20px;
-  padding-bottom: 56px;
-  background:
-    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(31, 41, 55, 0.6) 0, transparent 50%),
-    radial-gradient(ellipse 100% 60% at 50% 120%, rgba(21, 26, 34, 0.5) 0, transparent 50%),
-    var(--fe-bg-base);
-  color: var(--fe-text-primary);
-  font-family: var(--fe-font-body);
-  font-size: 1rem;
-  line-height: 1.7;
-}
-
-.episode__header {
-  margin-bottom: 20px;
-  padding: 0 !important;
-  height: auto !important;
-}
-
-.episode__main {
-  padding: 0 !important;
-}
-
-.episode__content {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 !important;
-}
-
-.episode__back {
-  color: var(--fe-text-secondary) !important;
-  font-size: 1.05rem;
-}
-
-.episode__back:hover {
-  color: var(--fe-text-primary) !important;
-}
-
-.episode__loading {
-  padding: 60px 20px;
-}
-
-@media (max-width: 600px) {
-  .episode {
-    padding: 16px;
-    padding-bottom: 52px;
-  }
-
-  .episode__content {
-    max-width: 100%;
-  }
-
-  .episode__header {
-    margin-bottom: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .episode {
-    padding: 12px 10px;
-    padding-bottom: 48px;
-    font-size: 0.9375rem;
-  }
-
-  .episode__header {
-    margin-bottom: 12px;
-  }
-
-  .episode__back {
-    font-size: 0.9375rem;
-  }
-
-  .episode__loading {
-    padding: 40px 16px;
-  }
-}
-</style>

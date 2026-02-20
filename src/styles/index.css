@@ -1,0 +1,17 @@
+/* English Movies — global styles entry */
+
+@import './base.css';
+@import './app.css';
+@import './components/episode-block.css';
+@import './components/episode-script.css';
+@import './components/episode-hero.css';
+@import './components/phrase-drawer.css';
+@import './components/poster-card.css';
+@import './components/content-loader.css';
+@import './components/back-button.css';
+@import './components/page-section-header.css';
+@import './views/home.css';
+@import './views/catalog.css';
+@import './views/movie-content.css';
+@import './views/episode.css';
+@import './views/dictionary.css';

@@ -15,22 +15,3 @@ defineProps<{
   title: string
 }>()
 </script>
-
-<style scoped>
-.episode-hero {
-  margin-bottom: 28px;
-  background: var(--fe-bg-card);
-  border: 1px solid var(--fe-border);
-  border-radius: 14px;
-}
-
-.episode-hero__title {
-  font-family: var(--fe-font-heading);
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--fe-text-primary);
-  letter-spacing: -0.01em;
-}
-</style>

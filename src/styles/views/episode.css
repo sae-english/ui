@@ -1,0 +1,68 @@
+/* Episode (series) script page */
+
+.episode {
+  min-height: 100vh;
+  padding: 20px;
+  padding-bottom: 56px;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(31, 41, 55, 0.6) 0, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 50% 120%, rgba(21, 26, 34, 0.5) 0, transparent 50%),
+    var(--fe-bg-base);
+  color: var(--fe-text-primary);
+  font-family: var(--fe-font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.episode__header {
+  margin-bottom: 20px;
+  padding: 0 !important;
+  height: auto !important;
+}
+
+.episode__main {
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.episode__content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 !important;
+}
+
+.episode__loading {
+  padding: 60px 20px;
+}
+
+@media (max-width: 600px) {
+  .episode {
+    padding: 16px;
+    padding-bottom: 52px;
+  }
+
+  .episode__content {
+    max-width: 100%;
+  }
+
+  .episode__header {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .episode {
+    padding: 14px 12px;
+    padding-bottom: 52px;
+  }
+
+  .episode__header {
+    margin-bottom: 14px;
+  }
+
+  .episode__loading {
+    padding: 48px 20px;
+  }
+}

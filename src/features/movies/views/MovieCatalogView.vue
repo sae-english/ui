@@ -1,17 +1,13 @@
 <template>
   <div class="catalog">
-    <section class="catalog__header">
-      <h1 class="catalog__title">Изучение по фильмам</h1>
-      <p class="catalog__subtitle">Выбери фильм и начни практику</p>
-    </section>
+    <PageSectionHeader
+      title="Изучение по фильмам"
+      subtitle="Выбери фильм и начни практику"
+    />
 
     <el-main class="catalog__content">
-      <div v-if="loading" class="catalog__loading">
-        <el-skeleton :rows="4" animated class="catalog__skeleton" />
-        <el-space align="center" :size="12">
-          <el-icon class="is-loading" :size="32"><Loading /></el-icon>
-          <el-text type="info">Загрузка каталога...</el-text>
-        </el-space>
+      <div v-if="loading" class="catalog__loading content-loader-wrap">
+        <ContentLoader message="Загрузка каталога..." :icon="Loading" :icon-size="32" />
       </div>
 
       <el-empty v-else-if="error" :description="error">
@@ -48,6 +44,8 @@ import { useRouter } from "vue-router";
 import { useLanguage } from "@/composables/useLanguage";
 import { ElMessage } from "element-plus";
 import { Loading } from "@element-plus/icons-vue";
+import ContentLoader from "@/components/ui/ContentLoader.vue";
+import PageSectionHeader from "@/components/layout/PageSectionHeader.vue";
 import { getLimitedMovies } from "@/features/movies/api";
 import type { MovieDto } from "@/features/movies/types";
 import MoviePosterCard from "@/features/movies/components/MoviePosterCard.vue";
@@ -84,90 +82,3 @@ function openMovie(movie: MovieDto) {
 
 onMounted(loadMovies);
 </script>
-
-<style scoped>
-.catalog {
-  min-height: calc(100vh - 60px);
-  padding: 0;
-  background:
-    radial-gradient(
-      ellipse 120% 80% at 50% -20%,
-      rgba(31, 41, 55, 0.5) 0,
-      transparent 50%
-    ),
-    var(--fe-bg-base);
-  font-family: var(--fe-font-body);
-}
-
-.catalog__header {
-  padding: 32px 24px 24px;
-}
-
-.catalog__title {
-  font-family: var(--fe-font-heading);
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--fe-text-primary);
-  margin: 0 0 8px;
-  letter-spacing: -0.02em;
-}
-
-.catalog__subtitle {
-  font-size: 1rem;
-  color: var(--fe-text-secondary);
-  margin: 0;
-}
-
-.catalog__content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px 48px !important;
-}
-
-.catalog__section {
-  margin-bottom: 48px;
-}
-
-.catalog__section-title {
-  font-family: var(--fe-font-heading);
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--fe-text-secondary);
-  margin: 0 0 20px;
-}
-
-.catalog__poster-list {
-  margin: 0 !important;
-}
-
-.catalog__poster-item {
-  margin-bottom: 24px;
-}
-
-.catalog__loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  padding: 64px 24px;
-}
-
-.catalog__skeleton {
-  width: 100%;
-  max-width: 400px;
-}
-
-@media (max-width: 600px) {
-  .catalog__header {
-    padding: 24px 20px 20px;
-  }
-
-  .catalog__title {
-    font-size: 1.5rem;
-  }
-
-  .catalog__content {
-    padding: 0 20px 36px !important;
-  }
-}
-</style>

@@ -1,0 +1,237 @@
+/* Script blocks: section, scene, dialogue, action, transition */
+
+.episode-block {
+  margin: 0;
+  position: relative;
+}
+
+.episode-block--section .el-divider__text {
+  background: transparent;
+  color: var(--fe-text-muted);
+  font-size: 0.95rem;
+}
+
+.episode-block__scene-card {
+  background: var(--fe-bg-elevated);
+  border: 1px solid var(--fe-border);
+  border-radius: 12px;
+}
+
+.episode-block__scene-label {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fe-accent);
+}
+
+.episode-block__scene-desc {
+  font-size: 1.05rem;
+  color: var(--fe-text-secondary);
+  font-style: italic;
+}
+
+.episode-block__dialogue {
+  border-radius: 12px;
+  background: var(--fe-bg-card);
+  border-left: 3px solid var(--fe-border);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.45);
+}
+
+.episode-block__dialogue:hover {
+  background: var(--fe-bg-elevated);
+  border-left-color: var(--fe-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+.episode-block__dialogue-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.episode-block__dialogue-speaker {
+  color: var(--fe-accent) !important;
+  border-color: var(--fe-accent-soft);
+  font-weight: 600;
+  font-size: 0.95rem !important;
+}
+
+.episode-block__dialogue-uncut-flag {
+  margin-left: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--fe-text-secondary);
+}
+
+.episode-block__dialogue-parenthetical {
+  font-size: 1rem;
+  color: var(--fe-text-muted);
+  font-style: italic;
+}
+
+.episode-block__dialogue-text {
+  margin: 0;
+  font-size: clamp(0.9375rem, 2.2vw + 0.85rem, 1.1rem);
+  line-height: 1.65;
+  color: var(--fe-text-primary);
+  max-width: 65ch;
+}
+
+.episode-block__action {
+  margin: 0;
+  padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 14px);
+  font-size: clamp(0.9rem, 1.8vw + 0.8rem, 1.05rem);
+  color: var(--fe-text-secondary);
+  font-style: italic;
+  line-height: 1.6;
+  max-width: 65ch;
+}
+
+.episode-block__transition {
+  margin: 0;
+  padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 14px);
+  font-size: clamp(0.875rem, 1.5vw + 0.75rem, 1rem);
+  color: var(--fe-text-muted);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .episode-block--section .el-divider__text {
+    font-size: 0.875rem;
+  }
+
+  .episode-block__scene-card .el-card__body {
+    padding: 8px 12px !important;
+  }
+
+  .episode-block__scene-label {
+    font-size: 0.8rem;
+  }
+
+  .episode-block__scene-desc {
+    font-size: 0.95rem;
+  }
+
+  .episode-block__dialogue {
+    border-radius: 10px;
+  }
+
+  .episode-block__dialogue .el-card__body {
+    padding: 12px 14px !important;
+  }
+
+  .episode-block__dialogue-head {
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .episode-block__dialogue-speaker {
+    font-size: 0.875rem !important;
+  }
+
+  .episode-block__dialogue-uncut-flag {
+    font-size: 0.75rem;
+  }
+
+  .episode-block__dialogue-parenthetical {
+    font-size: 0.9rem;
+  }
+
+  .episode-block__dialogue-text {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .episode-block__action {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+  }
+
+  .episode-block__transition {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .episode-block--section .el-divider__text {
+    font-size: 0.875rem;
+  }
+
+  .episode-block__scene-card {
+    border-radius: 10px;
+  }
+
+  .episode-block__scene-card .el-card__body {
+    padding: 10px 14px !important;
+  }
+
+  .episode-block__scene-label {
+    font-size: 0.8125rem;
+    margin-right: 8px;
+  }
+
+  .episode-block__scene-desc {
+    font-size: 0.9375rem;
+  }
+
+  .episode-block__dialogue {
+    border-radius: 10px;
+    border-left-width: 3px;
+  }
+
+  .episode-block__dialogue .el-card__body {
+    padding: 14px 16px !important;
+  }
+
+  .episode-block__dialogue:hover {
+    transform: none;
+  }
+
+  .episode-block__dialogue-head {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .episode-block__dialogue-speaker {
+    font-size: 0.9375rem !important;
+  }
+
+  .episode-block__dialogue-uncut-flag {
+    font-size: 0.75rem;
+  }
+
+  .episode-block__dialogue-parenthetical {
+    font-size: 0.9375rem;
+  }
+
+  .episode-block__dialogue-text {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    word-spacing: 0.02em;
+  }
+
+  .episode-block__action {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    padding: 10px 14px;
+  }
+
+  .episode-block__transition {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    padding: 10px 14px;
+  }
+}

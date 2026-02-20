@@ -1,26 +1,13 @@
 <template>
   <el-container class="movie-content" direction="vertical">
     <el-header class="movie-content__header" height="auto">
-      <el-button
-        class="movie-content__back"
-        :icon="ArrowLeftBold"
-        text
-        @click="goBack"
-      >
-        К фильмам
-      </el-button>
+      <BackButton label="К фильмам" @click="goBack" />
     </el-header>
 
     <el-main class="movie-content__main">
-      <el-space
-        v-if="loading"
-        direction="vertical"
-        alignment="center"
-        class="movie-content__loading"
-      >
-        <el-icon class="is-loading" :size="40"><VideoCameraFilled /></el-icon>
-        <el-text type="info">Загрузка сценария...</el-text>
-      </el-space>
+      <div v-if="loading" class="content-loader-wrap">
+        <ContentLoader message="Загрузка сценария..." />
+      </div>
 
       <el-empty v-else-if="error" :description="error">
         <el-button type="primary" @click="loadContent">Повторить</el-button>
@@ -51,13 +38,14 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { ArrowLeftBold, VideoCameraFilled } from "@element-plus/icons-vue";
 import { getMovieContentById, contentBlockToTranscriptBlock } from "@/features/movies/api";
+import BackButton from "@/components/ui/BackButton.vue";
 import { useLanguage } from "@/composables/useLanguage";
 import { saveDictionaryEntry } from "@/services/api";
 import type { MovieDto } from "@/features/movies/types";
 import type { PhraseFormModel } from "@/types/phrase";
 import type { TranscriptBlock } from "@/types/movie";
+import ContentLoader from "@/components/ui/ContentLoader.vue";
 import EpisodeScript from "@/components/script/EpisodeScript.vue";
 import PhraseDrawer, { type DictionaryContext } from "@/components/script/PhraseDrawer.vue";
 
@@ -159,61 +147,3 @@ async function handleDrawerSubmit(payload: {
 onMounted(loadContent);
 watch(movieId, loadContent);
 </script>
-
-<style scoped>
-.movie-content {
-  min-height: 100vh;
-  padding: 24px 20px;
-  background: var(--fe-bg-base);
-  font-family: var(--fe-font-body);
-}
-
-.movie-content__header {
-  padding: 0 !important;
-  height: auto !important;
-  margin-bottom: 24px;
-}
-
-.movie-content__back {
-  color: var(--fe-text-secondary) !important;
-}
-
-.movie-content__back:hover {
-  color: var(--fe-text-primary) !important;
-}
-
-.movie-content__loading {
-  padding: 60px 24px;
-}
-
-.movie-content__content {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 !important;
-}
-
-@media (max-width: 600px) {
-  .movie-content {
-    padding: 16px 12px;
-  }
-
-  .movie-content__header {
-    margin-bottom: 16px;
-  }
-
-  .movie-content__content {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .movie-content {
-    padding: 12px 10px;
-  }
-
-  .movie-content__header {
-    margin-bottom: 12px;
-  }
-}
-
-</style>

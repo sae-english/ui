@@ -1,0 +1,64 @@
+/* Movie catalog page */
+
+.catalog {
+  min-height: calc(100vh - 60px);
+  padding: 0;
+  background:
+    radial-gradient(
+      ellipse 120% 80% at 50% -20%,
+      rgba(31, 41, 55, 0.5) 0,
+      transparent 50%
+    ),
+    var(--fe-bg-base);
+  font-family: var(--fe-font-body);
+}
+
+.catalog__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 48px !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.catalog__section {
+  margin-bottom: 48px;
+}
+
+.catalog__section-title {
+  font-family: var(--fe-font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--fe-text-secondary);
+  margin: 0 0 20px;
+}
+
+.catalog__poster-list {
+  margin: 0 !important;
+}
+
+.catalog__poster-item {
+  margin-bottom: 24px;
+}
+
+.catalog__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 50vh;
+  gap: 24px;
+}
+
+.catalog__skeleton {
+  width: 100%;
+  max-width: 400px;
+}
+
+@media (max-width: 600px) {
+  .catalog__content {
+    padding: 0 20px 36px !important;
+  }
+}

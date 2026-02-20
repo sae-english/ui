@@ -1,0 +1,13 @@
+/* Centered loader in visible content area */
+
+.content-loader-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+
+.content-loader {
+  flex-shrink: 0;
+}

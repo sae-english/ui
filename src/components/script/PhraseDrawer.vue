@@ -64,87 +64,63 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import type { PhraseFormModel } from '@/types/phrase'
-import type { DictionaryContentType } from '@/services/api'
-import { translate as translateApi } from '@/services/api'
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import type { PhraseFormModel } from "@/types/phrase";
+import type { DictionaryContentType } from "@/services/api";
+import { translate as translateApi } from "@/services/api";
 
 /** Контекст для привязки записи словаря к контенту (фильм/эпизод и блок). */
 export interface DictionaryContext {
-  contentKey?: string | null
-  contentType?: DictionaryContentType | null
-  blockId?: string | null
+  contentKey?: string | null;
+  contentType?: DictionaryContentType | null;
+  blockId?: string | null;
 }
 
 const props = defineProps<{
-  visible: boolean
-  form: PhraseFormModel
-  loading?: boolean
+  visible: boolean;
+  form: PhraseFormModel;
+  loading?: boolean;
   /** Контекст контента (contentKey, contentType, blockId) — передаётся в API при сохранении в словарь. */
-  dictionaryContext?: DictionaryContext | null
-}>()
+  dictionaryContext?: DictionaryContext | null;
+}>();
 
 const emit = defineEmits<{
-  'update:visible': [value: boolean]
-  'update:form': [value: PhraseFormModel]
-  submit: [payload: { form: PhraseFormModel; context?: DictionaryContext | null }]
-}>()
+  "update:visible": [value: boolean];
+  "update:form": [value: PhraseFormModel];
+  submit: [
+    payload: { form: PhraseFormModel; context?: DictionaryContext | null },
+  ];
+}>();
 
-const translating = ref(false)
+const translating = ref(false);
 
 function updateField<K extends keyof PhraseFormModel>(
   field: K,
   value: PhraseFormModel[K],
 ) {
-  emit('update:form', { ...props.form, [field]: value })
+  emit("update:form", { ...props.form, [field]: value });
 }
 
 async function onTranslate() {
-  const text = props.form.phrase?.trim()
-  if (!text) return
-  translating.value = true
+  const text = props.form.phrase?.trim();
+  if (!text) return;
+  translating.value = true;
   try {
-    const result = await translateApi(text)
-    emit('update:form', { ...props.form, translation: result.translation })
+    const result = await translateApi(text);
+    emit("update:form", { ...props.form, translation: result.translation });
   } catch (e) {
-    console.error(e)
-    ElMessage.error('Не удалось перевести. Проверь сервер.')
+    console.error(e);
+    ElMessage.error("Не удалось перевести. Проверь сервер.");
   } finally {
-    translating.value = false
+    translating.value = false;
   }
 }
 
 function onSubmit() {
-  emit('submit', {
+  emit("submit", {
     form: props.form,
     context: props.dictionaryContext ?? undefined,
-  })
+  });
 }
 </script>
-
-<style scoped>
-.phrase-drawer__body {
-  padding-right: 4px;
-}
-
-.phrase-drawer__translate-btn {
-  margin-top: 8px;
-}
-
-.phrase-drawer__form :deep(.el-form-item__label) {
-  font-size: 0.9rem;
-  color: var(--fe-text-muted);
-}
-
-.phrase-drawer__form :deep(.el-textarea__inner),
-.phrase-drawer__form :deep(.el-input__inner) {
-  font-size: 0.95rem;
-}
-
-.phrase-drawer__actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 8px;
-}
-</style>

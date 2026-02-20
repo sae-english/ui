@@ -1,0 +1,33 @@
+/* Home / landing page */
+
+.home {
+  min-height: calc(100vh - 60px);
+  padding: 48px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(31, 41, 55, 0.5) 0, transparent 50%),
+    var(--fe-bg-base);
+  font-family: var(--fe-font-body);
+}
+
+.home__sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 320px));
+  gap: 24px;
+  width: 100%;
+  max-width: 700px;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .home {
+    padding: 32px 20px 48px;
+  }
+
+  .home__sections {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+}

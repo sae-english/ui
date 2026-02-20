@@ -1,0 +1,7 @@
+.back-button {
+  color: var(--fe-text-secondary) !important;
+}
+
+.back-button:hover {
+  color: var(--fe-text-primary) !important;
+}
