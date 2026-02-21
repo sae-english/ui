@@ -2,7 +2,7 @@
   <header class="app__header">
     <RouterLink :to="to('/')" class="app__logo">
       <el-icon class="app__logo-icon"><VideoCameraFilled /></el-icon>
-      <span class="app__logo-text">English Movies</span>
+      <span class="app__logo-text">{{ appTitle }}</span>
     </RouterLink>
     <nav class="app__nav">
       <RouterLink
@@ -46,6 +46,7 @@ defineProps<{
   language: StudyLanguage
   languageOptions: { value: StudyLanguage; label: string }[]
   navItems: { path: string; label: string }[]
+  appTitle: string
 }>()
 
 defineEmits<{

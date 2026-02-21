@@ -19,7 +19,7 @@
         </template>
       </el-image>
       <el-tag size="small" type="warning" effect="dark" round class="poster-card__badge">
-        Movie
+        {{ t.common.movie }}
       </el-tag>
     </div>
     <template #footer>
@@ -33,8 +33,11 @@
 
 <script setup lang="ts">
 import { VideoCameraFilled } from '@element-plus/icons-vue'
+import { useI18n } from '@/i18n'
 import { getPosterForTitle } from '@/utils/posters'
 import type { MovieDto } from '@/features/movies/types'
+
+const { t } = useI18n()
 
 defineProps<{
   title: Pick<MovieDto, 'name' | 'director' | 'year'>

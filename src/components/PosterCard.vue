@@ -25,7 +25,7 @@
         round
         class="poster-card__badge"
       >
-        {{ title.type === 'MOVIE' ? 'Movie' : 'Series' }}
+        {{ title.type === 'MOVIE' ? t.common.movie : t.common.series }}
       </el-tag>
     </div>
     <template #footer>
@@ -39,8 +39,11 @@
 
 <script setup lang="ts">
 import { VideoCameraFilled } from '@element-plus/icons-vue'
+import { useI18n } from '@/i18n'
 import { getPosterForTitle } from '@/utils/posters'
 import type { TitleDto } from '@/types/movie'
+
+const { t } = useI18n()
 
 defineProps<{
   title: TitleDto

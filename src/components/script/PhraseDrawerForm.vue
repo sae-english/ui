@@ -60,11 +60,10 @@
 import { ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import type { PhraseFormModel } from "@/types/phrase";
-import { PHRASE_FORM_RULES } from "@/constants/phrase";
 
 const props = defineProps<{
   form: PhraseFormModel;
-  formRules?: FormRules;
+  formRules: FormRules;
   canSubmit: boolean;
   translateLoading: boolean;
   saveLoading: boolean;
@@ -83,7 +82,6 @@ const emit = defineEmits<{
 }>();
 
 const formRef = ref<FormInstance | null>(null);
-const formRules = props.formRules ?? PHRASE_FORM_RULES;
 
 async function onSaveClick() {
   const valid = await formRef.value?.validate().then(() => true).catch(() => false);

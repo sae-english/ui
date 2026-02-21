@@ -1,12 +1,12 @@
 <template>
   <el-container class="movie-content" direction="vertical">
     <el-header class="movie-content__header" height="auto">
-      <BackButton label="Back to movies" @click="goBack" />
+      <BackButton :label="t.movieContent.backToMovies" @click="goBack" />
     </el-header>
 
     <el-main class="movie-content__main">
       <div v-if="query.isLoading.value" class="content-loader-wrap">
-        <ContentLoader message="Loading script..." />
+        <ContentLoader :message="t.movieContent.loadingScript" />
       </div>
 
       <template v-else-if="blocks.length > 0 || hasLoadedOnce">
@@ -24,7 +24,7 @@
         />
       </template>
 
-      <el-empty v-else description="Content not found" />
+      <el-empty v-else :description="t.movieContent.contentNotFound" />
     </el-main>
   </el-container>
 </template>
@@ -40,6 +40,7 @@ import {
 } from "@/features/movies/api";
 import BackButton from "@/components/ui/BackButton.vue";
 import { useLanguage } from "@/composables/useLanguage";
+import { useI18n } from "@/i18n";
 import type { TranscriptBlock } from "@/types/movie";
 import ContentLoader from "@/components/ui/ContentLoader.vue";
 import InfiniteScrollLoadMore from "@/components/ui/InfiniteScrollLoadMore.vue";
@@ -50,6 +51,7 @@ import { DEFAULT_PAGE_SIZE } from "@/constants/defaults";
 const route = useRoute();
 const router = useRouter();
 const { navQuery } = useLanguage();
+const { t } = useI18n();
 
 const movieId = computed(() => {
   const id = route.params.movieId;
@@ -91,7 +93,7 @@ const hasLoadedOnce = computed(
 const errorMessage = computed(
   () =>
     (query.error.value as Error | null)?.message ??
-    "Failed to load script",
+    t.value.movieContent.failedLoadScript,
 );
 
 watch(

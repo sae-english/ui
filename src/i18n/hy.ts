@@ -1,0 +1,98 @@
+/**
+ * Armenian UI strings (Latin transliteration). Must have the same keys as en.ts (type-checked).
+ */
+import type { Translations } from "./en";
+
+export const hy: Translations = {
+  app: {
+    title: "English Movies",
+    nav: {
+      home: "Glkhavor",
+      movies: "Filmner",
+      dictionary: "Bararan",
+    },
+  },
+  home: {
+    heroTitle: "English Movies",
+    heroTagline: "Sovorel angleren inch sirets",
+    cardMovies: "Filmner",
+    cardMoviesDesc: "Skriptner, dialogner, targmanutyunner. Yntreq filmy yev sksir.",
+    cardSeries: "Seria",
+    cardSeriesDesc: "Kgan achkel",
+    cardBooks: "Grer",
+    cardBooksDesc: "Kgan achkel",
+    cardSongs: "Yerker",
+    cardSongsDesc: "Kgan achkel",
+  },
+  catalog: {
+    title: "Sovorel filmnerov",
+    subtitle: "Yntreq filmy yev sksir",
+    sectionMovies: "Filmner",
+    loading: "Katalogy barcrume...",
+    retry: "Krknel",
+    noMovies: "Filmner chka",
+    errorLoadMovies: "Chkarogh enq barcrnel filmnery. Stugel servery 8080 portum e.",
+  },
+  movieContent: {
+    backToMovies: "Vapshe filmner",
+    loadingScript: "Skripty barcrume...",
+    contentNotFound: "Nerkayutyun chgtav",
+    failedLoadScript: "Chkarogh enq barcrnel skripty",
+  },
+  dictionary: {
+    title: "Bararan",
+    subtitle: "Banner yev bavakanner vor pahvac en kardalov",
+    loading: "Barcrume...",
+    retry: "Krknel",
+    empty: "Bararany datark e",
+    emptyHint: "Kardalov nerkayac bannery yntreq yev pahvec bararanum.",
+    deleteTitle: "Jnjel miji?",
+    deleteMessage: "Jnjel \"{{value}}\" bararanic?",
+    cancel: "Stugel",
+    delete: "Jnjel",
+    deleted: "Jnjel e",
+    failedDelete: "Chkarogh enq jnjel",
+    failedLoad: "Chkarogh enq barcrnel bararany. Stugel servery ashxatum e.",
+  },
+  episode: {
+    back: "Vapshe",
+    loadingEpisode: "Seriayy barcrume...",
+    notFound: "Serian chgtav",
+    toHome: "Glkhavor",
+    failedLoadEpisode: "Chkarogh enq barcrnel seriayy",
+  },
+  phrase: {
+    drawerTitle: "Nor bavakan",
+    addToDictionary: "Avelacnel bararanum",
+    form: {
+      phrase: "Yntrel bavakan",
+      translation: "Targmanutyun",
+      comment: "Mijoc",
+      placeholderTranslation: "Mutqagrel targmanutyun",
+      placeholderComment: "Dzerkutyunner, kazmutyunner, ev ayl.",
+      translate: "Targmanel",
+      save: "Pahvel",
+      validationPhraseRequired: "Mutqagrel bavakan",
+      validationTranslationRequired: "Mutqagrel targmanutyun",
+      successAdded: "Avelacvac e bararanum",
+      errorSave: "Chkarogh enq pahvel",
+      errorTranslate: "Chkarogh enq targmanel. Stugel servery.",
+    },
+    similar: {
+      title: "Nman mijer bararanum",
+      createNew: "Stvorel nor",
+      empty: "Nman mijer chgtav.",
+      searching: "Zhoghovume...",
+      showContext: "Stugel konteksty",
+      hideContext: "Txnel konteksty",
+    },
+  },
+  common: {
+    loading: "Barcrume...",
+    loadMore: "Avelacnel",
+    scene: "Deky",
+    extendedVersion: "layn seriayy",
+    movie: "Film",
+    series: "Seria",
+  },
+};

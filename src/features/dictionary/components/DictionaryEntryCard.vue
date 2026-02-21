@@ -17,7 +17,7 @@
           :icon="Delete"
           @click="$emit('delete')"
         >
-          Delete
+          {{ t.dictionary.delete }}
         </el-button>
       </div>
     </div>
@@ -26,7 +26,10 @@
 
 <script setup lang="ts">
 import { Delete } from '@element-plus/icons-vue'
+import { useI18n } from '@/i18n'
 import type { DictionaryDto } from '@/services/api'
+
+const { t } = useI18n()
 
 defineProps<{
   entry: DictionaryDto

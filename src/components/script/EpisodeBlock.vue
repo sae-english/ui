@@ -20,7 +20,7 @@
   >
     <el-card shadow="never" class="episode-block__scene-card" body-style="padding: 10px 14px">
       <el-space :size="10" wrap>
-        <el-text tag="span" class="episode-block__scene-label">Scene</el-text>
+        <el-text tag="span" class="episode-block__scene-label">{{ t.common.scene }}</el-text>
         <el-text tag="span" type="info" class="episode-block__scene-desc">{{ block.description }}</el-text>
       </el-space>
     </el-card>
@@ -41,7 +41,7 @@
       <el-space class="episode-block__dialogue-head" :size="10" wrap>
         <el-tag size="small" effect="plain" class="episode-block__dialogue-speaker">
           {{ block.speaker }}
-          <el-text v-if="block.isUncut" size="small" class="episode-block__dialogue-uncut-flag"> (extended version)</el-text>
+          <el-text v-if="block.isUncut" size="small" class="episode-block__dialogue-uncut-flag"> ({{ t.common.extendedVersion }})</el-text>
         </el-tag>
         <el-text v-if="block.parenthetical" type="info" class="episode-block__dialogue-parenthetical">
           ({{ block.parenthetical }})
@@ -74,6 +74,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 import type { TranscriptBlock } from '@/types/movie'
 
 const props = defineProps<{

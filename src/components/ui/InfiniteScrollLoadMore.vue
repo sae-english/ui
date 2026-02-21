@@ -10,11 +10,11 @@
       :loading="isFetchingNextPage"
       @click="$emit('loadMore')"
     >
-      Load more
+      {{ t.common.loadMore }}
     </el-button>
     <ContentLoader
       v-else-if="isFetchingNextPage"
-      message="Loading..."
+      :message="t.common.loading"
     />
   </div>
 </template>
@@ -22,8 +22,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useIntersectionObserver } from "@vueuse/core";
+import { useI18n } from "@/i18n";
 import ContentLoader from "@/components/ui/ContentLoader.vue";
 import { INFINITE_SCROLL_ROOT_MARGIN } from "@/constants/defaults";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   hasNextPage: boolean;

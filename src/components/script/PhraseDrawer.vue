@@ -1,37 +1,38 @@
 <template>
   <el-drawer
     :model-value="visible"
-    :title="PHRASE_DRAWER_TITLE"
+    :title="t.phrase.drawerTitle"
     :direction="PHRASE_DRAWER_DIRECTION"
     :size="drawerSize"
     @update:model-value="emit('update:visible', $event)"
   >
     <el-main class="phrase-drawer__body">
-      <!-- Scenario 1: search returned data — only list + "Create new" -->
       <PhraseDrawerSimilarList
         v-if="showListView"
         :entries="similarEntries"
         :loading="searchQuery.isFetching.value"
         :title="similarEntriesTitle"
-        :create-new-label="PHRASE_DRAWER_SIMILAR_ENTRIES.createNew"
-        :searching-label="PHRASE_DRAWER_SIMILAR_ENTRIES.searching"
+        :create-new-label="t.phrase.similar.createNew"
+        :searching-label="t.phrase.similar.searching"
+        :show-context-label="t.phrase.similar.showContext"
+        :hide-context-label="t.phrase.similar.hideContext"
         @create-new="openCreateForm"
       />
 
-      <!-- Scenario 2: no results or user clicked "Create new" — only form -->
       <PhraseDrawerForm
         v-if="showFormView"
         :form="form"
+        :form-rules="phraseFormRules"
         :can-submit="canSubmit"
         :translate-loading="translateMutation.isPending.value"
         :save-loading="saveMutation.isPending.value"
-        :phrase-label="PHRASE_FORM_LABELS.phrase"
-        :translation-label="PHRASE_FORM_LABELS.translation"
-        :comment-label="PHRASE_FORM_LABELS.comment"
-        :translation-placeholder="PHRASE_FORM_PLACEHOLDERS.translation"
-        :comment-placeholder="PHRASE_FORM_PLACEHOLDERS.comment"
-        :translate-button-label="PHRASE_FORM_BUTTONS.translate"
-        :save-button-label="PHRASE_FORM_BUTTONS.save"
+        :phrase-label="t.phrase.form.phrase"
+        :translation-label="t.phrase.form.translation"
+        :comment-label="t.phrase.form.comment"
+        :translation-placeholder="t.phrase.form.placeholderTranslation"
+        :comment-placeholder="t.phrase.form.placeholderComment"
+        :translate-button-label="t.phrase.form.translate"
+        :save-button-label="t.phrase.form.save"
         @translate="onTranslate"
         @submit="onSubmit"
       />
@@ -51,17 +52,11 @@ import {
   saveDictionaryEntry,
   searchDictionaryByValue,
 } from "@/services/api";
+import { useI18n } from "@/i18n";
 import {
-  PHRASE_DRAWER_TITLE,
   PHRASE_DRAWER_DIRECTION,
   PHRASE_DRAWER_SIZE,
   PHRASE_DRAWER_BREAKPOINTS,
-  PHRASE_FORM_LABELS,
-  PHRASE_FORM_PLACEHOLDERS,
-  PHRASE_FORM_BUTTONS,
-  PHRASE_SAVE_MESSAGES,
-  PHRASE_TRANSLATE_MESSAGES,
-  PHRASE_DRAWER_SIMILAR_ENTRIES,
 } from "@/constants/phrase";
 import PhraseDrawerSimilarList from "@/components/script/PhraseDrawerSimilarList.vue";
 import PhraseDrawerForm from "@/components/script/PhraseDrawerForm.vue";
@@ -84,6 +79,25 @@ const props = defineProps<{
 const emit = defineEmits<{
   "update:visible": [value: boolean];
 }>();
+
+const { t } = useI18n();
+
+const phraseFormRules = computed(() => ({
+  phrase: [
+    {
+      required: true,
+      message: t.value.phrase.form.validationPhraseRequired,
+      trigger: "blur" as const,
+    },
+  ],
+  translation: [
+    {
+      required: true,
+      message: t.value.phrase.form.validationTranslationRequired,
+      trigger: "blur" as const,
+    },
+  ],
+}));
 
 const form = ref<PhraseFormModel>({
   phrase: "",
@@ -116,7 +130,7 @@ const searchQuery = useQuery({
 const similarEntries = computed(() => searchQuery.data.value ?? []);
 const similarEntriesTitle = computed(() => {
   const n = similarEntries.value.length;
-  const base = PHRASE_DRAWER_SIMILAR_ENTRIES.title;
+  const base = t.value.phrase.similar.title;
   return n ? `${base} (${n})` : base;
 });
 
@@ -201,18 +215,18 @@ const translateMutation = useMutation({
     form.value = { ...form.value, translation: data.translation };
   },
   onError: () => {
-    ElMessage.error(PHRASE_TRANSLATE_MESSAGES.error);
+    ElMessage.error(t.value.phrase.form.errorTranslate);
   },
 });
 
 const saveMutation = useMutation({
   mutationFn: saveDictionaryEntry,
   onSuccess: () => {
-    ElMessage.success(PHRASE_SAVE_MESSAGES.success);
+    ElMessage.success(t.value.phrase.form.successAdded);
     emit("update:visible", false);
   },
   onError: () => {
-    ElMessage.error(PHRASE_SAVE_MESSAGES.error);
+    ElMessage.error(t.value.phrase.form.errorSave);
   },
 });
 

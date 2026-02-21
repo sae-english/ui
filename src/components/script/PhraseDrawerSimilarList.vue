@@ -127,18 +127,15 @@ import { ref } from "vue";
 import { Loading, VideoPlay, ArrowDown, ArrowUp } from "@element-plus/icons-vue";
 import type { ExpandedDictionaryDto } from "@/services/api";
 import type { ContentBlockDto } from "@/services/api";
-import { PHRASE_DRAWER_SIMILAR_ENTRIES } from "@/constants/phrase";
-
 defineProps<{
   entries: ExpandedDictionaryDto[];
   loading: boolean;
   title: string;
   createNewLabel: string;
   searchingLabel: string;
+  showContextLabel: string;
+  hideContextLabel: string;
 }>();
-
-const showContextLabel = PHRASE_DRAWER_SIMILAR_ENTRIES.showContext;
-const hideContextLabel = PHRASE_DRAWER_SIMILAR_ENTRIES.hideContext;
 
 defineEmits<{
   createNew: [];

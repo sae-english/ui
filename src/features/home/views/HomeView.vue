@@ -1,30 +1,30 @@
 <template>
   <div class="home">
     <HomeHero
-      title="English Movies"
-      tagline="Learn English through what you love"
+      :title="t.home.heroTitle"
+      :tagline="t.home.heroTagline"
     />
 
     <section class="home__sections">
       <HomeCard
-        title="Movies"
-        description="Scripts, dialogues, translations. Pick a movie and start practicing."
+        :title="t.home.cardMovies"
+        :description="t.home.cardMoviesDesc"
         :icon="VideoCameraFilled"
         :to="to('/movies')"
       />
       <HomeCard
-        title="Series"
-        description="Coming soon"
+        :title="t.home.cardSeries"
+        :description="t.home.cardSeriesDesc"
         :icon="Film"
       />
       <HomeCard
-        title="Books"
-        description="Coming soon"
+        :title="t.home.cardBooks"
+        :description="t.home.cardBooksDesc"
         :icon="Reading"
       />
       <HomeCard
-        title="Songs"
-        description="Coming soon"
+        :title="t.home.cardSongs"
+        :description="t.home.cardSongsDesc"
         :icon="Headset"
       />
     </section>
@@ -34,8 +34,10 @@
 <script setup lang="ts">
 import { VideoCameraFilled, Film, Reading, Headset } from '@element-plus/icons-vue'
 import { useLanguage } from '@/composables/useLanguage'
+import { useI18n } from '@/i18n'
 import HomeHero from '@/features/home/components/HomeHero.vue'
 import HomeCard from '@/features/home/components/HomeCard.vue'
 
 const { to } = useLanguage()
+const { t } = useI18n()
 </script>

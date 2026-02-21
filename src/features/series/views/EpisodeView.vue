@@ -1,16 +1,16 @@
 <template>
   <el-container class="episode" direction="vertical">
     <el-header class="episode__header" height="auto">
-      <BackButton label="Back" @click="goBack" />
+      <BackButton :label="t.episode.back" @click="goBack" />
     </el-header>
 
     <el-main class="episode__main">
       <div v-if="loading" class="content-loader-wrap">
-        <ContentLoader message="Loading episode..." />
+        <ContentLoader :message="t.episode.loadingEpisode" />
       </div>
 
-      <el-empty v-else-if="error" description="Episode not found">
-        <el-button type="primary" @click="goBack">To home</el-button>
+      <el-empty v-else-if="error" :description="t.episode.notFound">
+        <el-button type="primary" @click="goBack">{{ t.episode.toHome }}</el-button>
       </el-empty>
 
       <template v-else-if="transcript">
@@ -36,6 +36,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import BackButton from '@/components/ui/BackButton.vue'
+import { useI18n } from '@/i18n'
 import {
   getEpisodeById,
   toEpisodeTranscript,
@@ -48,6 +49,7 @@ import PhraseAddButton from '@/components/script/PhraseAddButton.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const episodeId = computed(() => {
   const id = route.params.id
@@ -70,7 +72,7 @@ async function loadEpisode() {
     transcript.value = toEpisodeTranscript(dto)
   } catch (e) {
     console.error(e)
-    error.value = 'Failed to load episode'
+    error.value = t.value.episode.failedLoadEpisode
     ElMessage.error(error.value)
   } finally {
     loading.value = false

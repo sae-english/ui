@@ -8,7 +8,7 @@
         type="primary"
         size="large"
         class="episode-script__add-fab"
-        :title="'Add to dictionary'"
+        :title="t.phrase.addToDictionary"
         @click="onAddClick"
       >
         <el-icon :size="24"><DocumentAdd /></el-icon>
@@ -29,7 +29,10 @@ import { ref, computed } from "vue";
 import { useTextSelection } from "@vueuse/core";
 import { DocumentAdd } from "@element-plus/icons-vue";
 import type { DictionaryContentType } from "@/services/api";
+import { useI18n } from "@/i18n";
 import PhraseDrawer from "@/components/script/PhraseDrawer.vue";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   /** Content key (movie/episode) for linking dictionary entry. */
