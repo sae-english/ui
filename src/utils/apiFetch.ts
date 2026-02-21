@@ -1,8 +1,8 @@
 import { API_BASE_URL } from '@/constants/api'
 
 /**
- * fetch с заголовком для ngrok (пропуск страницы "Visit Site" на бесплатном плане).
- * Используй везде вместо fetch для запросов к API.
+ * fetch with header for ngrok (skip "Visit Site" page on free plan).
+ * Use everywhere instead of fetch for API requests.
  */
 export function apiFetch(
   input: RequestInfo | URL,

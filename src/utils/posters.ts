@@ -1,5 +1,5 @@
 /**
- * Маппинг title -> путь к постеру в assets
+ * Mapping title -> poster path in assets
  */
 import friendsPoster from '@/assets/posters/friends.webp'
 import interstellarPoster from '@/assets/posters/interstellar.webp'
@@ -10,15 +10,15 @@ const posterMap: Record<string, string> = {
 }
 
 /**
- * Нормализует имя title для поиска постера (lowercase, без спецсимволов)
+ * Normalize title name for poster lookup (lowercase, no special chars)
  */
 function normalizeTitleName(name: string): string {
   return name.toLowerCase().trim().replace(/[^a-z0-9]/g, '')
 }
 
 /**
- * Возвращает URL постера для title по имени.
- * Если постера нет в маппинге — возвращает friends по умолчанию.
+ * Return poster URL for title by name.
+ * If not in mapping, returns friends as default.
  */
 export function getPosterForTitle(name: string): string {
   const key = normalizeTitleName(name)

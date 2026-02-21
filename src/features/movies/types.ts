@@ -1,4 +1,4 @@
-/** DTO фильма с бэка */
+/** Movie DTO from backend */
 export interface MovieDto {
   movieId: number
   workId: number
@@ -10,7 +10,7 @@ export interface MovieDto {
   description: string
 }
 
-/** Один блок сценария с бэка. type: section | action | scene | dialogue | transition */
+/** Single script block from backend. type: section | action | scene | dialogue | transition */
 export interface ContentBlockDto {
   type: string
   id?: string | null
@@ -21,7 +21,7 @@ export interface ContentBlockDto {
   parenthetical?: string | null
 }
 
-/** Кредиты сценария с бэка */
+/** Script credits from backend */
 export interface CreditsDto {
   writtenBy?: string | null
   storyBy?: string | null
@@ -30,11 +30,13 @@ export interface CreditsDto {
   scriptDate?: string | null
 }
 
-export interface MovieContentDto {
-  id: number
+/** One page of content (pagination). Pass nextCursor as after for the next page. */
+export interface MovieContentPageDto {
   movieId: number
   contentKey?: string | null
-  content: ContentBlockDto[]
   credits: CreditsDto
   note: string | null
+  content: ContentBlockDto[]
+  nextCursor: string | null
+  hasMore: boolean
 }

@@ -22,9 +22,6 @@
 
 .episode__main {
   padding: 0 !important;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
 }
 
 .episode__content {

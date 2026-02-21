@@ -1,5 +1,5 @@
 /**
- * Типы, соответствующие DTO сервера
+ * Types matching server DTOs
  */
 
 export type TitleType = 'MOVIE' | 'SERIES'

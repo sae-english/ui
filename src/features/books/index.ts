@@ -1,1 +1,1 @@
-// Книги — будет реализовано позже
+// Books — to be implemented later

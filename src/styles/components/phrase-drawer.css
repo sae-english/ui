@@ -1,9 +1,35 @@
-/* Phrase drawer form */
+/* Phrase drawer */
 
 .phrase-drawer__body {
   padding-right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
+/* List-first view: header with title + Create new button */
+.phrase-drawer__list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.phrase-drawer__list-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+}
+
+/* Standalone list (when list is main content) */
+.phrase-drawer__similar-list--standalone {
+  margin-top: 0;
+}
+
+/* Form */
 .phrase-drawer__translate-btn {
   margin-top: 8px;
 }
@@ -22,4 +48,93 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 8px;
+}
+
+/* Similar entries in dictionary */
+.phrase-drawer__similar {
+  margin-top: 24px;
+  border-top: 1px solid var(--el-border-color-lighter);
+  padding-top: 16px;
+}
+
+.phrase-drawer__similar--below-form {
+  margin-top: 20px;
+  padding-top: 16px;
+}
+
+.phrase-drawer__similar-heading {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--el-text-color-secondary);
+}
+
+.phrase-drawer__similar-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0;
+  color: var(--el-text-color-secondary);
+  font-size: 0.9rem;
+}
+
+.phrase-drawer__similar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.phrase-drawer__similar-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.phrase-drawer__similar-item:last-child {
+  border-bottom: none;
+}
+
+.phrase-drawer__similar-item--compact {
+  padding: 8px 0;
+}
+
+.phrase-drawer__similar-item--compact .phrase-drawer__similar-translation {
+  margin-top: 2px;
+}
+
+.phrase-drawer__similar-value {
+  font-weight: 500;
+  color: var(--el-text-color-primary);
+}
+
+.phrase-drawer__similar-translation {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: var(--el-text-color-regular);
+}
+
+.phrase-drawer__similar-comment {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--el-text-color-secondary);
+  font-style: italic;
+}
+
+.phrase-drawer__similar-meta {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--el-color-primary);
+}
+
+.phrase-drawer__similar-context {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--el-text-color-secondary);
+  line-height: 1.35;
+}
+
+.phrase-drawer__similar-empty {
+  margin: 0;
+  padding: 16px 0;
+  font-size: 0.9rem;
+  color: var(--el-text-color-secondary);
 }

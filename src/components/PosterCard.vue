@@ -25,7 +25,7 @@
         round
         class="poster-card__badge"
       >
-        {{ title.type === 'MOVIE' ? 'Фильм' : 'Сериал' }}
+        {{ title.type === 'MOVIE' ? 'Movie' : 'Series' }}
       </el-tag>
     </div>
     <template #footer>

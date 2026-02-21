@@ -1,4 +1,4 @@
-/** Изучаемый язык */
+/** Study language */
 export const StudyLanguage = {
   English: 'en',
   Armenian: 'hy',

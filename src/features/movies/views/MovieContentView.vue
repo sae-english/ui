@@ -1,53 +1,51 @@
 <template>
   <el-container class="movie-content" direction="vertical">
     <el-header class="movie-content__header" height="auto">
-      <BackButton label="К фильмам" @click="goBack" />
+      <BackButton label="Back to movies" @click="goBack" />
     </el-header>
 
     <el-main class="movie-content__main">
-      <div v-if="loading" class="content-loader-wrap">
-        <ContentLoader message="Загрузка сценария..." />
+      <div v-if="query.isLoading.value" class="content-loader-wrap">
+        <ContentLoader message="Loading script..." />
       </div>
 
-      <el-empty v-else-if="error" :description="error">
-        <el-button type="primary" @click="loadContent">Повторить</el-button>
-      </el-empty>
-
-      <template v-else-if="movieContent">
+      <template v-else-if="blocks.length > 0 || hasLoadedOnce">
         <el-main class="movie-content__content">
-          <EpisodeScript
-            :blocks="blocks"
-            @add-selection="handleBlockAddSelection"
-          />
+          <PhraseAddButton :content-key="contentKey" content-type="MOVIE">
+            <EpisodeScript :blocks="blocks" />
+          </PhraseAddButton>
         </el-main>
 
-        <PhraseDrawer
-          v-model:visible="drawerVisible"
-          :form="phraseForm"
-          :loading="drawerSubmitting"
-          :dictionary-context="drawerContext"
-          @update:form="updatePhraseForm"
-          @submit="handleDrawerSubmit"
+        <InfiniteScrollLoadMore
+          :has-next-page="query.hasNextPage.value"
+          :is-fetching-next-page="query.isFetchingNextPage.value"
+          class="movie-content__load-more"
+          @load-more="query.fetchNextPage()"
         />
       </template>
+
+      <el-empty v-else description="Content not found" />
     </el-main>
   </el-container>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useInfiniteQuery } from "@tanstack/vue-query";
 import { ElMessage } from "element-plus";
-import { getMovieContentById, contentBlockToTranscriptBlock } from "@/features/movies/api";
+import {
+  getMovieContentPage,
+  contentBlockToTranscriptBlock,
+} from "@/features/movies/api";
 import BackButton from "@/components/ui/BackButton.vue";
 import { useLanguage } from "@/composables/useLanguage";
-import { saveDictionaryEntry } from "@/services/api";
-import type { MovieDto } from "@/features/movies/types";
-import type { PhraseFormModel } from "@/types/phrase";
 import type { TranscriptBlock } from "@/types/movie";
 import ContentLoader from "@/components/ui/ContentLoader.vue";
+import InfiniteScrollLoadMore from "@/components/ui/InfiniteScrollLoadMore.vue";
 import EpisodeScript from "@/components/script/EpisodeScript.vue";
-import PhraseDrawer, { type DictionaryContext } from "@/components/script/PhraseDrawer.vue";
+import PhraseAddButton from "@/components/script/PhraseAddButton.vue";
+import { DEFAULT_PAGE_SIZE } from "@/constants/defaults";
 
 const route = useRoute();
 const router = useRouter();
@@ -58,49 +56,50 @@ const movieId = computed(() => {
   return typeof id === "string" ? parseInt(id, 10) : Number(id);
 });
 
-const movie = ref<MovieDto | null>(null);
-const movieContent = ref<Awaited<ReturnType<typeof getMovieContentById>>>(null);
-const loading = ref(true);
-const error = ref<string | null>(null);
+const query = useInfiniteQuery({
+  queryKey: computed(() => ["movie-content", movieId.value] as const),
+  queryFn: async ({ pageParam }) => {
+    const id = movieId.value;
+    const page = await getMovieContentPage(id, {
+      after: pageParam ?? undefined,
+      limit: DEFAULT_PAGE_SIZE,
+    });
+    if (!page) throw new Error("Content not found");
+    return page;
+  },
+  initialPageParam: null as string | null,
+  getNextPageParam: (lastPage) =>
+    lastPage.hasMore ? (lastPage.nextCursor ?? undefined) : undefined,
+  enabled: computed(() => {
+    const id = movieId.value;
+    return !!id && !isNaN(id);
+  }),
+});
 
 const blocks = computed<TranscriptBlock[]>(() => {
-  const content = movieContent.value?.content;
-  if (!Array.isArray(content)) return [];
-  return content.map(contentBlockToTranscriptBlock);
+  const pages = query.data.value?.pages ?? [];
+  return pages.flatMap((p) =>
+    (p.content ?? []).map(contentBlockToTranscriptBlock),
+  );
 });
 
-const drawerVisible = ref(false);
-const drawerPendingBlockId = ref<string | undefined>(undefined);
-const drawerContext = computed(() => ({
-  contentKey: movieContent.value?.contentKey ?? undefined,
-  contentType: "MOVIE" as const,
-  blockId: drawerPendingBlockId.value ?? undefined,
-}));
-const phraseForm = ref<PhraseFormModel>({
-  phrase: "",
-  translation: "",
-  comment: "",
-});
-const drawerSubmitting = ref(false);
+const firstPage = computed(() => query.data.value?.pages[0]);
+const contentKey = computed(() => firstPage.value?.contentKey ?? undefined);
+const hasLoadedOnce = computed(
+  () => (query.data.value?.pages?.length ?? 0) > 0,
+);
+const errorMessage = computed(
+  () =>
+    (query.error.value as Error | null)?.message ??
+    "Failed to load script",
+);
 
-async function loadContent() {
-  const id = movieId.value;
-  if (!id || isNaN(id)) return;
-  loading.value = true;
-  error.value = null;
-  try {
-    const state = history.state as { movie?: MovieDto } | null;
-    if (state?.movie) movie.value = state.movie;
-    movieContent.value = await getMovieContentById(id);
-    if (!movieContent.value) error.value = "Контент не найден";
-  } catch (e) {
-    console.error(e);
-    error.value = "Не удалось загрузить сценарий";
-    ElMessage.error(error.value);
-  } finally {
-    loading.value = false;
-  }
-}
+watch(
+  () => query.isError.value,
+  (isErr) => {
+    if (isErr) ElMessage.error(errorMessage.value);
+  },
+);
 
 function goBack() {
   router.push({
@@ -108,42 +107,4 @@ function goBack() {
     query: navQuery(),
   });
 }
-
-function handleBlockAddSelection(payload: { text: string; blockId?: string }) {
-  phraseForm.value = { phrase: payload.text, translation: "", comment: "" };
-  drawerPendingBlockId.value = payload.blockId;
-  drawerVisible.value = true;
-}
-
-function updatePhraseForm(f: PhraseFormModel) {
-  phraseForm.value = f;
-}
-
-async function handleDrawerSubmit(payload: {
-  form: PhraseFormModel;
-  context?: DictionaryContext | null;
-}) {
-  const { form, context } = payload;
-  drawerSubmitting.value = true;
-  try {
-    await saveDictionaryEntry({
-      value: form.phrase.trim(),
-      translation: form.translation.trim(),
-      comment: form.comment?.trim(),
-      contentKey: context?.contentKey,
-      contentType: context?.contentType as "MOVIE" | undefined,
-      blockId: context?.blockId,
-    });
-    ElMessage.success("Добавлено в словарь");
-    drawerVisible.value = false;
-  } catch (e) {
-    console.error(e);
-    ElMessage.error("Не удалось сохранить");
-  } finally {
-    drawerSubmitting.value = false;
-  }
-}
-
-onMounted(loadContent);
-watch(movieId, loadContent);
 </script>

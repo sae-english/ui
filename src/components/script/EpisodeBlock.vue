@@ -41,7 +41,7 @@
       <el-space class="episode-block__dialogue-head" :size="10" wrap>
         <el-tag size="small" effect="plain" class="episode-block__dialogue-speaker">
           {{ block.speaker }}
-          <el-text v-if="block.isUncut" size="small" class="episode-block__dialogue-uncut-flag"> (расширенная версия)</el-text>
+          <el-text v-if="block.isUncut" size="small" class="episode-block__dialogue-uncut-flag"> (extended version)</el-text>
         </el-tag>
         <el-text v-if="block.parenthetical" type="info" class="episode-block__dialogue-parenthetical">
           ({{ block.parenthetical }})

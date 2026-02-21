@@ -19,7 +19,7 @@
         </template>
       </el-image>
       <el-tag size="small" type="warning" effect="dark" round class="poster-card__badge">
-        Фильм
+        Movie
       </el-tag>
     </div>
     <template #footer>

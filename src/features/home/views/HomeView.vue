@@ -2,29 +2,29 @@
   <div class="home">
     <HomeHero
       title="English Movies"
-      tagline="Учи английский через то, что любишь"
+      tagline="Learn English through what you love"
     />
 
     <section class="home__sections">
       <HomeCard
         title="Movies"
-        description="Скрипты, диалоги, переводы. Выбери фильм и начни практику."
+        description="Scripts, dialogues, translations. Pick a movie and start practicing."
         :icon="VideoCameraFilled"
         :to="to('/movies')"
       />
       <HomeCard
         title="Series"
-        description="Скоро"
+        description="Coming soon"
         :icon="Film"
       />
       <HomeCard
         title="Books"
-        description="Скоро"
+        description="Coming soon"
         :icon="Reading"
       />
       <HomeCard
         title="Songs"
-        description="Скоро"
+        description="Coming soon"
         :icon="Headset"
       />
     </section>

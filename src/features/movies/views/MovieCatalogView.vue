@@ -1,22 +1,22 @@
 <template>
   <div class="catalog">
     <PageSectionHeader
-      title="Изучение по фильмам"
-      subtitle="Выбери фильм и начни практику"
+      title="Learn with movies"
+      subtitle="Pick a movie and start practicing"
     />
 
     <el-main class="catalog__content">
       <div v-if="loading" class="catalog__loading content-loader-wrap">
-        <ContentLoader message="Загрузка каталога..." :icon="Loading" :icon-size="32" />
+        <ContentLoader message="Loading catalog..." :icon="Loading" :icon-size="32" />
       </div>
 
       <el-empty v-else-if="error" :description="error">
-        <el-button type="primary" @click="loadMovies">Повторить</el-button>
+        <el-button type="primary" @click="loadMovies">Retry</el-button>
       </el-empty>
 
       <template v-else>
         <section v-if="movies.length" class="catalog__section">
-          <h2 class="catalog__section-title">Фильмы</h2>
+          <h2 class="catalog__section-title">Movies</h2>
           <el-row :gutter="24" class="catalog__poster-list">
             <el-col
               v-for="movie in movies"
@@ -32,7 +32,7 @@
           </el-row>
         </section>
 
-        <el-empty v-else description="Нет фильмов" />
+        <el-empty v-else description="No movies" />
       </template>
     </el-main>
   </div>
@@ -48,6 +48,7 @@ import ContentLoader from "@/components/ui/ContentLoader.vue";
 import PageSectionHeader from "@/components/layout/PageSectionHeader.vue";
 import { getLimitedMovies } from "@/features/movies/api";
 import type { MovieDto } from "@/features/movies/types";
+import { CATALOG_MOVIES_LIMIT } from "@/constants/defaults";
 import MoviePosterCard from "@/features/movies/components/MoviePosterCard.vue";
 
 const router = useRouter();
@@ -60,11 +61,11 @@ async function loadMovies() {
   loading.value = true;
   error.value = null;
   try {
-    movies.value = await getLimitedMovies(5);
+    movies.value = await getLimitedMovies(CATALOG_MOVIES_LIMIT);
   } catch (e) {
     console.error(e);
     error.value =
-      "Не удалось загрузить фильмы. Проверь, что сервер запущен на порту 8080.";
+      "Failed to load movies. Make sure the server is running on port 8080.";
     ElMessage.error(error.value);
   } finally {
     loading.value = false;

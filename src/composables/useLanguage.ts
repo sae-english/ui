@@ -21,12 +21,12 @@ export function useLanguage() {
     router.replace({ query: { ...route.query, language: lang } })
   }
 
-  /** Query-объект с текущим языком для навигации */
+  /** Query object with current language for navigation */
   function navQuery(extra?: Record<string, string | string[]>) {
     return { language: language.value, ...extra }
   }
 
-  /** Маршрут с language в query */
+  /** Route with language in query */
   function to(path: string, params?: Record<string, string>) {
     const loc: { path: string; query: Record<string, string>; params?: Record<string, string> } = {
       path,

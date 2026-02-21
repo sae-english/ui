@@ -38,28 +38,21 @@ export interface EpisodeTranscript {
   blocks: TranscriptBlock[]
 }
 
-/** Получить список фильмов и сериалов */
-export async function getTitles(): Promise<TitleDto[]> {
-  const res = await apiFetch(apiUrl('/titles'))
-  if (!res.ok) throw new Error('Не удалось загрузить каталог')
-  return res.json()
-}
-
-/** Получить список эпизодов для title */
+/** Get list of episodes for a title */
 export async function getEpisodesByTitleId(titleId: number): Promise<EpisodeListDto[]> {
   const res = await apiFetch(apiUrl(`/titles/${titleId}/episodes`))
-  if (!res.ok) throw new Error(`Не удалось загрузить эпизоды`)
+  if (!res.ok) throw new Error('Failed to load episodes')
   return res.json()
 }
 
-/** Получить эпизод с контентом по id */
+/** Get episode with content by id */
 export async function getEpisodeById(id: number): Promise<EpisodeDto> {
   const res = await apiFetch(apiUrl(`/episodes/${id}`))
-  if (!res.ok) throw new Error('Эпизод не найден')
+  if (!res.ok) throw new Error('Episode not found')
   return res.json()
 }
 
-/** Преобразует EpisodeDto в EpisodeTranscript для совместимости с EpisodeView */
+/** Convert EpisodeDto to EpisodeTranscript for EpisodeView */
 export function toEpisodeTranscript(dto: EpisodeDto): EpisodeTranscript {
   const content = Array.isArray(dto.content) ? dto.content : []
   return {
@@ -95,10 +88,10 @@ export async function sendMessage(payload: MessagePayload): Promise<SendMessageR
 
 export type TranslateResult = { translation: string }
 
-/** Тип контента для привязки записи словаря */
+/** Content type for linking dictionary entry */
 export type DictionaryContentType = 'MOVIE' | 'SERIES' | 'EPISODE' | 'BOOK' | 'ALBUM'
 
-/** Словарь */
+/** Dictionary entry DTO */
 export interface DictionaryDto {
   id: number
   value: string
@@ -109,6 +102,26 @@ export interface DictionaryDto {
   blockId: string | null
   createdAt: string
   updatedAt: string
+}
+
+/** Content block from backend (same shape as in movie content pages). */
+export interface ContentBlockDto {
+  type?: string | null
+  id?: string | null
+  title?: string | null
+  text?: string | null
+  description?: string | null
+  speaker?: string | null
+  parenthetical?: string | null
+}
+
+/** Dictionary entry with expanded context: work title and content block. */
+export interface ExpandedDictionaryDto {
+  dictionary: DictionaryDto
+  /** Movie/series title (work.name). */
+  title: string | null
+  /** Content block for block_id. */
+  block: ContentBlockDto | null
 }
 
 export interface DictionaryRequestDto {
@@ -123,8 +136,18 @@ export interface DictionaryRequestDto {
 
 export async function getDictionaryEntries(): Promise<DictionaryDto[]> {
   const res = await apiFetch(dictionaryApiUrl(''))
-  if (!res.ok) throw new Error('Не удалось загрузить словарь')
+  if (!res.ok) throw new Error('Failed to load dictionary')
   return res.json()
+}
+
+/** Search dictionary by value (case-insensitive contains). Returns expanded entries. GET /api/dictionary/search/expanded?q=... */
+export async function searchDictionaryByValue(query: string): Promise<ExpandedDictionaryDto[]> {
+  const q = query?.trim() ?? ''
+  if (!q) return []
+  const res = await apiFetch(dictionaryApiUrl(`/search/expanded?q=${encodeURIComponent(q)}`))
+  if (!res.ok) throw new Error('Failed to search dictionary')
+  const data = (await res.json()) as ExpandedDictionaryDto[]
+  return Array.isArray(data) ? data : []
 }
 
 export async function saveDictionaryEntry(
@@ -144,13 +167,13 @@ export async function saveDictionaryEntry(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
-  if (!res.ok) throw new Error('Не удалось сохранить')
+  if (!res.ok) throw new Error('Failed to save')
   return res.json()
 }
 
 export async function deleteDictionaryEntry(id: number): Promise<void> {
   const res = await apiFetch(dictionaryApiUrl(`/${id}`), { method: 'DELETE' })
-  if (!res.ok) throw new Error('Не удалось удалить')
+  if (!res.ok) throw new Error('Failed to delete')
 }
 
 export async function translate(text: string): Promise<TranslateResult> {
@@ -160,6 +183,6 @@ export async function translate(text: string): Promise<TranslateResult> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: text?.trim() ?? '' }),
   })
-  if (!res.ok) throw new Error('Не удалось перевести текст')
+  if (!res.ok) throw new Error('Failed to translate text')
   return res.json()
 }

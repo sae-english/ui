@@ -1,22 +1,22 @@
 <template>
   <div class="dictionary">
     <PageSectionHeader
-      title="Словарь"
-      subtitle="Слова и фразы, сохранённые при чтении"
+      title="Dictionary"
+      subtitle="Words and phrases saved while reading"
     />
 
     <el-main class="dictionary__content">
       <div v-if="loading" class="dictionary__loading content-loader-wrap">
-        <ContentLoader message="Загрузка..." :icon="Loading" :icon-size="36" />
+        <ContentLoader message="Loading..." :icon="Loading" :icon-size="36" />
       </div>
 
       <el-empty v-else-if="error" :description="error">
-        <el-button type="primary" @click="loadEntries">Повторить</el-button>
+        <el-button type="primary" @click="loadEntries">Retry</el-button>
       </el-empty>
 
-      <el-empty v-else-if="!entries.length" description="Словарь пуст">
+      <el-empty v-else-if="!entries.length" description="Dictionary is empty">
         <el-text type="info" size="small">
-          Выделяй фразы при чтении скриптов и сохраняй их в словарь.
+          Select phrases while reading scripts and save them to the dictionary.
         </el-text>
       </el-empty>
 
@@ -36,15 +36,15 @@
 
     <el-dialog
       v-model="deleteDialogVisible"
-      title="Удалить запись?"
+      title="Delete entry?"
       width="400px"
       :close-on-click-modal="true"
     >
-      <p>Удалить «{{ entryToDelete?.value }}» из словаря?</p>
+      <p>Delete "{{ entryToDelete?.value }}" from the dictionary?</p>
       <template #footer>
-        <el-button @click="deleteDialogVisible = false">Отмена</el-button>
+        <el-button @click="deleteDialogVisible = false">Cancel</el-button>
         <el-button type="danger" :loading="deleting" @click="doDelete">
-          Удалить
+          Delete
         </el-button>
       </template>
     </el-dialog>
@@ -78,7 +78,7 @@ async function loadEntries() {
     entries.value = await getDictionaryEntries()
   } catch (e) {
     console.error(e)
-    error.value = 'Не удалось загрузить словарь. Проверь, что сервер запущен.'
+    error.value = 'Failed to load dictionary. Make sure the server is running.'
     ElMessage.error(error.value)
   } finally {
     loading.value = false
@@ -99,10 +99,10 @@ async function doDelete() {
     entries.value = entries.value.filter((e) => e.id !== entry.id)
     deleteDialogVisible.value = false
     entryToDelete.value = null
-    ElMessage.success('Удалено')
+    ElMessage.success('Deleted')
   } catch (e) {
     console.error(e)
-    ElMessage.error('Не удалось удалить')
+    ElMessage.error('Failed to delete')
   } finally {
     deleting.value = false
   }

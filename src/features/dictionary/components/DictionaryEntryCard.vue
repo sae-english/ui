@@ -17,7 +17,7 @@
           :icon="Delete"
           @click="$emit('delete')"
         >
-          Удалить
+          Delete
         </el-button>
       </div>
     </div>
