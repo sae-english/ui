@@ -176,12 +176,12 @@ export async function deleteDictionaryEntry(id: number): Promise<void> {
   if (!res.ok) throw new Error('Failed to delete')
 }
 
-export async function translate(text: string): Promise<TranslateResult> {
-  const url = `${baseUrl()}/translate`
+export async function translate(text: string, target = 'ru'): Promise<TranslateResult> {
+  const url = `${baseUrl()}/api/translate`
   const res = await apiFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: text?.trim() ?? '' }),
+    body: JSON.stringify({ text: text?.trim() ?? '', target }),
   })
   if (!res.ok) throw new Error('Failed to translate text')
   return res.json()

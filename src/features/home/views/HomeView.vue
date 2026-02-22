@@ -16,6 +16,7 @@
         :title="t.home.cardSeries"
         :description="t.home.cardSeriesDesc"
         :icon="Film"
+        :to="to('/series')"
       />
       <HomeCard
         :title="t.home.cardBooks"

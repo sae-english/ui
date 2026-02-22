@@ -4,6 +4,8 @@ import HomeView from '@/features/home/views/HomeView.vue'
 import MovieCatalogView from '@/features/movies/views/MovieCatalogView.vue'
 import MovieContentView from '@/features/movies/views/MovieContentView.vue'
 import DictionaryView from '@/features/dictionary/views/DictionaryView.vue'
+import SeriesCatalogView from '@/features/series/views/SeriesCatalogView.vue'
+import SeriesContentView from '@/features/series/views/SeriesContentView.vue'
 import EpisodeView from '@/features/series/views/EpisodeView.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -35,6 +37,17 @@ const routes: RouteRecordRaw[] = [
     path: '/movie/:movieId/content',
     name: 'movie-content',
     component: MovieContentView,
+    props: true,
+  },
+  {
+    path: '/series',
+    name: 'series-catalog',
+    component: SeriesCatalogView,
+  },
+  {
+    path: '/series/:seriesId',
+    name: 'series-content',
+    component: SeriesContentView,
     props: true,
   },
   {
