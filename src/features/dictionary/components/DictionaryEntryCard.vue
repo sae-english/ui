@@ -6,19 +6,19 @@
         <span class="dictionary-entry-card__translation">{{ entry.translation }}</span>
         <p v-if="entry.comment" class="dictionary-entry-card__comment">{{ entry.comment }}</p>
       </div>
-      <div class="dictionary-entry-card__meta">
-        <el-text type="info" size="small">
+      <div class="dictionary-entry-card__footer">
+        <el-text type="info" size="small" class="dictionary-entry-card__date">
           {{ formatDate(entry.createdAt) }}
         </el-text>
         <el-button
-          type="danger"
+          circle
           text
+          type="danger"
           size="small"
           :icon="Delete"
+          class="dictionary-entry-card__delete"
           @click="$emit('delete')"
-        >
-          {{ t.dictionary.delete }}
-        </el-button>
+        />
       </div>
     </div>
   </el-card>
@@ -51,16 +51,21 @@ function formatDate(iso: string): string {
 
 <style scoped>
 .dictionary-entry-card {
-  border-radius: 12px;
-  border: 1px solid var(--fe-border);
-  background: var(--fe-bg-card);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.dictionary-entry-card :deep(.el-card__body) {
+  padding: 14px 16px;
 }
 
 .dictionary-entry-card__body {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .dictionary-entry-card__main {
@@ -92,17 +97,25 @@ function formatDate(iso: string): string {
   line-height: 1.4;
 }
 
-.dictionary-entry-card__meta {
+.dictionary-entry-card__footer {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  gap: 12px;
+}
+
+.dictionary-entry-card__date {
+  opacity: 0.75;
+}
+
+.dictionary-entry-card__delete :deep(.el-icon) {
+  font-size: 16px;
 }
 
 @media (max-width: 600px) {
   .dictionary-entry-card__body {
-    flex-direction: column;
+    gap: 6px;
   }
 }
 </style>
