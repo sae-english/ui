@@ -1,8 +1,6 @@
 /** Movie DTO from backend */
 export interface MovieDto {
   movieId: number
-  workId: number
-  type: string
   name: string
   language: string
   director: string
