@@ -71,13 +71,15 @@
     <el-text tag="p" type="info" class="episode-block__transition">{{ block.text }}</el-text>
   </div>
 
-  <!-- Text (e.g. comedy stand-up paragraph) -->
+  <!-- Text (e.g. comedy stand-up paragraph) — same card as dialogue for visual consistency -->
   <div
     v-else-if="block.type === 'text'"
     class="episode-block episode-block--text"
     :data-block-id="blockIdAttr"
   >
-    <el-text tag="p" class="episode-block__text">{{ block.text }}</el-text>
+    <el-card shadow="never" class="episode-block__dialogue episode-block__text-card" body-style="padding: 16px 20px">
+      <el-text tag="p" class="episode-block__dialogue-text">{{ block.text }}</el-text>
+    </el-card>
   </div>
 </template>
 

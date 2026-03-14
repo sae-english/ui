@@ -16,6 +16,11 @@
       </RouterLink>
     </nav>
     <div class="app__actions">
+      <el-tooltip :content="settingsLabel" placement="bottom">
+        <RouterLink :to="to('/settings')" class="app__settings-btn" :class="{ 'app__settings-btn--active': isActive('/settings') }">
+          <el-icon :size="20"><Setting /></el-icon>
+        </RouterLink>
+      </el-tooltip>
       <el-select
         :model-value="language"
         class="app__lang-select"
@@ -34,13 +39,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { VideoCameraFilled } from '@element-plus/icons-vue'
+import { VideoCameraFilled, Setting } from '@element-plus/icons-vue'
 import { useLanguage } from '@/composables/useLanguage'
+import { useI18n } from '@/i18n'
 import type { StudyLanguage } from '@/types/language'
 
 const route = useRoute()
 const { to } = useLanguage()
+const { t } = useI18n()
 
 defineProps<{
   language: StudyLanguage
@@ -48,6 +56,8 @@ defineProps<{
   navItems: { path: string; label: string }[]
   appTitle: string
 }>()
+
+const settingsLabel = computed(() => t.value.settings.title)
 
 defineEmits<{
   'update:language': [value: StudyLanguage]
