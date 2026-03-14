@@ -213,6 +213,7 @@ const translateMutation = useMutation({
   mutationFn: (text: string) => translateApi(text),
   onSuccess: (data) => {
     form.value = { ...form.value, translation: data.translation };
+    ElMessage.success(t.value.phrase.form.successTranslate);
   },
   onError: () => {
     ElMessage.error(t.value.phrase.form.errorTranslate);

@@ -92,6 +92,7 @@ export const hy: Translations = {
       validationPhraseRequired: "Mutqagrel bavakan",
       validationTranslationRequired: "Mutqagrel targmanutyun",
       successAdded: "Avelacvac e bararanum",
+      successTranslate: "Targmanvac",
       errorSave: "Chkarogh enq pahvel",
       errorTranslate: "Chkarogh enq targmanel. Stugel servery.",
     },

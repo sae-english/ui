@@ -93,6 +93,7 @@ const en = {
       validationPhraseRequired: "Enter phrase",
       validationTranslationRequired: "Enter translation",
       successAdded: "Added to dictionary",
+      successTranslate: "Translated",
       errorSave: "Failed to save",
       errorTranslate: "Failed to translate. Check the server.",
     },

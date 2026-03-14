@@ -1,6 +1,9 @@
 /** Default page size for content pagination (scripts, lists, etc.) */
 export const DEFAULT_PAGE_SIZE = 50;
 
+/** Default target language for translate API (ISO 639-1, e.g. backend uses Yandex when configured). */
+export const DEFAULT_TRANSLATE_TARGET = "ru";
+
 /** Number of movies to load in the catalog on the home page */
 export const CATALOG_MOVIES_LIMIT = 5;
 

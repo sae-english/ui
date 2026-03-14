@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '@/constants/api'
+import { DEFAULT_TRANSLATE_TARGET } from '@/constants/defaults'
 import { apiFetch } from '@/utils/apiFetch'
 import type {
   TitleDto,
@@ -176,7 +177,14 @@ export async function deleteDictionaryEntry(id: number): Promise<void> {
   if (!res.ok) throw new Error('Failed to delete')
 }
 
-export async function translate(text: string, target = 'ru'): Promise<TranslateResult> {
+/**
+ * Translate text via backend (Yandex when translate.provider=yandex, else MyMemory).
+ * POST /api/translate with { text, target }. Returns { translation }.
+ */
+export async function translate(
+  text: string,
+  target: string = DEFAULT_TRANSLATE_TARGET,
+): Promise<TranslateResult> {
   const url = `${baseUrl()}/api/translate`
   const res = await apiFetch(url, {
     method: 'POST',
