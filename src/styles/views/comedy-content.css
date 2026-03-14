@@ -1,0 +1,81 @@
+/* Comedy (stand-up) transcript content page — same layout as movie/episode */
+
+.comedy-content {
+  min-height: 100vh;
+  padding: 24px 20px;
+  padding-bottom: 56px;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(31, 41, 55, 0.6) 0, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 50% 120%, rgba(21, 26, 34, 0.5) 0, transparent 50%),
+    var(--fe-bg-base);
+  color: var(--fe-text-primary);
+  font-family: var(--fe-font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.comedy-content__header {
+  padding: 0 !important;
+  height: auto !important;
+  margin-bottom: 24px;
+}
+
+.comedy-content__main {
+  padding: 0 !important;
+}
+
+.comedy-content__content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 !important;
+}
+
+.comedy-content__hero {
+  margin-bottom: 1.5rem;
+}
+
+.comedy-content__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--fe-text-primary);
+}
+
+.comedy-content__meta {
+  color: var(--el-text-color-secondary);
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.comedy-content__desc {
+  font-size: 0.9rem;
+  color: var(--el-text-color-regular);
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .comedy-content {
+    padding: 16px 12px;
+    padding-bottom: 52px;
+  }
+
+  .comedy-content__header {
+    margin-bottom: 16px;
+  }
+
+  .comedy-content__content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .comedy-content {
+    padding: 14px 12px;
+    padding-bottom: 52px;
+  }
+
+  .comedy-content__header {
+    margin-bottom: 14px;
+  }
+}

@@ -19,6 +19,12 @@
         :to="to('/series')"
       />
       <HomeCard
+        :title="t.home.cardComedy"
+        :description="t.home.cardComedyDesc"
+        :icon="Microphone"
+        :to="to('/comedy')"
+      />
+      <HomeCard
         :title="t.home.cardBooks"
         :description="t.home.cardBooksDesc"
         :icon="Reading"
@@ -33,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { VideoCameraFilled, Film, Reading, Headset } from '@element-plus/icons-vue'
+import { VideoCameraFilled, Film, Microphone, Reading, Headset } from '@element-plus/icons-vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
 import HomeHero from '@/features/home/components/HomeHero.vue'

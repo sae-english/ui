@@ -90,7 +90,7 @@ export async function sendMessage(payload: MessagePayload): Promise<SendMessageR
 export type TranslateResult = { translation: string }
 
 /** Content type for linking dictionary entry */
-export type DictionaryContentType = 'MOVIE' | 'SERIES' | 'EPISODE' | 'BOOK' | 'ALBUM'
+export type DictionaryContentType = 'MOVIE' | 'SERIES' | 'EPISODE' | 'BOOK' | 'ALBUM' | 'COMEDY'
 
 /** Dictionary entry DTO */
 export interface DictionaryDto {

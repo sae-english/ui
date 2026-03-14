@@ -106,6 +106,16 @@
   line-height: 1.6;
 }
 
+/* Comedy / stand-up paragraph (type="text") — same size as dialogue text */
+.episode-block__text {
+  margin: 0;
+  padding: clamp(8px, 2vw, 10px) 0;
+  font-size: clamp(0.9375rem, 2.2vw + 0.85rem, 1.1rem);
+  line-height: 1.65;
+  color: var(--fe-text-primary);
+  max-width: 65ch;
+}
+
 @media (max-width: 600px) {
   .episode-block--section .el-divider__text {
     font-size: 0.875rem;
@@ -161,6 +171,11 @@
   .episode-block__transition {
     font-size: 0.9rem;
     padding: 8px 12px;
+  }
+
+  .episode-block__text {
+    font-size: 1rem;
+    line-height: 1.6;
   }
 }
 
@@ -233,5 +248,12 @@
     font-size: 0.9375rem;
     line-height: 1.65;
     padding: 10px 14px;
+  }
+
+  .episode-block__text {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    word-spacing: 0.02em;
   }
 }

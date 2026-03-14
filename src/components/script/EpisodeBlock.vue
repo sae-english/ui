@@ -70,6 +70,15 @@
   >
     <el-text tag="p" type="info" class="episode-block__transition">{{ block.text }}</el-text>
   </div>
+
+  <!-- Text (e.g. comedy stand-up paragraph) -->
+  <div
+    v-else-if="block.type === 'text'"
+    class="episode-block episode-block--text"
+    :data-block-id="blockIdAttr"
+  >
+    <el-text tag="p" class="episode-block__text">{{ block.text }}</el-text>
+  </div>
 </template>
 
 <script setup lang="ts">

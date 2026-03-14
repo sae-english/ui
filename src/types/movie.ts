@@ -44,6 +44,7 @@ export type TranscriptBlock =
     }
   | { type: 'action'; text: string; isUncut?: boolean; id?: string }
   | { type: 'transition'; text: string; id?: string }
+  | { type: 'text'; text: string; id?: string }
 
 export interface EpisodeDto {
   id: number

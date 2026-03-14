@@ -7,6 +7,8 @@ import DictionaryView from '@/features/dictionary/views/DictionaryView.vue'
 import SeriesCatalogView from '@/features/series/views/SeriesCatalogView.vue'
 import SeriesContentView from '@/features/series/views/SeriesContentView.vue'
 import EpisodeView from '@/features/series/views/EpisodeView.vue'
+import ComedyCatalogView from '@/features/comedy/views/ComedyCatalogView.vue'
+import ComedyContentView from '@/features/comedy/views/ComedyContentView.vue'
 import SettingsView from '@/features/settings/views/SettingsView.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -49,6 +51,26 @@ const routes: RouteRecordRaw[] = [
     path: '/series',
     name: 'series-catalog',
     component: SeriesCatalogView,
+  },
+  {
+    path: '/comedy',
+    name: 'comedy-catalog',
+    component: ComedyCatalogView,
+  },
+  {
+    path: '/comedy/:id/content',
+    name: 'comedy-content',
+    component: ComedyContentView,
+    props: true,
+  },
+  {
+    path: '/comedy/:id',
+    name: 'comedy-redirect',
+    redirect: (to) => ({
+      name: 'comedy-content',
+      params: { id: to.params.id },
+      query: to.query,
+    }),
   },
   {
     path: '/series/:seriesId',
