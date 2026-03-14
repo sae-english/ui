@@ -11,6 +11,7 @@ export const hy: Translations = {
       movies: "Filmner",
       series: "Seria",
       dictionary: "Bararan",
+      settings: "Kaxordutyunner",
     },
   },
   home: {
@@ -112,5 +113,14 @@ export const hy: Translations = {
     extendedVersion: "layn seriayy",
     movie: "Film",
     series: "Seria",
+  },
+  settings: {
+    title: "Kaxordutyunner",
+    subtitle: "Koghmany nerkayutyunner",
+    telegramSending: "Banner yevser Telegram",
+    telegramSendingHint: "Eranov barcrvelov bararanic bannery yevsven Telegram tvyalnerov.",
+    failedLoad: "Chkarogh enq barcrnel kaxordutyunnery",
+    failedSave: "Chkarogh enq pahvel",
+    saved: "Kaxordutyunnery pahvac e",
   },
 };

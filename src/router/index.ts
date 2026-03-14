@@ -7,6 +7,7 @@ import DictionaryView from '@/features/dictionary/views/DictionaryView.vue'
 import SeriesCatalogView from '@/features/series/views/SeriesCatalogView.vue'
 import SeriesContentView from '@/features/series/views/SeriesContentView.vue'
 import EpisodeView from '@/features/series/views/EpisodeView.vue'
+import SettingsView from '@/features/settings/views/SettingsView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -18,6 +19,11 @@ const routes: RouteRecordRaw[] = [
     path: '/dictionary',
     name: 'dictionary',
     component: DictionaryView,
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: SettingsView,
   },
   {
     path: '/movies',

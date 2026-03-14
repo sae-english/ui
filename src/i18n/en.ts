@@ -12,6 +12,7 @@ const en = {
       movies: "Movies",
       series: "Series",
       dictionary: "Dictionary",
+      settings: "Settings",
     },
   },
   home: {
@@ -113,6 +114,15 @@ const en = {
     extendedVersion: "extended version",
     movie: "Movie",
     series: "Series",
+  },
+  settings: {
+    title: "Settings",
+    subtitle: "Application preferences",
+    telegramSending: "Send words to Telegram",
+    telegramSendingHint: "When enabled, words from the dictionary are sent to your Telegram on a schedule.",
+    failedLoad: "Failed to load settings",
+    failedSave: "Failed to save",
+    saved: "Settings saved",
   },
 } as const;
 

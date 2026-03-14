@@ -194,3 +194,23 @@ export async function translate(
   if (!res.ok) throw new Error('Failed to translate text')
   return res.json()
 }
+
+// --- Settings (backend: app_setting table) ---
+
+export type TelegramSendingSetting = { enabled: boolean }
+
+export async function getTelegramSendingEnabled(): Promise<TelegramSendingSetting> {
+  const res = await apiFetch(`${baseUrl()}/api/settings/telegram-sending`)
+  if (!res.ok) throw new Error('Failed to load settings')
+  return res.json()
+}
+
+export async function setTelegramSendingEnabled(enabled: boolean): Promise<TelegramSendingSetting> {
+  const res = await apiFetch(`${baseUrl()}/api/settings/telegram-sending`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ enabled }),
+  })
+  if (!res.ok) throw new Error('Failed to save settings')
+  return res.json()
+}
