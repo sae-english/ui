@@ -6,7 +6,7 @@ type StringValues<T> = { [K in keyof T]: T[K] extends object ? StringValues<T[K]
 
 const en = {
   app: {
-    title: "English Movies",
+    title: "SAE Polyglot",
     nav: {
       home: "Home",
       movies: "Movies",
@@ -15,7 +15,7 @@ const en = {
     },
   },
   home: {
-    heroTitle: "English Movies",
+    heroTitle: "SAE Polyglot",
     heroTagline: "Learn English through what you love",
     cardMovies: "Movies",
     cardMoviesDesc: "Scripts, dialogues, translations. Pick a movie and start practicing.",

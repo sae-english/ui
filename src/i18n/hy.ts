@@ -5,7 +5,7 @@ import type { Translations } from "./en";
 
 export const hy: Translations = {
   app: {
-    title: "English Movies",
+    title: "SAE Polyglot",
     nav: {
       home: "Glkhavor",
       movies: "Filmner",
@@ -14,7 +14,7 @@ export const hy: Translations = {
     },
   },
   home: {
-    heroTitle: "English Movies",
+    heroTitle: "SAE Polyglot",
     heroTagline: "Sovorel angleren inch sirets",
     cardMovies: "Filmner",
     cardMoviesDesc: "Skriptner, dialogner, targmanutyunner. Yntreq filmy yev sksir.",
