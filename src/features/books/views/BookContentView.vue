@@ -22,7 +22,7 @@
             <nav v-if="sections.length" class="book-content__toc" aria-label="Table of contents">
               <h2 class="book-content__toc-title">{{ t.bookContent.tableOfContents }}</h2>
               <ul class="book-content__toc-list">
-                <li v-for="s in sections" :key="s.id || s.title" class="book-content__toc-item">
+                <li v-for="(s, i) in sections" :key="s.id ?? s.title ?? i" class="book-content__toc-item">
                   <a
                     v-if="s.id"
                     :href="'#' + s.id"
