@@ -31,6 +31,7 @@ const navItems = computed(() => [
   { path: "/movies", label: t.value.app.nav.movies },
   { path: "/series", label: t.value.app.nav.series },
   { path: "/comedy", label: t.value.app.nav.comedy },
+  { path: "/books", label: t.value.app.nav.books },
   { path: "/dictionary", label: t.value.app.nav.dictionary },
 ]);
 

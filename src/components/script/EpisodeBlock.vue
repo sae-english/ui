@@ -3,6 +3,7 @@
   <div
     v-if="block.type === 'section'"
     class="episode-block episode-block--section"
+    :id="blockIdAttr"
     :data-block-id="blockIdAttr"
   >
     <el-divider content-position="center">
@@ -16,6 +17,7 @@
   <div
     v-else-if="block.type === 'scene'"
     class="episode-block episode-block--scene"
+    :id="blockIdAttr"
     :data-block-id="blockIdAttr"
   >
     <el-card shadow="never" class="episode-block__scene-card" body-style="padding: 10px 14px">
@@ -30,6 +32,7 @@
   <div
     v-else-if="block.type === 'dialogue'"
     class="episode-block episode-block--dialogue"
+    :id="blockIdAttr"
     :data-block-id="blockIdAttr"
   >
     <el-card
@@ -55,6 +58,7 @@
   <div
     v-else-if="block.type === 'action'"
     class="episode-block episode-block--action"
+    :id="blockIdAttr"
     :data-block-id="blockIdAttr"
   >
     <el-text tag="p" type="info" class="episode-block__action">
@@ -66,6 +70,7 @@
   <div
     v-else-if="block.type === 'transition'"
     class="episode-block episode-block--transition"
+    :id="blockIdAttr"
     :data-block-id="blockIdAttr"
   >
     <el-text tag="p" type="info" class="episode-block__transition">{{ block.text }}</el-text>
@@ -75,6 +80,7 @@
   <div
     v-else-if="block.type === 'text'"
     class="episode-block episode-block--text"
+    :id="blockIdAttr"
     :data-block-id="blockIdAttr"
   >
     <el-card shadow="never" class="episode-block__dialogue episode-block__text-card" body-style="padding: 16px 20px">

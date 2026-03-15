@@ -13,5 +13,8 @@ export const CATALOG_SERIES_LIMIT = 20;
 /** Number of comedy specials to load in the catalog */
 export const CATALOG_COMEDY_LIMIT = 20;
 
+/** Number of books to load in the catalog */
+export const CATALOG_BOOKS_LIMIT = 20;
+
 /** Root margin for infinite scroll trigger (intersection observer) */
 export const INFINITE_SCROLL_ROOT_MARGIN = "200px";

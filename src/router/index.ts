@@ -9,6 +9,8 @@ import SeriesContentView from '@/features/series/views/SeriesContentView.vue'
 import EpisodeView from '@/features/series/views/EpisodeView.vue'
 import ComedyCatalogView from '@/features/comedy/views/ComedyCatalogView.vue'
 import ComedyContentView from '@/features/comedy/views/ComedyContentView.vue'
+import BookCatalogView from '@/features/books/views/BookCatalogView.vue'
+import BookContentView from '@/features/books/views/BookContentView.vue'
 import SettingsView from '@/features/settings/views/SettingsView.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -68,6 +70,26 @@ const routes: RouteRecordRaw[] = [
     name: 'comedy-redirect',
     redirect: (to) => ({
       name: 'comedy-content',
+      params: { id: to.params.id },
+      query: to.query,
+    }),
+  },
+  {
+    path: '/books',
+    name: 'book-catalog',
+    component: BookCatalogView,
+  },
+  {
+    path: '/books/:id/content',
+    name: 'book-content',
+    component: BookContentView,
+    props: true,
+  },
+  {
+    path: '/books/:id',
+    name: 'book-redirect',
+    redirect: (to) => ({
+      name: 'book-content',
       params: { id: to.params.id },
       query: to.query,
     }),

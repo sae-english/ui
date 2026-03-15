@@ -28,6 +28,7 @@
         :title="t.home.cardBooks"
         :description="t.home.cardBooksDesc"
         :icon="Reading"
+        :to="to('/books')"
       />
       <HomeCard
         :title="t.home.cardSongs"

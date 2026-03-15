@@ -106,9 +106,14 @@
   line-height: 1.6;
 }
 
-/* Comedy / stand-up paragraph (type="text") — uses same card as dialogue for consistency */
+/* Comedy / book paragraph (type="text") — uses same card as dialogue for consistency */
 .episode-block__text-card .el-card__body {
   padding: 16px 20px;
+}
+
+/* Preserve line breaks and indentation in book/comedy text paragraphs */
+.episode-block__text-card .episode-block__dialogue-text {
+  white-space: pre-line;
 }
 
 @media (max-width: 600px) {

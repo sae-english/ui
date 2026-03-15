@@ -1,0 +1,120 @@
+/* Book content page — same layout as comedy/movie */
+
+.book-content {
+  min-height: 100vh;
+  padding: 24px 20px;
+  padding-bottom: 56px;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(31, 41, 55, 0.6) 0, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 50% 120%, rgba(21, 26, 34, 0.5) 0, transparent 50%),
+    var(--fe-bg-base);
+  color: var(--fe-text-primary);
+  font-family: var(--fe-font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.book-content__header {
+  padding: 0 !important;
+  height: auto !important;
+  margin-bottom: 24px;
+}
+
+.book-content__main {
+  padding: 0 !important;
+}
+
+.book-content__content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 !important;
+}
+
+.book-content__hero {
+  margin-bottom: 1.5rem;
+}
+
+.book-content__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--fe-text-primary);
+}
+
+.book-content__meta {
+  color: var(--el-text-color-secondary);
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.book-content__desc {
+  font-size: 0.9rem;
+  color: var(--el-text-color-regular);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Table of contents — chapter navigation */
+.book-content__toc {
+  margin-top: 1.25rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+
+.book-content__toc-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--fe-text-primary);
+}
+
+.book-content__toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.book-content__toc-item {
+  margin: 0.25rem 0;
+}
+
+.book-content__toc-link {
+  color: var(--el-color-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.book-content__toc-link:hover {
+  text-decoration: underline;
+}
+
+.book-content__toc-plain {
+  font-size: 0.9rem;
+  color: var(--el-text-color-regular);
+}
+
+@media (max-width: 600px) {
+  .book-content {
+    padding: 16px 12px;
+    padding-bottom: 52px;
+  }
+
+  .book-content__header {
+    margin-bottom: 16px;
+  }
+
+  .book-content__content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-content {
+    padding: 14px 12px;
+    padding-bottom: 52px;
+  }
+
+  .book-content__header {
+    margin-bottom: 14px;
+  }
+}
