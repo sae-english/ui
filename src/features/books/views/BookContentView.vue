@@ -23,7 +23,11 @@
               <el-collapse-item :title="t.bookContent.tableOfContents" name="toc">
                 <nav aria-label="Table of contents">
                   <ul class="book-content__toc-list">
-                    <li v-for="s in sections" :key="s.id || s.title" class="book-content__toc-item">
+                    <li
+                      v-for="(s, i) in sections"
+                      :key="s.id ?? s.title ?? i"
+                      class="book-content__toc-item"
+                    >
                       <a
                         v-if="s.id"
                         :href="'#' + s.id"
@@ -112,7 +116,12 @@ const contentKey = computed(() => firstPage.value?.contentKey ?? undefined)
 const hasLoadedOnce = computed(() => (query.data.value?.pages?.length ?? 0) > 0)
 
 /** Sections (chapters) for TOC — from first page toc (all chapters), so all chapters are visible immediately */
-const sections = computed<TranscriptBlock[]>(() => {
+type TocSection = {
+  id?: string | null
+  title?: string | null
+}
+
+const sections = computed<TocSection[]>(() => {
   const toc = firstPage.value?.toc ?? []
   return toc
     .map(
@@ -121,7 +130,7 @@ const sections = computed<TranscriptBlock[]>(() => {
           type: 'section',
           id: item.id,
           title: item.title,
-        } as TranscriptBlock)
+        } as TocSection)
     )
     .filter((b) => (b as { id?: string }).id?.trim())
 })

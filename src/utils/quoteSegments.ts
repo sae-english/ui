@@ -9,9 +9,10 @@ export function getQuoteSegments(text: string): QuoteSegment[] {
   const parts = text.split('"')
   const out: QuoteSegment[] = []
   for (let i = 0; i < parts.length; i++) {
-    const text = parts[i]
-    if (text.length === 0 && i > 0 && i < parts.length - 1) continue
-    out.push({ type: i % 2 === 1 ? 'quote' : 'narrative', text })
+    const segmentText = parts[i]
+    if (segmentText == null) continue
+    if (segmentText.length === 0 && i > 0 && i < parts.length - 1) continue
+    out.push({ type: i % 2 === 1 ? 'quote' : 'narrative', text: segmentText })
   }
   return out
 }
