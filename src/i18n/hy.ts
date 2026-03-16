@@ -78,8 +78,9 @@ export const hy: Translations = {
     contentNotFound: "Gry chgtav",
     failedLoadContent: "Chkarogh enq barcrnel gry",
     tableOfContents: "Bashdarband",
-     bookmarkSaved: "Bookmark pahvel e",
-     failedSaveBookmark: "Chkarogh enq pahvel bookmark@",
+    bookmarkSaved: "Bookmark pahvel e",
+    failedSaveBookmark: "Chkarogh enq pahvel bookmark@",
+    goToBookmark: "Gnel bookmark-in",
   },
   seriesContent: {
     backToSeries: "Vapshe seria",
@@ -152,6 +153,7 @@ export const hy: Translations = {
     series: "Seria",
     comedy: "Komedia",
     book: "Gr",
+    saveBookmark: "Pahvel bookmark@",
   },
   settings: {
     title: "Kaxordutyunner",

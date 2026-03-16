@@ -10,9 +10,7 @@
           :title="t.bookContent.goToBookmark"
           @click="goToBookmark"
         >
-          <el-icon :size="18">
-            <Star />
-          </el-icon>
+          ★
         </button>
       </div>
     </el-header>
@@ -94,7 +92,6 @@
 
 <script setup lang="ts">
 import { ElCollapse, ElCollapseItem } from "element-plus";
-import { Star } from "@element-plus/icons-vue";
 import { useRoute, useRouter } from "vue-router";
 import BackButton from "@/components/ui/BackButton.vue";
 import { useLanguage } from "@/composables/useLanguage";
@@ -131,10 +128,11 @@ function goBack() {
 }
 
 function goToBookmark() {
-  сonsole.log("test ----- ", bookmark.value);
-  if (!bookmark.value) return;
-  const { blockId, sectionId } = bookmark.value;
+  const value = bookmark?.value;
+  if (!value) return;
+  const { blockId, sectionId } = value;
   if (!blockId) return;
+
   const bookId = id.value;
   const queryObj = route.query;
 

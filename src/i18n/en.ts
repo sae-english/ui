@@ -154,6 +154,7 @@ const en = {
     series: "Series",
     comedy: "Comedy",
     book: "Book",
+    saveBookmark: "Save bookmark",
   },
   settings: {
     title: "Settings",
