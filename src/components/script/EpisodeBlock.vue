@@ -84,7 +84,24 @@
     :data-block-id="blockIdAttr"
     :class="{ 'episode-block--first-paragraph': block.firstInSection }"
   >
-    <el-card shadow="never" class="episode-block__dialogue episode-block__text-card" body-style="padding: 16px 20px">
+    <el-card
+      shadow="never"
+      class="episode-block__dialogue episode-block__text-card"
+      body-style="padding: 16px 20px 14px"
+    >
+      <div v-if="showBookmarkButton" class="episode-block__toolbar">
+        <button
+          type="button"
+          class="episode-block__bookmark-btn"
+          :class="{ 'episode-block__bookmark-btn--active': isActiveBookmark }"
+          :title="t.common.saveBookmark"
+          @click.stop="handleBookmarkClick"
+        >
+          <el-icon :size="14">
+            <Star />
+          </el-icon>
+        </button>
+      </div>
       <el-text tag="p" class="episode-block__dialogue-text">
         <!-- Если есть spans (книга) — рендерим их, иначе старое поведение -->
         <template v-if="(block as any).spans && (block as any).spans.length">
@@ -113,11 +130,18 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { Star } from '@element-plus/icons-vue'
 import { useI18n } from '@/i18n'
 import { getQuoteSegments } from '@/utils/quoteSegments'
+import { upsertBookBookmark, getBookBookmarkLocation } from '@/features/books/api'
+import { useBookBookmarkStore } from '@/features/books/bookmarkStore'
 import type { TranscriptBlock } from '@/types/movie'
 
 const { t } = useI18n()
+const route = useRoute()
+const bookmarkStore = useBookBookmarkStore()
 
 const props = withDefaults(
   defineProps<{
@@ -138,6 +162,55 @@ const textSegments = computed(() => {
   if (props.block.type !== 'text') return []
   return getQuoteSegments(props.block.text)
 })
+
+const showBookmarkButton = computed(() => {
+  const routeName = route.name
+  if (routeName !== 'book-content' && routeName !== 'book-chapter') return false
+  return !!blockIdAttr.value
+})
+
+const isActiveBookmark = computed(() => {
+  const blockId = blockIdAttr.value
+  if (!blockId) return false
+  const rawId = route.params.id
+  const bookId = rawId != null ? Number(rawId) : NaN
+  if (!bookId || Number.isNaN(bookId)) return false
+  return bookmarkStore.byBookId[bookId]?.blockId === blockId
+})
+
+function handleBookmarkClick() {
+  const blockId = blockIdAttr.value
+  if (!blockId) return
+
+  const routeName = route.name
+  if (routeName !== 'book-content' && routeName !== 'book-chapter') return
+
+  const rawId = route.params.id
+  const bookId = rawId != null ? Number(rawId) : NaN
+  if (!bookId || Number.isNaN(bookId)) return
+
+  ;(async () => {
+    try {
+      await upsertBookBookmark(bookId, blockId)
+      // После сохранения сразу подтянем sectionId с бэка
+      try {
+        const loc = await getBookBookmarkLocation(bookId)
+        if (loc) {
+          bookmarkStore.setBookmark(bookId, loc.blockId, loc.sectionId)
+        } else {
+          bookmarkStore.setBookmark(bookId, blockId)
+        }
+      } catch (e) {
+        // если запрос за location упал — всё равно оставим хотя бы blockId в сторе
+        bookmarkStore.setBookmark(bookId, blockId)
+      }
+      ElMessage.success(t.value.bookContent.bookmarkSaved)
+    } catch (err) {
+      console.error('Failed to save book bookmark', err)
+      ElMessage.error(t.value.bookContent.failedSaveBookmark)
+    }
+  })()
+}
 </script>
 
 <style scoped>
@@ -151,5 +224,41 @@ const textSegments = computed(() => {
 
 .episode-block--first-paragraph .episode-block__dialogue-text {
   margin-top: 8px;
+}
+
+.episode-block__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.episode-block__bookmark-btn {
+  border: none;
+  background: transparent;
+  color: var(--el-text-color-secondary);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1;
+  opacity: 0.6;
+  transition:
+    opacity 0.12s ease-out,
+    transform 0.08s ease-out,
+    color 0.12s ease-out;
+}
+
+.episode-block__bookmark-btn:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  color: var(--el-color-primary);
+}
+
+.episode-block__bookmark-btn--active {
+  opacity: 1;
+  color: #facc15;
+}
+
+.episode-block__bookmark-btn :deep(.el-icon) {
+  vertical-align: middle;
 }
 </style>

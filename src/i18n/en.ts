@@ -79,6 +79,9 @@ const en = {
     contentNotFound: "Book not found",
     failedLoadContent: "Failed to load book",
     tableOfContents: "Table of contents",
+    bookmarkSaved: "Bookmark saved",
+    failedSaveBookmark: "Failed to save bookmark",
+    goToBookmark: "Go to bookmark",
   },
   seriesContent: {
     backToSeries: "Back to series",

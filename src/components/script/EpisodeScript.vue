@@ -7,6 +7,7 @@
         :block="block"
         :index="index"
         :highlight-quotes="highlightQuotes"
+        :bookmark-block-id="bookmarkBlockId"
       />
     </el-space>
   </div>
@@ -20,7 +21,8 @@ withDefaults(
   defineProps<{
     blocks: TranscriptBlock[]
     highlightQuotes?: boolean
+    bookmarkBlockId?: string | null
   }>(),
-  { highlightQuotes: false }
+  { highlightQuotes: false, bookmarkBlockId: undefined }
 )
 </script>

@@ -78,6 +78,8 @@ export const hy: Translations = {
     contentNotFound: "Gry chgtav",
     failedLoadContent: "Chkarogh enq barcrnel gry",
     tableOfContents: "Bashdarband",
+     bookmarkSaved: "Bookmark pahvel e",
+     failedSaveBookmark: "Chkarogh enq pahvel bookmark@",
   },
   seriesContent: {
     backToSeries: "Vapshe seria",

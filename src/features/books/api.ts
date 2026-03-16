@@ -44,6 +44,41 @@ export async function getBookContentPage(
   return res.json()
 }
 
+export async function getBookBookmark(id: number): Promise<string | null> {
+  const res = await apiFetch(booksApiUrl(`/${id}/bookmark`))
+  if (res.status === 404) return null
+  if (!res.ok) throw new Error('Failed to load book bookmark')
+  const data = await res.json()
+  return typeof data?.blockId === 'string' ? data.blockId : null
+}
+
+export async function getBookBookmarkLocation(
+  id: number,
+): Promise<{ blockId: string; sectionId: string | null } | null> {
+  const res = await apiFetch(booksApiUrl(`/${id}/bookmark/location`))
+  if (res.status === 404) return null
+  if (!res.ok) throw new Error('Failed to load book bookmark location')
+  const data = await res.json()
+  if (typeof data?.blockId !== 'string') return null
+  return {
+    blockId: data.blockId,
+    sectionId: typeof data.sectionId === 'string' ? data.sectionId : null,
+  }
+}
+
+export async function upsertBookBookmark(id: number, blockId: string): Promise<string | null> {
+  const trimmed = blockId.trim()
+  if (!trimmed) return null
+  const res = await apiFetch(booksApiUrl(`/${id}/bookmark`), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ blockId: trimmed }),
+  })
+  if (!res.ok) throw new Error('Failed to save book bookmark')
+  const data = await res.json()
+  return typeof data?.blockId === 'string' ? data.blockId : null
+}
+
 /** Convert BookContentBlockDto to TranscriptBlock for EpisodeScript (section, dialogue, text) */
 export function bookBlockToTranscriptBlock(b: BookContentBlockDto): TranscriptBlock {
   const type = (b.type ?? 'text').toLowerCase()

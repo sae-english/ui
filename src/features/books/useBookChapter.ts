@@ -1,4 +1,4 @@
-import { computed, nextTick, watch } from 'vue'
+import { computed, nextTick, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuery } from '@tanstack/vue-query'
 import { ElMessage } from 'element-plus'
@@ -7,6 +7,7 @@ import type { BookContentBlockDto, BookContentPageDto, BookTocItem } from '@/fea
 import type { TranscriptBlock } from '@/types/movie'
 import { DEFAULT_PAGE_SIZE } from '@/constants/defaults'
 import { useI18n } from '@/i18n'
+import { useBookBookmarkStore } from '@/features/books/bookmarkStore'
 
 type ChapterData = {
   meta: BookContentPageDto
@@ -18,6 +19,7 @@ export function useBookChapter() {
   const route = useRoute()
   const router = useRouter()
   const { t } = useI18n()
+  const bookmarkStore = useBookBookmarkStore()
 
   const bookId = computed(() => {
     const p = route.params.id
@@ -126,12 +128,35 @@ export function useBookChapter() {
       t.value.bookContent.failedLoadContent,
   )
 
+  const bookmark = computed(() => {
+    const id = bookId.value
+    if (!id || isNaN(id)) return null
+    return bookmarkStore.byBookId[id] ?? null
+  })
+
+  onMounted(() => {
+    const id = bookId.value
+    if (id && !isNaN(id)) {
+      bookmarkStore.loadBookmark(id).catch((err) => {
+        console.error('Failed to load book bookmark', err)
+      })
+    }
+  })
+
   // При смене главы поднимаем скролл к началу страницы
   watch(
-    () => [sectionId.value, query.isSuccess.value, chapterBlocks.value.length] as const,
-    async ([sec, ok, len]) => {
+    () => [sectionId.value, query.isSuccess.value, chapterBlocks.value.length, route.hash] as const,
+    async ([sec, ok, len, hash]) => {
       if (!sec || !ok || !len) return
       await nextTick()
+      const idFromHash = hash?.replace(/^#/, '')
+      if (idFromHash) {
+        const el = document.getElementById(idFromHash)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          return
+        }
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' })
     },
   )
@@ -148,6 +173,7 @@ export function useBookChapter() {
       name: 'book-chapter',
       params: { id: bookId.value, sectionId: id },
       query: route.query,
+      hash: undefined,
     })
   }
 
@@ -163,6 +189,7 @@ export function useBookChapter() {
     prevSection,
     nextSection,
     errorMessage,
+    bookmark,
     goToSection,
   }
 }

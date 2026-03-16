@@ -1,8 +1,9 @@
-import { computed, nextTick, watch } from 'vue'
+import { computed, nextTick, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useInfiniteQuery } from '@tanstack/vue-query'
 import { ElMessage } from 'element-plus'
 import { getBookContentPage, bookBlockToTranscriptBlock } from '@/features/books/api'
+import { useBookBookmarkStore } from '@/features/books/bookmarkStore'
 import type { BookContentPageDto, BookTocItem } from '@/features/books/types'
 import type { TranscriptBlock } from '@/types/movie'
 import { DEFAULT_PAGE_SIZE } from '@/constants/defaults'
@@ -11,6 +12,7 @@ import { useI18n } from '@/i18n'
 export function useBookContent() {
   const route = useRoute()
   const { t } = useI18n()
+  const bookmarkStore = useBookBookmarkStore()
 
   const id = computed(() => {
     const p = route.params.id
@@ -57,6 +59,21 @@ export function useBookContent() {
       t.value.bookContent.failedLoadContent
   )
 
+  const bookmark = computed(() => {
+    const bookId = id.value
+    if (!bookId || isNaN(bookId)) return null
+    return bookmarkStore.byBookId[bookId] ?? null
+  })
+
+  onMounted(() => {
+    const bookId = id.value
+    if (bookId && !isNaN(bookId)) {
+      bookmarkStore.loadBookmark(bookId).catch((err) => {
+        console.error('Failed to load book bookmark', err)
+      })
+    }
+  })
+
   // После первой загрузки пытаемся проскроллить к hash, если он есть
   watch(
     () => [query.isSuccess.value, query.data.value?.pages?.length, route.hash] as const,
@@ -87,6 +104,7 @@ export function useBookContent() {
     hasLoadedOnce,
     sections,
     errorMessage,
+    bookmark,
   }
 }
 
