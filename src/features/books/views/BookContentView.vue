@@ -132,7 +132,6 @@ const sections = computed<TocSection[]>(() => {
     .map(
       (item) =>
         ({
-          type: 'section',
           id: item.id,
           title: item.title,
         } as TocSection)
@@ -145,33 +144,6 @@ const errorMessage = computed(
     (query.error.value as Error | null)?.message ??
     t.value.bookContent.failedLoadContent
 )
-
-function scrollToSection(sectionId: string) {
-  const tryScroll = () => {
-    const el = document.getElementById(sectionId)
-    if (!el) return false
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    router.replace({ ...route, hash: '#' + sectionId }).catch(() => {})
-    return true
-  }
-
-  // Если блок уже загружен — просто скроллим.
-  if (tryScroll()) return
-
-  // Если нужная секция ещё не подгружена, пытаемся подгрузить страницы, пока она не появится
-  const loadUntilFound = async () => {
-    // Защита от бесконечного цикла: максимум N шагов (по количеству оставшихся страниц)
-    let safety = 100
-    while (safety-- > 0) {
-      if (!query.hasNextPage.value) break
-      await query.fetchNextPage()
-      await nextTick()
-      if (tryScroll()) break
-    }
-  }
-
-  void loadUntilFound()
-}
 
 /** After first page loads, scroll to hash if present */
 watch(

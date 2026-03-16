@@ -72,7 +72,7 @@
               text
               @click="goToSection(prevSection.id!)"
             >
-              ← {{ t.bookContent.prevChapter }}: {{ prevSection.title }}
+              ← {{ prevSection.title }}
             </el-button>
 
             <el-button
@@ -81,7 +81,7 @@
               type="primary"
               @click="goToSection(nextSection.id!)"
             >
-              {{ t.bookContent.nextChapter }}: {{ nextSection.title }} →
+              {{ nextSection.title }} →
             </el-button>
           </div>
         </div>
@@ -204,17 +204,17 @@ const blocks = computed<TranscriptBlock[]>(() =>
   chapterBlocks.value.map((b) => bookBlockToTranscriptBlock(b)),
 )
 
-const currentSection = computed<TocItem | null>(() => {
+const currentSection = computed<TocItem | null | undefined>(() => {
   return sections.value.find((s) => s.id === sectionId.value) ?? null
 })
 
-const prevSection = computed<TocItem | null>(() => {
+const prevSection = computed<TocItem | null | undefined>(() => {
   const idx = sections.value.findIndex((s) => s.id === sectionId.value)
   if (idx > 0) return sections.value[idx - 1]
   return null
 })
 
-const nextSection = computed<TocItem | null>(() => {
+const nextSection = computed<TocItem | null | undefined>(() => {
   const idx = sections.value.findIndex((s) => s.id === sectionId.value)
   if (idx >= 0 && idx < sections.value.length - 1) return sections.value[idx + 1]
   return null
