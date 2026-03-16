@@ -1,5 +1,5 @@
 import { computed, nextTick, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useInfiniteQuery } from '@tanstack/vue-query'
 import { ElMessage } from 'element-plus'
 import { getBookContentPage, bookBlockToTranscriptBlock } from '@/features/books/api'
@@ -10,7 +10,6 @@ import { useI18n } from '@/i18n'
 
 export function useBookContent() {
   const route = useRoute()
-  const router = useRouter()
   const { t } = useI18n()
 
   const id = computed(() => {

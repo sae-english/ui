@@ -108,14 +108,16 @@ export function useBookChapter() {
 
   const prevSection = computed<BookTocItem | null>(() => {
     const idx = sections.value.findIndex((s) => s.id === sectionId.value)
-    if (idx > 0) return sections.value[idx - 1]
-    return null
+    if (idx <= 0) return null
+    const candidate = sections.value[idx - 1]
+    return candidate ?? null
   })
 
   const nextSection = computed<BookTocItem | null>(() => {
     const idx = sections.value.findIndex((s) => s.id === sectionId.value)
-    if (idx >= 0 && idx < sections.value.length - 1) return sections.value[idx + 1]
-    return null
+    if (idx < 0 || idx >= sections.value.length - 1) return null
+    const candidate = sections.value[idx + 1]
+    return candidate ?? null
   })
 
   const errorMessage = computed(

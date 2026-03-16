@@ -33,7 +33,7 @@
                         :to="{
                           name: 'book-chapter',
                           params: { id, sectionId: s.id },
-                          query: route.query,
+                          query: $route.query,
                         }"
                         class="book-content__toc-link"
                       >
@@ -81,9 +81,11 @@ const { id, query, blocks, firstPage, contentKey, hasLoadedOnce, sections, error
   useBookContent()
 
 function goBack() {
-  router.push({
-    name: 'book-catalog',
-    query: navQuery(),
-  })
+  // возвращаемся на каталог книг
+  window.history.length > 1
+    ? window.history.back()
+    : (location.href = `${location.origin}${location.pathname}#/books?${new URLSearchParams(
+        navQuery(),
+      ).toString()}`)
 }
 </script>
