@@ -101,7 +101,7 @@ import BackButton from '@/components/ui/BackButton.vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
 import { getBookContentPage, bookBlockToTranscriptBlock } from '@/features/books/api'
-import type { BookContentBlockDto, BookContentPageDto } from '@/features/books/types'
+import type { BookContentBlockDto, BookContentPageDto, BookTocItem } from '@/features/books/types'
 import type { TranscriptBlock } from '@/types/movie'
 import ContentLoader from '@/components/ui/ContentLoader.vue'
 import EpisodeScript from '@/components/script/EpisodeScript.vue'
@@ -120,11 +120,9 @@ const bookId = computed(() => {
 
 const sectionId = computed(() => String(route.params.sectionId ?? ''))
 
-type TocItem = { id?: string | null; title?: string | null }
-
 type ChapterData = {
   meta: BookContentPageDto
-  toc: TocItem[]
+  toc: BookTocItem[]
   blocks: BookContentBlockDto[]
 }
 
@@ -204,17 +202,17 @@ const blocks = computed<TranscriptBlock[]>(() =>
   chapterBlocks.value.map((b) => bookBlockToTranscriptBlock(b)),
 )
 
-const currentSection = computed<TocItem | null | undefined>(() => {
+const currentSection = computed<BookTocItem | null>(() => {
   return sections.value.find((s) => s.id === sectionId.value) ?? null
 })
 
-const prevSection = computed<TocItem | null | undefined>(() => {
+const prevSection = computed<BookTocItem | null>(() => {
   const idx = sections.value.findIndex((s) => s.id === sectionId.value)
   if (idx > 0) return sections.value[idx - 1]
   return null
 })
 
-const nextSection = computed<TocItem | null | undefined>(() => {
+const nextSection = computed<BookTocItem | null>(() => {
   const idx = sections.value.findIndex((s) => s.id === sectionId.value)
   if (idx >= 0 && idx < sections.value.length - 1) return sections.value[idx + 1]
   return null

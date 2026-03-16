@@ -51,3 +51,6 @@ export interface BookContentPageDto {
   nextCursor: string | null
   hasMore: boolean
 }
+
+/** Single TOC item (chapter) derived from BookContentPageDto.toc */
+export type BookTocItem = NonNullable<NonNullable<BookContentPageDto['toc']>>[number]
