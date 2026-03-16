@@ -75,8 +75,8 @@ async function loadBooks() {
 
 function openBook(book: BookDto) {
   router.push({
-    name: 'book-content',
-    params: { id: String(book.id) },
+    name: 'book-chapter',
+    params: { id: String(book.id), sectionId: 'start' },
     query: navQuery(),
     state: { book: JSON.parse(JSON.stringify(book)) },
   })

@@ -28,12 +28,17 @@
                       :key="s.id ?? s.title ?? i"
                       class="book-content__toc-item"
                     >
-                      <a
+                      <RouterLink
                         v-if="s.id"
-                        :href="'#' + s.id"
+                        :to="{
+                          name: 'book-chapter',
+                          params: { id, sectionId: s.id },
+                          query: route.query,
+                        }"
                         class="book-content__toc-link"
-                        @click.prevent="scrollToSection(s.id)"
-                      >{{ s.title || s.id }}</a>
+                      >
+                        {{ s.title || s.id }}
+                      </RouterLink>
                       <span v-else class="book-content__toc-plain">{{ s.title }}</span>
                     </li>
                   </ul>

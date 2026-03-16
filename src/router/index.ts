@@ -11,6 +11,7 @@ import ComedyCatalogView from '@/features/comedy/views/ComedyCatalogView.vue'
 import ComedyContentView from '@/features/comedy/views/ComedyContentView.vue'
 import BookCatalogView from '@/features/books/views/BookCatalogView.vue'
 import BookContentView from '@/features/books/views/BookContentView.vue'
+import BookChapterView from '@/features/books/views/BookChapterView.vue'
 import SettingsView from '@/features/settings/views/SettingsView.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -83,6 +84,12 @@ const routes: RouteRecordRaw[] = [
     path: '/books/:id/content',
     name: 'book-content',
     component: BookContentView,
+    props: true,
+  },
+  {
+    path: '/books/:id/chapters/:sectionId',
+    name: 'book-chapter',
+    component: BookChapterView,
     props: true,
   },
   {
