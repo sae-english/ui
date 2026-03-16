@@ -116,6 +116,15 @@
   white-space: pre-line;
 }
 
+/* Direct speech (quoted text) in book paragraphs — subtle emphasis */
+.episode-block__quote {
+  font-style: italic;
+  color: var(--el-text-color-regular);
+  border-left: 2px solid var(--fe-accent-soft, var(--el-color-primary-light-5));
+  padding-left: 0.35em;
+  margin-left: 0.1em;
+}
+
 @media (max-width: 600px) {
   .episode-block--section .el-divider__text {
     font-size: 0.875rem;

@@ -30,6 +30,12 @@
   padding: 0 !important;
 }
 
+.book-content__load-more {
+  max-width: 720px;
+  margin: 24px auto 0;
+  text-align: center;
+}
+
 .book-content__hero {
   margin-bottom: 1.5rem;
 }

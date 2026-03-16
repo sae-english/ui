@@ -6,6 +6,7 @@
         :key="index"
         :block="block"
         :index="index"
+        :highlight-quotes="highlightQuotes"
       />
     </el-space>
   </div>
@@ -15,7 +16,11 @@
 import type { TranscriptBlock } from '@/types/movie'
 import EpisodeBlock from '@/components/script/EpisodeBlock.vue'
 
-defineProps<{
-  blocks: TranscriptBlock[]
-}>()
+withDefaults(
+  defineProps<{
+    blocks: TranscriptBlock[]
+    highlightQuotes?: boolean
+  }>(),
+  { highlightQuotes: false }
+)
 </script>

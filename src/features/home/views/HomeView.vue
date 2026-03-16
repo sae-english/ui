@@ -28,7 +28,7 @@
         :title="t.home.cardBooks"
         :description="t.home.cardBooksDesc"
         :icon="Reading"
-        :to="to('/books')"
+        :to="{ name: 'book-catalog', query: navQuery() }"
       />
       <HomeCard
         :title="t.home.cardSongs"
@@ -46,6 +46,6 @@ import { useI18n } from '@/i18n'
 import HomeHero from '@/features/home/components/HomeHero.vue'
 import HomeCard from '@/features/home/components/HomeCard.vue'
 
-const { to } = useLanguage()
+const { to, navQuery } = useLanguage()
 const { t } = useI18n()
 </script>

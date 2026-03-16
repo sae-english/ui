@@ -76,15 +76,37 @@
     <el-text tag="p" type="info" class="episode-block__transition">{{ block.text }}</el-text>
   </div>
 
-  <!-- Text (e.g. comedy stand-up paragraph) — same card as dialogue for visual consistency -->
+  <!-- Text (e.g. comedy stand-up or book paragraph); when highlightQuotes, direct speech in "..." is styled -->
   <div
     v-else-if="block.type === 'text'"
     class="episode-block episode-block--text"
     :id="blockIdAttr"
     :data-block-id="blockIdAttr"
+    :class="{ 'episode-block--first-paragraph': block.firstInSection }"
   >
     <el-card shadow="never" class="episode-block__dialogue episode-block__text-card" body-style="padding: 16px 20px">
-      <el-text tag="p" class="episode-block__dialogue-text">{{ block.text }}</el-text>
+      <el-text tag="p" class="episode-block__dialogue-text">
+        <!-- Если есть spans (книга) — рендерим их, иначе старое поведение -->
+        <template v-if="(block as any).spans && (block as any).spans.length">
+          <span
+            v-for="(span, i) in (block as any).spans"
+            :key="i"
+            :class="{
+              'book-text--italic': span.style === 'italic' || span.style === 'italic-bold',
+              'book-text--bold': span.style === 'bold' || span.style === 'italic-bold',
+            }"
+          >
+            {{ i === 0 ? span.text : ' ' + span.text }}
+          </span>
+        </template>
+        <template v-else-if="highlightQuotes">
+          <template v-for="(seg, i) in textSegments" :key="i">
+            <span v-if="seg.type === 'quote'" class="episode-block__quote">{{ seg.text }}</span>
+            <template v-else>{{ seg.text }}</template>
+          </template>
+        </template>
+        <template v-else>{{ block.text }}</template>
+      </el-text>
     </el-card>
   </div>
 </template>
@@ -92,18 +114,42 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from '@/i18n'
-
-const { t } = useI18n()
+import { getQuoteSegments } from '@/utils/quoteSegments'
 import type { TranscriptBlock } from '@/types/movie'
 
-const props = defineProps<{
-  block: TranscriptBlock
-  index: number
-}>()
+const { t } = useI18n()
+
+const props = withDefaults(
+  defineProps<{
+    block: TranscriptBlock
+    index: number
+    highlightQuotes?: boolean
+  }>(),
+  { highlightQuotes: false }
+)
 
 const blockIdAttr = computed(() => {
   const b = props.block
   if ('id' in b && b.id != null && b.id !== '') return String(b.id)
   return undefined
 })
+
+const textSegments = computed(() => {
+  if (props.block.type !== 'text') return []
+  return getQuoteSegments(props.block.text)
+})
 </script>
+
+<style scoped>
+.book-text--italic {
+  font-style: italic;
+}
+
+.book-text--bold {
+  font-weight: 600;
+}
+
+.episode-block--first-paragraph .episode-block__dialogue-text {
+  margin-top: 8px;
+}
+</style>
