@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import type { RouteLocationRaw } from "vue-router";
-import { ArrowRight } from "@element-plus/icons-vue";
 
 defineProps<{
   title: string;

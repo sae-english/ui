@@ -14,7 +14,7 @@
         v-else-if="query.isError.value || !tracks.length"
         :description="errorMessage"
       >
-        <el-button type="primary" @click="query.refetch">
+        <el-button type="primary" @click="() => query.refetch()">
           {{ t.musicCatalog.retry }}
         </el-button>
       </el-empty>

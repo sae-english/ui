@@ -15,10 +15,11 @@
 
 <script setup lang="ts">
 import type { MusicTrackDto } from '@/features/music/types'
+import type { RouteLocationRaw } from 'vue-router'
 
 defineProps<{
   track: MusicTrackDto
-  to: { name: string; params?: Record<string, unknown>; query?: Record<string, unknown> }
+  to: RouteLocationRaw
 }>()
 </script>
 

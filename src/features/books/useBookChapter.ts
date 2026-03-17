@@ -5,7 +5,6 @@ import { ElMessage } from 'element-plus'
 import { getBookChapter, bookBlockToTranscriptBlock } from '@/features/books/api'
 import type { BookContentBlockDto, BookChapterDto, BookTocItem } from '@/features/books/types'
 import type { TranscriptBlock } from '@/types/movie'
-import { DEFAULT_PAGE_SIZE } from '@/constants/defaults'
 import { useI18n } from '@/i18n'
 import { useBookBookmarkStore } from '@/features/books/bookmarkStore'
 
