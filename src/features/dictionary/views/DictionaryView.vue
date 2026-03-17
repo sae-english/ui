@@ -56,6 +56,7 @@ import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import { useI18n } from '@/i18n'
+import { useLanguage } from '@/composables/useLanguage'
 import ContentLoader from '@/components/ui/ContentLoader.vue'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
 import DictionaryEntryCard from '@/features/dictionary/components/DictionaryEntryCard.vue'
@@ -66,6 +67,7 @@ import {
 } from '@/services/api'
 
 const { t } = useI18n()
+const { language } = useLanguage()
 
 const entries = ref<DictionaryDto[]>([])
 const loading = ref(true)
@@ -82,7 +84,8 @@ async function loadEntries() {
   loading.value = true
   error.value = null
   try {
-    entries.value = await getDictionaryEntries()
+    const langParam = language.value === 'hy' ? 'ARMENIAN' : 'ENGLISH'
+    entries.value = await getDictionaryEntries(langParam)
   } catch (e) {
     console.error(e)
     error.value = t.value.dictionary.failedLoad

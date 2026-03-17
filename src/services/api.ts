@@ -19,7 +19,10 @@ function apiUrl(path: string): string {
 }
 
 function dictionaryApiUrl(path: string): string {
-  const p = path ? (path.startsWith('/') ? path : `/${path}`) : ''
+  if (!path) return `${baseUrl()}/api/dictionary`
+  // If path starts with query string, don't insert extra slash
+  if (path.startsWith('?')) return `${baseUrl()}/api/dictionary${path}`
+  const p = path.startsWith('/') ? path : `/${path}`
   return `${baseUrl()}/api/dictionary${p}`
 }
 
@@ -135,8 +138,9 @@ export interface DictionaryRequestDto {
   blockId?: string | null
 }
 
-export async function getDictionaryEntries(): Promise<DictionaryDto[]> {
-  const res = await apiFetch(dictionaryApiUrl(''))
+export async function getDictionaryEntries(language?: string): Promise<DictionaryDto[]> {
+  const search = language ? `?language=${encodeURIComponent(language)}` : ''
+  const res = await apiFetch(dictionaryApiUrl(search))
   if (!res.ok) throw new Error('Failed to load dictionary')
   return res.json()
 }
