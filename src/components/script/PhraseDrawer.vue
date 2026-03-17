@@ -53,6 +53,7 @@ import {
   searchDictionaryByValue,
 } from "@/services/api";
 import { useI18n } from "@/i18n";
+import { useLanguage } from "@/composables/useLanguage";
 import {
   PHRASE_DRAWER_DIRECTION,
   PHRASE_DRAWER_SIZE,
@@ -81,6 +82,7 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+const { language } = useLanguage();
 
 const phraseFormRules = computed(() => ({
   phrase: [
@@ -247,6 +249,7 @@ function onSubmit() {
   saveMutation.mutate({
     value: form.value.phrase.trim(),
     translation: form.value.translation.trim(),
+    language: language.value === 'hy' ? 'ARMENIAN' : 'ENGLISH',
     comment: form.value.comment?.trim(),
     contentKey: ctx.contentKey,
     contentType: ctx.contentType,
