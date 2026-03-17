@@ -54,3 +54,15 @@ export interface BookContentPageDto {
 
 /** Single TOC item (chapter) derived from BookContentPageDto.toc */
 export type BookTocItem = NonNullable<NonNullable<BookContentPageDto['toc']>>[number]
+
+/** One logical chapter loaded by sectionId. Mirrors BookChapterDto on backend. */
+export interface BookChapterDto {
+  bookId: number
+  name: string
+  contentKey: string
+  author: string
+  year: number
+  description: string
+  toc: { id: string; title: string }[]
+  content: BookContentBlockDto[]
+}

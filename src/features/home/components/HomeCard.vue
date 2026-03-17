@@ -1,18 +1,10 @@
 <template>
-  <RouterLink
-    v-if="to"
-    :to="to"
-    class="home-card home-card--clickable"
-  >
+  <RouterLink v-if="to" :to="to" class="home-card home-card--clickable">
     <el-icon class="home-card__icon"><component :is="icon" /></el-icon>
     <h2 class="home-card__title">{{ title }}</h2>
     <p class="home-card__desc">{{ description }}</p>
-    <el-icon class="home-card__arrow"><ArrowRight /></el-icon>
   </RouterLink>
-  <div
-    v-else
-    class="home-card home-card--disabled"
-  >
+  <div v-else class="home-card home-card--disabled">
     <el-icon class="home-card__icon"><component :is="icon" /></el-icon>
     <h2 class="home-card__title">{{ title }}</h2>
     <p class="home-card__desc">{{ description }}</p>
@@ -20,15 +12,15 @@
 </template>
 
 <script setup lang="ts">
-import type { RouteLocationRaw } from 'vue-router'
-import { ArrowRight } from '@element-plus/icons-vue'
+import type { RouteLocationRaw } from "vue-router";
+import { ArrowRight } from "@element-plus/icons-vue";
 
 defineProps<{
-  title: string
-  description: string
-  icon: object
-  to?: RouteLocationRaw | null
-}>()
+  title: string;
+  description: string;
+  icon: object;
+  to?: RouteLocationRaw | null;
+}>();
 </script>
 
 <style scoped>

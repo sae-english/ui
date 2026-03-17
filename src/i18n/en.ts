@@ -29,7 +29,7 @@ const en = {
     cardBooks: "Books",
     cardBooksDesc: "Read books with chapters and paragraphs. Pick a book and start reading.",
     cardSongs: "Songs",
-    cardSongsDesc: "Coming soon",
+    cardSongsDesc: "Lyrics with transliteration. Pick a song and read along.",
   },
   catalog: {
     title: "Learn with movies",
@@ -63,6 +63,19 @@ const en = {
     loadingScript: "Loading transcript...",
     contentNotFound: "Content not found",
     failedLoadScript: "Failed to load transcript",
+  },
+  musicCatalog: {
+    title: "Learn with songs",
+    subtitle: "Pick a song and read the lyrics with transliteration",
+    loading: "Loading songs...",
+    retry: "Retry",
+    noTracks: "No songs",
+    errorLoadTracks: "Failed to load songs. Make sure the server is running.",
+  },
+  musicContent: {
+    backToMusic: "Back to songs",
+    loadingTrack: "Loading song...",
+    failedLoadTrack: "Failed to load song",
   },
   bookCatalog: {
     title: "Learn with books",

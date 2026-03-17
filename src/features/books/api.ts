@@ -1,7 +1,13 @@
 import { API_BASE_URL } from '@/constants/api'
 import { DEFAULT_PAGE_SIZE } from '@/constants/defaults'
 import { apiFetch } from '@/utils/apiFetch'
-import type { BookDto, BookFullDto, BookContentBlockDto, BookContentPageDto } from '@/features/books/types'
+import type {
+  BookDto,
+  BookFullDto,
+  BookContentBlockDto,
+  BookContentPageDto,
+  BookChapterDto,
+} from '@/features/books/types'
 import type { TranscriptBlock } from '@/types/movie'
 
 function baseUrl(): string {
@@ -25,6 +31,22 @@ export async function getBookById(id: number): Promise<BookFullDto | null> {
   const res = await apiFetch(booksApiUrl(`/${id}`))
   if (res.status === 404) return null
   if (!res.ok) throw new Error('Failed to load book')
+  return res.json()
+}
+
+/**
+ * Load a single chapter by sectionId without cursor pagination.
+ * Backend: GET /api/books/{id}/chapters/{sectionId}
+ */
+export async function getBookChapter(
+  id: number,
+  sectionId: string,
+): Promise<BookChapterDto | null> {
+  const safeSectionId = sectionId?.trim()
+  if (!safeSectionId) return null
+  const res = await apiFetch(booksApiUrl(`/${id}/chapters/${encodeURIComponent(safeSectionId)}`))
+  if (res.status === 404) return null
+  if (!res.ok) throw new Error('Failed to load book chapter')
   return res.json()
 }
 

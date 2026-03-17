@@ -34,6 +34,7 @@
         :title="t.home.cardSongs"
         :description="t.home.cardSongsDesc"
         :icon="Headset"
+        :to="to('/music')"
       />
     </section>
   </div>

@@ -28,7 +28,7 @@ export const hy: Translations = {
     cardBooks: "Grer",
     cardBooksDesc: "Kardir grerov, glxavornerov yev tesaknerov. Yntreq gry yev sksir kardel.",
     cardSongs: "Yerker",
-    cardSongsDesc: "Kgan achkel",
+    cardSongsDesc: "Yerger targmanutyamb. Yntreq yergy yev kardir.",
   },
   catalog: {
     title: "Sovorel filmnerov",
@@ -62,6 +62,19 @@ export const hy: Translations = {
     loadingScript: "Skripty barcrume...",
     contentNotFound: "Nerkayutyun chgtav",
     failedLoadScript: "Chkarogh enq barcrnel skripty",
+  },
+  musicCatalog: {
+    title: "Sovorel yerkerov",
+    subtitle: "Yntreq yerg yev kardir barery targmanutyamb",
+    loading: "Yerker barcrume...",
+    retry: "Krknel",
+    noTracks: "Yerker chkan",
+    errorLoadTracks: "Chkarogh enq barcrnel yerker@. Stugel servery.",
+  },
+  musicContent: {
+    backToMusic: "Vapshe yerker",
+    loadingTrack: "Yergy barcrume...",
+    failedLoadTrack: "Chkarogh enq barcrnel yergy",
   },
   bookCatalog: {
     title: "Sovorel grerov",

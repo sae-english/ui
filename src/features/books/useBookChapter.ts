@@ -2,15 +2,15 @@ import { computed, nextTick, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuery } from '@tanstack/vue-query'
 import { ElMessage } from 'element-plus'
-import { getBookContentPage, bookBlockToTranscriptBlock } from '@/features/books/api'
-import type { BookContentBlockDto, BookContentPageDto, BookTocItem } from '@/features/books/types'
+import { getBookChapter, bookBlockToTranscriptBlock } from '@/features/books/api'
+import type { BookContentBlockDto, BookChapterDto, BookTocItem } from '@/features/books/types'
 import type { TranscriptBlock } from '@/types/movie'
 import { DEFAULT_PAGE_SIZE } from '@/constants/defaults'
 import { useI18n } from '@/i18n'
 import { useBookBookmarkStore } from '@/features/books/bookmarkStore'
 
 type ChapterData = {
-  meta: BookContentPageDto
+  meta: BookChapterDto
   toc: BookTocItem[]
   blocks: BookContentBlockDto[]
 }
@@ -34,65 +34,36 @@ export function useBookChapter() {
     queryFn: async () => {
       const id = bookId.value
       let targetSection = sectionId.value
-      let after: string | null = null
-      let found = false
-      const chapterBlocks: BookContentBlockDto[] = []
-      let meta: BookContentPageDto | null = null
-      let toc: BookTocItem[] = []
 
-      // Идём по страницам, пока не соберём все блоки нужной главы
-      // или не кончатся данные.
-      for (let safety = 0; safety < 500; safety++) {
-        const page = await getBookContentPage(id, {
-          after: after ?? undefined,
-          limit: DEFAULT_PAGE_SIZE,
-        })
-        if (!page) throw new Error('Book or page not found')
-
-        if (!meta) {
-          meta = page
-          toc = (page.toc ?? []).filter((item) => item.id?.trim())
-
-          // Если sectionId === 'start' или пустой — начинаем с первой секции книги (пролог или глава 1)
-          if (!targetSection || targetSection === 'start') {
-            const firstId = toc[0]?.id
-            if (firstId) {
-              targetSection = firstId
-              if (sectionId.value !== firstId) {
-                router.replace({
-                  name: 'book-chapter',
-                  params: { id, sectionId: firstId },
-                  query: route.query,
-                })
-              }
-            }
-          }
+      // Сначала загружаем главу как есть; если sectionId == 'start' или пусто —
+      // сразу переадресуем на первую секцию из TOC.
+      if (!targetSection || targetSection === 'start') {
+        const first = await getBookChapter(id, targetSection)
+        if (!first) throw new Error('Book or chapter not found')
+        const toc = (first.toc ?? []).filter((item) => item.id?.trim())
+        const firstId = toc[0]?.id
+        if (firstId && sectionId.value !== firstId) {
+          router.replace({
+            name: 'book-chapter',
+            params: { id, sectionId: firstId },
+            query: route.query,
+          })
         }
-
-        const content = page.content ?? []
-        for (const b of content) {
-          const type = (b.type ?? 'text').toLowerCase()
-          const isSection = type === 'section'
-          if (!found) {
-            if (isSection && b.id === targetSection) {
-              found = true
-              chapterBlocks.push(b)
-            }
-          } else {
-            if (isSection && b.id !== targetSection) {
-              return { meta, toc, blocks: chapterBlocks }
-            }
-            chapterBlocks.push(b)
-          }
+        return {
+          meta: first,
+          toc,
+          blocks: first.content ?? [],
         }
-
-        if (!page.hasMore) {
-          return { meta, toc, blocks: chapterBlocks }
-        }
-        after = page.nextCursor ?? null
       }
 
-      throw new Error('Chapter not found')
+      const chapter = await getBookChapter(id, targetSection)
+      if (!chapter) throw new Error('Chapter not found')
+      const toc = (chapter.toc ?? []).filter((item) => item.id?.trim())
+      return {
+        meta: chapter,
+        toc,
+        blocks: chapter.content ?? [],
+      }
     },
   })
 

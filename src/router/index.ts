@@ -9,6 +9,8 @@ import SeriesContentView from '@/features/series/views/SeriesContentView.vue'
 import EpisodeView from '@/features/series/views/EpisodeView.vue'
 import ComedyCatalogView from '@/features/comedy/views/ComedyCatalogView.vue'
 import ComedyContentView from '@/features/comedy/views/ComedyContentView.vue'
+import MusicCatalogView from '@/features/music/views/MusicCatalogView.vue'
+import MusicContentView from '@/features/music/views/MusicContentView.vue'
 import BookCatalogView from '@/features/books/views/BookCatalogView.vue'
 import BookContentView from '@/features/books/views/BookContentView.vue'
 import BookChapterView from '@/features/books/views/BookChapterView.vue'
@@ -74,6 +76,17 @@ const routes: RouteRecordRaw[] = [
       params: { id: to.params.id },
       query: to.query,
     }),
+  },
+  {
+    path: '/music',
+    name: 'music-catalog',
+    component: MusicCatalogView,
+  },
+  {
+    path: '/music/:id',
+    name: 'music-content',
+    component: MusicContentView,
+    props: true,
   },
   {
     path: '/books',
