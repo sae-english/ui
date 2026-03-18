@@ -1,43 +1,45 @@
 <template>
-  <el-container class="series-content" direction="vertical">
-    <el-header class="series-content__header" height="auto">
+  <ContentPageFrame
+    container-class="series-content"
+    header-class="series-content__header"
+    main-class="series-content__main"
+  >
+    <template #header>
       <BackButton :label="t.seriesContent.backToSeries" @click="goBack" />
-    </el-header>
+    </template>
 
-    <el-main class="series-content__main">
-      <AsyncState
-        :is-loading="loading"
-        :has-data="episodes.length > 0"
-        :error-message="error"
-        :retry-label="t.seriesCatalog.retry"
-        :empty-description="t.seriesContent.noEpisodes"
-        :loading-message="t.seriesContent.loadingEpisodes"
-        loading-wrapper-class="content-loader-wrap"
-        @retry="loadEpisodes"
-      >
-        <section class="series-content__section">
-          <h1 class="series-content__title">{{ seriesName }}</h1>
-          <ul class="series-content__episode-list">
-            <li
-              v-for="ep in episodes"
-              :key="ep.id"
-              class="series-content__episode-item"
+    <AsyncState
+      :is-loading="loading"
+      :has-data="episodes.length > 0"
+      :error-message="error"
+      :retry-label="t.seriesCatalog.retry"
+      :empty-description="t.seriesContent.noEpisodes"
+      :loading-message="t.seriesContent.loadingEpisodes"
+      loading-wrapper-class="content-loader-wrap"
+      @retry="loadEpisodes"
+    >
+      <section class="series-content__section">
+        <h1 class="series-content__title">{{ seriesName }}</h1>
+        <ul class="series-content__episode-list">
+          <li
+            v-for="ep in episodes"
+            :key="ep.id"
+            class="series-content__episode-item"
+          >
+            <router-link
+              :to="{ name: 'episode', params: { id: String(ep.id) }, query: navQuery() }"
+              class="series-content__episode-link"
             >
-              <router-link
-                :to="{ name: 'episode', params: { id: String(ep.id) }, query: navQuery() }"
-                class="series-content__episode-link"
-              >
-                <span class="series-content__episode-num">
-                  {{ t.seriesContent.episodeLabel }} {{ ep.season != null ? `S${ep.season} ` : '' }}#{{ ep.episodeNumber }}
-                </span>
-                <span class="series-content__episode-title">{{ ep.episodeTitle }}</span>
-              </router-link>
-            </li>
-          </ul>
-        </section>
-      </AsyncState>
-    </el-main>
-  </el-container>
+              <span class="series-content__episode-num">
+                {{ t.seriesContent.episodeLabel }} {{ ep.season != null ? `S${ep.season} ` : '' }}#{{ ep.episodeNumber }}
+              </span>
+              <span class="series-content__episode-title">{{ ep.episodeTitle }}</span>
+            </router-link>
+          </li>
+        </ul>
+      </section>
+    </AsyncState>
+  </ContentPageFrame>
 </template>
 
 <script setup lang="ts">
@@ -46,6 +48,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import BackButton from '@/components/ui/BackButton.vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
+import ContentPageFrame from '@/components/layout/ContentPageFrame.vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
 import { getEpisodesByTitleId } from '@/features/series/api'

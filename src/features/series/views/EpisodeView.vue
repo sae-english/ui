@@ -1,29 +1,31 @@
 <template>
-  <el-container class="episode" direction="vertical">
-    <el-header class="episode__header" height="auto">
+  <ContentPageFrame
+    container-class="episode"
+    header-class="episode__header"
+    main-class="episode__main"
+  >
+    <template #header>
       <BackButton :label="t.episode.back" @click="goBack" />
-    </el-header>
+    </template>
 
-    <el-main class="episode__main">
-      <AsyncState
-        :is-loading="loading"
-        :has-data="!!transcript"
-        :error-message="error ? t.episode.notFound : null"
-        :retry-label="t.episode.toHome"
-        :empty-description="t.episode.notFound"
-        :loading-message="t.episode.loadingEpisode"
-        loading-wrapper-class="content-loader-wrap"
-        @retry="goBack"
-      >
-        <el-main class="episode__content">
-          <EpisodeHero :episode-id="transcript!.episodeId" :title="transcript!.title" />
-          <PhraseAddButton :content-key="episodeContentKey" content-type="EPISODE">
-            <EpisodeScript :blocks="transcript!.blocks" />
-          </PhraseAddButton>
-        </el-main>
-      </AsyncState>
-    </el-main>
-  </el-container>
+    <AsyncState
+      :is-loading="loading"
+      :has-data="!!transcript"
+      :error-message="error ? t.episode.notFound : null"
+      :retry-label="t.episode.toHome"
+      :empty-description="t.episode.notFound"
+      :loading-message="t.episode.loadingEpisode"
+      loading-wrapper-class="content-loader-wrap"
+      @retry="goBack"
+    >
+      <el-main class="episode__content">
+        <EpisodeHero :episode-id="transcript!.episodeId" :title="transcript!.title" />
+        <PhraseAddButton :content-key="episodeContentKey" content-type="EPISODE">
+          <EpisodeScript :blocks="transcript!.blocks" />
+        </PhraseAddButton>
+      </el-main>
+    </AsyncState>
+  </ContentPageFrame>
 </template>
 
 <script setup lang="ts">
@@ -41,6 +43,7 @@ import AsyncState from '@/components/ui/AsyncState.vue'
 import EpisodeHero from '@/components/script/EpisodeHero.vue'
 import EpisodeScript from '@/components/script/EpisodeScript.vue'
 import PhraseAddButton from '@/components/script/PhraseAddButton.vue'
+import ContentPageFrame from '@/components/layout/ContentPageFrame.vue'
 
 const route = useRoute()
 const router = useRouter()

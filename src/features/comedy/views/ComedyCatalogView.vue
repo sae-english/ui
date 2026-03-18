@@ -1,40 +1,33 @@
 <template>
-  <div class="catalog">
-    <PageSectionHeader
-      :title="t.comedyCatalog.title"
-      :subtitle="t.comedyCatalog.subtitle"
-    />
-
-    <el-main class="catalog__content">
-      <AsyncState
-        :is-loading="loading"
-        :has-data="specials.length > 0"
-        :error-message="error"
-        :empty-description="t.comedyCatalog.noSpecials"
-        :retry-label="t.comedyCatalog.retry"
-        :loading-message="t.comedyCatalog.loading"
-        :loading-icon="Loading"
-        :loading-icon-size="32"
-        loading-wrapper-class="catalog__loading content-loader-wrap"
-        @retry="loadSpecials"
+  <CatalogLayout :title="t.comedyCatalog.title" :subtitle="t.comedyCatalog.subtitle">
+    <AsyncState
+      :is-loading="loading"
+      :has-data="specials.length > 0"
+      :error-message="error"
+      :empty-description="t.comedyCatalog.noSpecials"
+      :retry-label="t.comedyCatalog.retry"
+      :loading-message="t.comedyCatalog.loading"
+      :loading-icon="Loading"
+      :loading-icon-size="32"
+      loading-wrapper-class="catalog__loading content-loader-wrap"
+      @retry="loadSpecials"
+    >
+      <CatalogPosterGrid
+        :items="specials"
+        :item-key="(sp) => sp.id"
+        :section-title="t.comedyCatalog.sectionSpecials"
+        :xs="12"
+        :sm="8"
+        :md="6"
+        :lg="4"
+        :gutter="24"
       >
-        <CatalogPosterGrid
-          :items="specials"
-          :item-key="(sp) => sp.id"
-          :section-title="t.comedyCatalog.sectionSpecials"
-          :xs="12"
-          :sm="8"
-          :md="6"
-          :lg="4"
-          :gutter="24"
-        >
-          <template #item="{ item }">
-            <ComedySpecialCard :special="item" @click="openSpecial(item)" />
-          </template>
-        </CatalogPosterGrid>
-      </AsyncState>
-    </el-main>
-  </div>
+        <template #item="{ item }">
+          <ComedySpecialCard :special="item" @click="openSpecial(item)" />
+        </template>
+      </CatalogPosterGrid>
+    </AsyncState>
+  </CatalogLayout>
 </template>
 
 <script setup lang="ts">
@@ -45,7 +38,7 @@ import { useI18n } from '@/i18n'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
-import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
+import CatalogLayout from '@/components/layout/CatalogLayout.vue'
 import CatalogPosterGrid from '@/components/layout/CatalogPosterGrid.vue'
 import { getComedySpecials } from '@/features/comedy/api'
 import type { ComedySpecialDto } from '@/features/comedy/types'

@@ -1,32 +1,34 @@
 <template>
-  <el-container class="movie-content" direction="vertical">
-    <el-header class="movie-content__header" height="auto">
+  <ContentPageFrame
+    container-class="movie-content"
+    header-class="movie-content__header"
+    main-class="movie-content__main"
+  >
+    <template #header>
       <BackButton :label="t.movieContent.backToMovies" @click="goBack" />
-    </el-header>
+    </template>
 
-    <el-main class="movie-content__main">
-      <AsyncState
-        :is-loading="query.isLoading.value"
-        :has-data="blocks.length > 0 || hasLoadedOnce"
-        :empty-description="t.movieContent.contentNotFound"
-        :loading-message="t.movieContent.loadingScript"
-        loading-wrapper-class="content-loader-wrap"
-      >
-        <el-main class="movie-content__content">
-          <PhraseAddButton :content-key="contentKey" content-type="MOVIE">
-            <EpisodeScript :blocks="blocks" />
-          </PhraseAddButton>
-        </el-main>
+    <AsyncState
+      :is-loading="query.isLoading.value"
+      :has-data="blocks.length > 0 || hasLoadedOnce"
+      :empty-description="t.movieContent.contentNotFound"
+      :loading-message="t.movieContent.loadingScript"
+      loading-wrapper-class="content-loader-wrap"
+    >
+      <el-main class="movie-content__content">
+        <PhraseAddButton :content-key="contentKey" content-type="MOVIE">
+          <EpisodeScript :blocks="blocks" />
+        </PhraseAddButton>
+      </el-main>
 
-        <InfiniteScrollLoadMore
-          :has-next-page="query.hasNextPage.value"
-          :is-fetching-next-page="query.isFetchingNextPage.value"
-          class="movie-content__load-more"
-          @load-more="query.fetchNextPage()"
-        />
-      </AsyncState>
-    </el-main>
-  </el-container>
+      <InfiniteScrollLoadMore
+        :has-next-page="query.hasNextPage.value"
+        :is-fetching-next-page="query.isFetchingNextPage.value"
+        class="movie-content__load-more"
+        @load-more="query.fetchNextPage()"
+      />
+    </AsyncState>
+  </ContentPageFrame>
 </template>
 
 <script setup lang="ts">
@@ -47,6 +49,7 @@ import EpisodeScript from "@/components/script/EpisodeScript.vue";
 import PhraseAddButton from "@/components/script/PhraseAddButton.vue";
 import { DEFAULT_PAGE_SIZE } from "@/constants/defaults";
 import AsyncState from "@/components/ui/AsyncState.vue";
+import ContentPageFrame from "@/components/layout/ContentPageFrame.vue";
 
 const route = useRoute();
 const router = useRouter();

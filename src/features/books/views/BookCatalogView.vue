@@ -1,40 +1,33 @@
 <template>
-  <div class="catalog">
-    <PageSectionHeader
-      :title="t.bookCatalog.title"
-      :subtitle="t.bookCatalog.subtitle"
-    />
-
-    <el-main class="catalog__content">
-      <AsyncState
-        :is-loading="loading"
-        :has-data="books.length > 0"
-        :error-message="error"
-        :empty-description="t.bookCatalog.noBooks"
-        :retry-label="t.bookCatalog.retry"
-        :loading-message="t.bookCatalog.loading"
-        :loading-icon="Loading"
-        :loading-icon-size="32"
-        loading-wrapper-class="catalog__loading content-loader-wrap"
-        @retry="loadBooks"
+  <CatalogLayout :title="t.bookCatalog.title" :subtitle="t.bookCatalog.subtitle">
+    <AsyncState
+      :is-loading="loading"
+      :has-data="books.length > 0"
+      :error-message="error"
+      :empty-description="t.bookCatalog.noBooks"
+      :retry-label="t.bookCatalog.retry"
+      :loading-message="t.bookCatalog.loading"
+      :loading-icon="Loading"
+      :loading-icon-size="32"
+      loading-wrapper-class="catalog__loading content-loader-wrap"
+      @retry="loadBooks"
+    >
+      <CatalogPosterGrid
+        :items="books"
+        :item-key="(b) => b.id"
+        :section-title="t.bookCatalog.sectionBooks"
+        :xs="12"
+        :sm="8"
+        :md="6"
+        :lg="4"
+        :gutter="24"
       >
-        <CatalogPosterGrid
-          :items="books"
-          :item-key="(b) => b.id"
-          :section-title="t.bookCatalog.sectionBooks"
-          :xs="12"
-          :sm="8"
-          :md="6"
-          :lg="4"
-          :gutter="24"
-        >
-          <template #item="{ item }">
-            <BookCard :book="item" @click="openBook(item)" />
-          </template>
-        </CatalogPosterGrid>
-      </AsyncState>
-    </el-main>
-  </div>
+        <template #item="{ item }">
+          <BookCard :book="item" @click="openBook(item)" />
+        </template>
+      </CatalogPosterGrid>
+    </AsyncState>
+  </CatalogLayout>
 </template>
 
 <script setup lang="ts">
@@ -45,7 +38,7 @@ import { useI18n } from '@/i18n'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
-import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
+import CatalogLayout from '@/components/layout/CatalogLayout.vue'
 import CatalogPosterGrid from '@/components/layout/CatalogPosterGrid.vue'
 import { getBooks } from '@/features/books/api'
 import type { BookDto } from '@/features/books/types'

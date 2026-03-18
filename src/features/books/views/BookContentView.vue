@@ -1,6 +1,10 @@
 <template>
-  <el-container class="book-content" direction="vertical">
-    <el-header class="book-content__header" height="auto">
+  <ContentPageFrame
+    container-class="book-content"
+    header-class="book-content__header"
+    main-class="book-content__main"
+  >
+    <template #header>
       <div class="book-content__header-inner">
         <BackButton :label="t.bookContent.backToBooks" @click="goBack" />
         <button
@@ -13,78 +17,76 @@
           ★
         </button>
       </div>
-    </el-header>
+    </template>
 
-    <el-main class="book-content__main">
-      <AsyncState
-        :is-loading="query.isLoading.value"
-        :has-data="hasLoadedOnce"
-        :error-message="query.isError.value ? errorMessage : null"
-        :retry-label="t.bookCatalog.retry"
-        :empty-description="t.bookContent.contentNotFound"
-        :loading-message="t.bookContent.loadingContent"
-        loading-wrapper-class="content-loader-wrap"
-        @retry="goBack"
-      >
-        <div class="book-content__content">
-          <div class="book-content__hero">
-            <h1 class="book-content__title">{{ firstPage?.name }}</h1>
-            <p class="book-content__meta">
-              {{ firstPage?.author }} · {{ firstPage?.year }}
-            </p>
-            <p v-if="firstPage?.description" class="book-content__desc">
-              {{ firstPage.description }}
-            </p>
-            <el-collapse
-              v-if="sections.length"
-              class="book-content__toc"
-              accordion
+    <AsyncState
+      :is-loading="query.isLoading.value"
+      :has-data="hasLoadedOnce"
+      :error-message="query.isError.value ? errorMessage : null"
+      :retry-label="t.bookCatalog.retry"
+      :empty-description="t.bookContent.contentNotFound"
+      :loading-message="t.bookContent.loadingContent"
+      loading-wrapper-class="content-loader-wrap"
+      @retry="goBack"
+    >
+      <div class="book-content__content">
+        <div class="book-content__hero">
+          <h1 class="book-content__title">{{ firstPage?.name }}</h1>
+          <p class="book-content__meta">
+            {{ firstPage?.author }} · {{ firstPage?.year }}
+          </p>
+          <p v-if="firstPage?.description" class="book-content__desc">
+            {{ firstPage.description }}
+          </p>
+          <el-collapse
+            v-if="sections.length"
+            class="book-content__toc"
+            accordion
+          >
+            <el-collapse-item
+              :title="t.bookContent.tableOfContents"
+              name="toc"
             >
-              <el-collapse-item
-                :title="t.bookContent.tableOfContents"
-                name="toc"
-              >
-                <nav aria-label="Table of contents">
-                  <ul class="book-content__toc-list">
-                    <li
-                      v-for="(s, i) in sections"
-                      :key="s.id ?? s.title ?? i"
-                      class="book-content__toc-item"
+              <nav aria-label="Table of contents">
+                <ul class="book-content__toc-list">
+                  <li
+                    v-for="(s, i) in sections"
+                    :key="s.id ?? s.title ?? i"
+                    class="book-content__toc-item"
+                  >
+                    <RouterLink
+                      v-if="s.id"
+                      :to="{
+                        name: 'book-chapter',
+                        params: { id, sectionId: s.id },
+                        query: $route.query,
+                      }"
+                      class="book-content__toc-link"
                     >
-                      <RouterLink
-                        v-if="s.id"
-                        :to="{
-                          name: 'book-chapter',
-                          params: { id, sectionId: s.id },
-                          query: $route.query,
-                        }"
-                        class="book-content__toc-link"
-                      >
-                        {{ s.title || s.id }}
-                      </RouterLink>
-                      <span v-else class="book-content__toc-plain">{{
-                        s.title
-                      }}</span>
-                    </li>
-                  </ul>
-                </nav>
-              </el-collapse-item>
-            </el-collapse>
-          </div>
-          <PhraseAddButton :content-key="contentKey" content-type="BOOK">
-            <EpisodeScript :blocks="blocks" :highlight-quotes="true" />
-          </PhraseAddButton>
+                      {{ s.title || s.id }}
+                    </RouterLink>
+                    <span v-else class="book-content__toc-plain">{{
+                      s.title
+                    }}</span>
+                  </li>
+                </ul>
+              </nav>
+            </el-collapse-item>
+          </el-collapse>
         </div>
+        <PhraseAddButton :content-key="contentKey" content-type="BOOK">
+          <EpisodeScript :blocks="blocks" :highlight-quotes="true" />
+        </PhraseAddButton>
+      </div>
 
-        <InfiniteScrollLoadMore
-          :has-next-page="query.hasNextPage.value"
-          :is-fetching-next-page="query.isFetchingNextPage.value"
-          class="book-content__load-more"
-          @load-more="query.fetchNextPage()"
-        />
-      </AsyncState>
-    </el-main>
-  </el-container>
+      <InfiniteScrollLoadMore
+        :has-next-page="query.hasNextPage.value"
+        :is-fetching-next-page="query.isFetchingNextPage.value"
+        class="book-content__load-more"
+        @load-more="query.fetchNextPage()"
+      />
+    </AsyncState>
+  </ContentPageFrame>
 </template>
 
 <script setup lang="ts">
@@ -98,6 +100,7 @@ import EpisodeScript from "@/components/script/EpisodeScript.vue";
 import PhraseAddButton from "@/components/script/PhraseAddButton.vue";
 import { useBookContent } from "@/features/books/useBookContent";
 import AsyncState from "@/components/ui/AsyncState.vue";
+import ContentPageFrame from "@/components/layout/ContentPageFrame.vue";
 
 const { navQuery } = useLanguage();
 const { t } = useI18n();

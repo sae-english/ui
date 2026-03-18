@@ -1,40 +1,33 @@
 <template>
-  <div class="catalog">
-    <PageSectionHeader
-      :title="t.seriesCatalog.title"
-      :subtitle="t.seriesCatalog.subtitle"
-    />
-
-    <el-main class="catalog__content">
-      <AsyncState
-        :is-loading="loading"
-        :has-data="seriesList.length > 0"
-        :error-message="error"
-        :empty-description="t.seriesCatalog.noSeries"
-        :retry-label="t.seriesCatalog.retry"
-        :loading-message="t.seriesCatalog.loading"
-        :loading-icon="Loading"
-        :loading-icon-size="32"
-        loading-wrapper-class="catalog__loading content-loader-wrap"
-        @retry="loadSeries"
+  <CatalogLayout :title="t.seriesCatalog.title" :subtitle="t.seriesCatalog.subtitle">
+    <AsyncState
+      :is-loading="loading"
+      :has-data="seriesList.length > 0"
+      :error-message="error"
+      :empty-description="t.seriesCatalog.noSeries"
+      :retry-label="t.seriesCatalog.retry"
+      :loading-message="t.seriesCatalog.loading"
+      :loading-icon="Loading"
+      :loading-icon-size="32"
+      loading-wrapper-class="catalog__loading content-loader-wrap"
+      @retry="loadSeries"
+    >
+      <CatalogPosterGrid
+        :items="seriesList"
+        :item-key="(s) => s.titleId"
+        :section-title="t.seriesCatalog.sectionSeries"
+        :xs="12"
+        :sm="8"
+        :md="6"
+        :lg="4"
+        :gutter="24"
       >
-        <CatalogPosterGrid
-          :items="seriesList"
-          :item-key="(s) => s.titleId"
-          :section-title="t.seriesCatalog.sectionSeries"
-          :xs="12"
-          :sm="8"
-          :md="6"
-          :lg="4"
-          :gutter="24"
-        >
-          <template #item="{ item }">
-            <SeriesPosterCard :series="item" @click="openSeries(item)" />
-          </template>
-        </CatalogPosterGrid>
-      </AsyncState>
-    </el-main>
-  </div>
+        <template #item="{ item }">
+          <SeriesPosterCard :series="item" @click="openSeries(item)" />
+        </template>
+      </CatalogPosterGrid>
+    </AsyncState>
+  </CatalogLayout>
 </template>
 
 <script setup lang="ts">
@@ -45,8 +38,8 @@ import { useI18n } from '@/i18n'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
-import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
 import CatalogPosterGrid from '@/components/layout/CatalogPosterGrid.vue'
+import CatalogLayout from '@/components/layout/CatalogLayout.vue'
 import { getLimitedSeries } from '@/features/series/api'
 import type { SeriesDto } from '@/features/series/types'
 import { CATALOG_SERIES_LIMIT } from '@/constants/defaults'

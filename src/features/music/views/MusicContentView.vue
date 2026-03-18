@@ -1,47 +1,48 @@
 <template>
-  <el-container class="music-content" direction="vertical">
-    <el-header class="music-content__header" height="auto">
+  <ContentPageFrame
+    container-class="music-content"
+    header-class="music-content__header"
+    main-class="music-content__main"
+  >
+    <template #header>
       <div class="music-content__header-inner">
         <BackButton :label="t.musicContent.backToMusic" @click="goBack" />
       </div>
-    </el-header>
+    </template>
 
-    <el-main class="music-content__main">
-      <AsyncState
-        :is-loading="query.isLoading.value"
-        :has-data="!!track"
-        :error-message="(query.isError.value || !track) ? errorMessage : null"
-        :retry-label="t.musicCatalog.retry"
-        :loading-message="t.musicContent.loadingTrack"
-        loading-wrapper-class="content-loader-wrap"
-        @retry="goBack"
-      >
-        <div class="music-content__content">
-          <div class="music-content__hero">
-            <h1 class="music-content__title">{{ track!.name }}</h1>
-            <p class="music-content__meta">
-              <span v-if="track!.performer">{{ track!.performer }}</span>
-              <span v-if="track!.year">· {{ track!.year }}</span>
-            </p>
-            <p v-if="track!.description" class="music-content__desc">
-              {{ track!.description }}
-            </p>
-          </div>
-
-          <PhraseAddButton :content-key="track!.contentKey" content-type="ALBUM">
-            <EpisodeScript :blocks="blocks" :highlight-quotes="true" />
-          </PhraseAddButton>
+    <AsyncState
+      :is-loading="query.isLoading.value"
+      :has-data="!!track"
+      :error-message="(query.isError.value || !track) ? errorMessage : null"
+      :retry-label="t.musicCatalog.retry"
+      :loading-message="t.musicContent.loadingTrack"
+      loading-wrapper-class="content-loader-wrap"
+      @retry="goBack"
+    >
+      <div class="music-content__content">
+        <div class="music-content__hero">
+          <h1 class="music-content__title">{{ track!.name }}</h1>
+          <p class="music-content__meta">
+            <span v-if="track!.performer">{{ track!.performer }}</span>
+            <span v-if="track!.year">· {{ track!.year }}</span>
+          </p>
+          <p v-if="track!.description" class="music-content__desc">
+            {{ track!.description }}
+          </p>
         </div>
-      </AsyncState>
-    </el-main>
-  </el-container>
+
+        <PhraseAddButton :content-key="track!.contentKey" content-type="ALBUM">
+          <EpisodeScript :blocks="blocks" :highlight-quotes="true" />
+        </PhraseAddButton>
+      </div>
+    </AsyncState>
+  </ContentPageFrame>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuery } from '@tanstack/vue-query'
-import { ElContainer, ElHeader, ElMain } from 'element-plus'
 import BackButton from '@/components/ui/BackButton.vue'
 import EpisodeScript from '@/components/script/EpisodeScript.vue'
 import PhraseAddButton from '@/components/script/PhraseAddButton.vue'
@@ -49,6 +50,7 @@ import { getMusicTrackById, musicBlockToTranscriptBlock } from '@/features/music
 import type { TranscriptBlock } from '@/types/movie'
 import { useI18n } from '@/i18n'
 import AsyncState from '@/components/ui/AsyncState.vue'
+import ContentPageFrame from '@/components/layout/ContentPageFrame.vue'
 
 const { t } = useI18n()
 const route = useRoute()

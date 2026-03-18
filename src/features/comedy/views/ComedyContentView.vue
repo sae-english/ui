@@ -1,33 +1,35 @@
 <template>
-  <el-container class="comedy-content" direction="vertical">
-    <el-header class="comedy-content__header" height="auto">
+  <ContentPageFrame
+    container-class="comedy-content"
+    header-class="comedy-content__header"
+    main-class="comedy-content__main"
+  >
+    <template #header>
       <BackButton :label="t.comedyContent.backToComedy" @click="goBack" />
-    </el-header>
+    </template>
 
-    <el-main class="comedy-content__main">
-      <AsyncState
-        :is-loading="loading"
-        :has-data="!!special"
-        :error-message="error"
-        :retry-label="t.comedyCatalog.retry"
-        :empty-description="t.comedyContent.contentNotFound"
-        :loading-message="t.comedyContent.loadingScript"
-        loading-wrapper-class="content-loader-wrap"
-        @retry="goBack"
-      >
-        <div class="comedy-content__content">
-          <div class="comedy-content__hero">
-            <h1 class="comedy-content__title">{{ special!.name }}</h1>
-            <p class="comedy-content__meta">{{ special!.performer }} · {{ special!.year }}</p>
-            <p v-if="special!.description" class="comedy-content__desc">{{ special!.description }}</p>
-          </div>
-          <PhraseAddButton :content-key="special!.contentKey" content-type="COMEDY">
-            <EpisodeScript :blocks="blocks" />
-          </PhraseAddButton>
+    <AsyncState
+      :is-loading="loading"
+      :has-data="!!special"
+      :error-message="error"
+      :retry-label="t.comedyCatalog.retry"
+      :empty-description="t.comedyContent.contentNotFound"
+      :loading-message="t.comedyContent.loadingScript"
+      loading-wrapper-class="content-loader-wrap"
+      @retry="goBack"
+    >
+      <div class="comedy-content__content">
+        <div class="comedy-content__hero">
+          <h1 class="comedy-content__title">{{ special!.name }}</h1>
+          <p class="comedy-content__meta">{{ special!.performer }} · {{ special!.year }}</p>
+          <p v-if="special!.description" class="comedy-content__desc">{{ special!.description }}</p>
         </div>
-      </AsyncState>
-    </el-main>
-  </el-container>
+        <PhraseAddButton :content-key="special!.contentKey" content-type="COMEDY">
+          <EpisodeScript :blocks="blocks" />
+        </PhraseAddButton>
+      </div>
+    </AsyncState>
+  </ContentPageFrame>
 </template>
 
 <script setup lang="ts">
@@ -43,6 +45,7 @@ import type { TranscriptBlock } from '@/types/movie'
 import EpisodeScript from '@/components/script/EpisodeScript.vue'
 import PhraseAddButton from '@/components/script/PhraseAddButton.vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
+import ContentPageFrame from '@/components/layout/ContentPageFrame.vue'
 
 const route = useRoute()
 const router = useRouter()
