@@ -181,3 +181,14 @@
     margin-bottom: 14px;
   }
 }
+
+@media (max-width: 360px) {
+  .book-content {
+    padding: 12px 10px;
+    padding-bottom: 48px;
+  }
+
+  .book-content__header {
+    margin-bottom: 12px;
+  }
+}

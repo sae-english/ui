@@ -65,7 +65,7 @@
     <el-dialog
       v-model="deleteDialogVisible"
       :title="t.dictionary.deleteTitle"
-      width="400px"
+      :width="deleteDialogWidth"
       :close-on-click-modal="true"
     >
       <p>{{ deleteConfirmMessage }}</p>
@@ -92,6 +92,7 @@ import { computed, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Loading, DocumentAdd } from '@element-plus/icons-vue'
 import { useInfiniteQuery } from '@tanstack/vue-query'
+import { useWindowSize } from '@vueuse/core'
 import { useI18n } from '@/i18n'
 import { useLanguage } from '@/composables/useLanguage'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
@@ -108,6 +109,7 @@ import PhraseDrawer from '@/components/script/PhraseDrawer.vue'
 
 const { t } = useI18n()
 const { language } = useLanguage()
+const { width: windowWidth } = useWindowSize()
 
 const deleteDialogVisible = ref(false)
 const entryToDelete = ref<DictionaryDto | null>(null)
@@ -151,6 +153,12 @@ const drawerInitialPhrase = ref('')
 // Dictionary entries created from the dictionary page don't have content context.
 // We still need to send some DictionaryContentType to backend; contentKey/blockId will be omitted.
 const drawerContentType: DictionaryContentType = 'MOVIE'
+
+const deleteDialogWidth = computed(() => {
+  if (windowWidth.value <= 360) return '320px'
+  if (windowWidth.value <= 420) return '360px'
+  return '400px'
+})
 
 function openAddDrawer() {
   drawerInitialPhrase.value = ''

@@ -1,5 +1,9 @@
 <template>
-  <el-card class="dictionary-entry-card" shadow="hover">
+  <el-card
+    class="dictionary-entry-card"
+    shadow="hover"
+    body-style="padding: 14px 16px;"
+  >
     <div class="dictionary-entry-card__body">
       <div class="dictionary-entry-card__main">
         <span class="dictionary-entry-card__value">{{ entry.value }}</span>
@@ -58,14 +62,8 @@ function formatDate(iso: string): string {
 <style scoped>
 .dictionary-entry-card {
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  background: rgba(255, 255, 255, 0.02);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--el-border-color-lighter);
   overflow: hidden;
-}
-
-.dictionary-entry-card :deep(.el-card__body) {
-  padding: 14px 16px;
 }
 
 .dictionary-entry-card__body {
@@ -144,6 +142,24 @@ function formatDate(iso: string): string {
 @media (max-width: 600px) {
   .dictionary-entry-card__body {
     gap: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .dictionary-entry-card__value {
+    font-size: 1.05rem;
+  }
+
+  .dictionary-entry-card__translation {
+    font-size: 0.95rem;
+  }
+
+  .dictionary-entry-card__footer {
+    gap: 8px;
+  }
+
+  .dictionary-entry-card :deep(.el-card__body) {
+    padding: 12px 12px !important;
   }
 }
 </style>

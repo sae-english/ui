@@ -31,3 +31,13 @@
     max-width: 100%;
   }
 }
+
+@media (max-width: 420px) {
+  .home {
+    padding: 28px 16px 40px;
+  }
+
+  .home__sections {
+    gap: 18px;
+  }
+}

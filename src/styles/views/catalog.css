@@ -62,3 +62,13 @@
     padding: 0 20px 36px !important;
   }
 }
+
+@media (max-width: 420px) {
+  .catalog__content {
+    padding: 0 16px 30px !important;
+  }
+
+  .catalog__section-title {
+    margin-bottom: 16px;
+  }
+}

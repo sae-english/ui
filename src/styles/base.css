@@ -58,6 +58,39 @@
   }
 }
 
+/* Telegram Mini App / ultra-narrow screens */
+@media (max-width: 360px) {
+  :root {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+  }
+
+  button {
+    padding: 0.55em 0.95em;
+  }
+
+  .layout-main {
+    padding: 0 14px 28px;
+  }
+
+  .layout-loading-center {
+    min-height: 40vh;
+    gap: 12px;
+  }
+}
+
 a {
   font-weight: 500;
   color: var(--fe-accent);

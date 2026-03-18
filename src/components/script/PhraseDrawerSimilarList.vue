@@ -7,8 +7,7 @@
       </el-button>
     </div>
     <div v-if="loading" class="phrase-drawer-similar__loading">
-      <el-icon class="is-loading"><Loading /></el-icon>
-      <span>{{ searchingLabel }}</span>
+      <ContentLoader :message="searchingLabel" :icon="Loading" :icon-size="20" />
     </div>
     <ul v-else class="phrase-drawer-similar__list">
       <li
@@ -169,6 +168,7 @@ import { ref } from "vue";
 import { Loading, VideoPlay, ArrowDown, ArrowUp } from "@element-plus/icons-vue";
 import type { ExpandedDictionaryDto } from "@/services/api";
 import type { ContentBlockDto } from "@/services/api";
+import ContentLoader from "@/components/ui/ContentLoader.vue";
 defineProps<{
   entries: ExpandedDictionaryDto[];
   loading: boolean;
@@ -249,12 +249,7 @@ function getHighlightSegments(fullText: string | null | undefined, highlightValu
 }
 
 .phrase-drawer-similar__loading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   padding: 16px 0;
-  color: var(--el-text-color-secondary);
-  font-size: 0.9rem;
 }
 
 .phrase-drawer-similar__list {
@@ -381,6 +376,30 @@ function getHighlightSegments(fullText: string | null | undefined, highlightValu
   font-weight: 600;
   color: var(--el-text-color-primary);
   margin-bottom: 4px;
+}
+
+@media (max-width: 360px) {
+  .phrase-drawer-similar__header {
+    margin-bottom: 12px;
+    gap: 12px;
+  }
+
+  .phrase-drawer-similar__value {
+    font-size: 1rem;
+  }
+
+  .phrase-drawer-similar__work {
+    padding: 3px 8px;
+  }
+
+  .phrase-drawer-similar__block-body {
+    padding: 10px 12px;
+  }
+
+  /* `el-card` padding is set by :body-style, so we override for ultra-narrow screens */
+  .phrase-drawer-similar__card :deep(.el-card__body) {
+    padding: 14px 14px !important;
+  }
 }
 </style>
 

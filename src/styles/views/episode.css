@@ -63,3 +63,18 @@
     padding: 48px 20px;
   }
 }
+
+@media (max-width: 360px) {
+  .episode {
+    padding: 12px 10px;
+    padding-bottom: 48px;
+  }
+
+  .episode__header {
+    margin-bottom: 12px;
+  }
+
+  .episode__loading {
+    padding: 40px 18px;
+  }
+}

@@ -79,3 +79,14 @@
     margin-bottom: 14px;
   }
 }
+
+@media (max-width: 360px) {
+  .comedy-content {
+    padding: 12px 10px;
+    padding-bottom: 48px;
+  }
+
+  .comedy-content__header {
+    margin-bottom: 12px;
+  }
+}

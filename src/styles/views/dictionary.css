@@ -47,3 +47,13 @@
     padding: 0 20px 36px !important;
   }
 }
+
+@media (max-width: 420px) {
+  .dictionary__content {
+    padding: 0 16px 32px !important;
+  }
+
+  .dictionary__list {
+    gap: 10px;
+  }
+}
