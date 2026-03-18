@@ -5,27 +5,27 @@
       <span class="app__logo-text">{{ appTitle }}</span>
     </RouterLink>
     <nav class="app__nav">
-      <RouterLink
+      <NavLink
         v-for="item in navItems"
         :key="item.path"
         :to="to(item.path)"
-        class="app__nav-link"
-        :class="{ 'app__nav-link--active': isActive(item.path) }"
-        @click.prevent="goTo(item.path)"
+        :path-for-active="item.path"
+        base-class="app__nav-link"
+        active-class="app__nav-link--active"
       >
         {{ item.label }}
-      </RouterLink>
+      </NavLink>
     </nav>
     <div class="app__actions">
       <el-tooltip :content="settingsLabel" placement="bottom">
-        <RouterLink
+        <NavLink
           :to="to('/settings')"
-          class="app__settings-btn"
-          :class="{ 'app__settings-btn--active': isActive('/settings') }"
-          @click.prevent="goTo('/settings')"
+          path-for-active="/settings"
+          base-class="app__settings-btn"
+          active-class="app__settings-btn--active"
         >
           <el-icon :size="20"><Setting /></el-icon>
-        </RouterLink>
+        </NavLink>
       </el-tooltip>
       <el-select
         :model-value="language"
@@ -46,13 +46,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { VideoCameraFilled, Setting } from '@element-plus/icons-vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
 import type { StudyLanguage } from '@/types/language'
+import NavLink from '@/components/layout/NavLink.vue'
 
-const route = useRoute()
 const router = useRouter()
 const { to } = useLanguage()
 const { t } = useI18n()
@@ -70,16 +70,7 @@ defineEmits<{
   'update:language': [value: StudyLanguage]
 }>()
 
-function isActive(path: string): boolean {
-  if (path === '/') return route.path === '/'
-  return route.path.startsWith(path)
-}
-
 function goHome() {
   router.push(to('/'))
-}
-
-function goTo(path: string) {
-  router.push(to(path))
 }
 </script>

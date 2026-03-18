@@ -14,112 +14,151 @@
       <li
         v-for="expanded in entries"
         :key="expanded.dictionary.id"
-        class="phrase-drawer-similar__card"
+        class="phrase-drawer-similar__item"
       >
-        <!-- Work title -->
-        <div v-if="expanded.title" class="phrase-drawer-similar__work">
-          <el-icon class="phrase-drawer-similar__work-icon"><VideoPlay /></el-icon>
-          <span class="phrase-drawer-similar__work-title">{{ expanded.title }}</span>
-        </div>
+        <el-card
+          shadow="never"
+          class="phrase-drawer-similar__card"
+          :body-style="{ padding: '16px' }"
+        >
+          <!-- Work title -->
+          <div v-if="expanded.title" class="phrase-drawer-similar__work">
+            <el-icon class="phrase-drawer-similar__work-icon"><VideoPlay /></el-icon>
+            <span class="phrase-drawer-similar__work-title">{{ expanded.title }}</span>
+          </div>
 
-        <!-- Dictionary entry: phrase + translation + comment -->
-        <div class="phrase-drawer-similar__entry">
-          <div class="phrase-drawer-similar__value">{{ expanded.dictionary.value }}</div>
-          <div v-if="expanded.dictionary.translation" class="phrase-drawer-similar__translation">
-            {{ expanded.dictionary.translation }}
-          </div>
-          <div
-            v-if="expanded.dictionary.comments?.length"
-            class="phrase-drawer-similar__comment"
-          >
-            {{ expanded.dictionary.comments?.join(', ') }}
-          </div>
-        </div>
-
-        <!-- Context block: collapsed by default, expand on click -->
-        <div v-if="hasBlockContent(expanded.block)" class="phrase-drawer-similar__block">
-          <div
-            class="phrase-drawer-similar__block-header"
-            @click="toggleExpanded(expanded.dictionary.id)"
-          >
-            <el-button
-              text
-              size="small"
-              :icon="isExpanded(expanded.dictionary.id) ? ArrowUp : ArrowDown"
-            >
-              {{ isExpanded(expanded.dictionary.id) ? hideContextLabel : showContextLabel }}
-            </el-button>
-          </div>
-          <Transition name="phrase-drawer-similar-expand">
-            <div
-              v-show="isExpanded(expanded.dictionary.id)"
-              class="phrase-drawer-similar__block-body-wrap"
-            >
-              <div
-                class="phrase-drawer-similar__block-body"
-                :class="blockBodyClass(expanded.block)"
-              >
-                <!-- Dialogue -->
-                <template v-if="expanded.block?.type === 'dialogue'">
-                  <div v-if="expanded.block.speaker" class="phrase-drawer-similar__block-speaker">
-                    {{ expanded.block.speaker }}
-                  </div>
-                  <div v-if="expanded.block.parenthetical" class="phrase-drawer-similar__block-parenthetical">
-                    ({{ expanded.block.parenthetical }})
-                  </div>
-                  <p v-if="expanded.block.text" class="phrase-drawer-similar__block-text">
-                    <template v-for="(seg, i) in getHighlightSegments(expanded.block.text, expanded.dictionary.value)" :key="i">
-                      <span v-if="seg.highlight" class="phrase-drawer-similar__word-highlight">{{ seg.text }}</span>
-                      <template v-else>{{ seg.text }}</template>
-                    </template>
-                  </p>
-                </template>
-                <!-- Action -->
-                <template v-else-if="expanded.block?.type === 'action'">
-                  <p class="phrase-drawer-similar__block-text phrase-drawer-similar__block-text--action">
-                    <template v-for="(seg, i) in getHighlightSegments(expanded.block.text, expanded.dictionary.value)" :key="i">
-                      <span v-if="seg.highlight" class="phrase-drawer-similar__word-highlight">{{ seg.text }}</span>
-                      <template v-else>{{ seg.text }}</template>
-                    </template>
-                  </p>
-                </template>
-                <!-- Scene -->
-                <template v-else-if="expanded.block?.type === 'scene'">
-                  <div v-if="expanded.block.title" class="phrase-drawer-similar__block-heading">
-                    {{ expanded.block.title }}
-                  </div>
-                  <p v-if="expanded.block.description" class="phrase-drawer-similar__block-text">
-                    <template v-for="(seg, i) in getHighlightSegments(expanded.block.description, expanded.dictionary.value)" :key="i">
-                      <span v-if="seg.highlight" class="phrase-drawer-similar__word-highlight">{{ seg.text }}</span>
-                      <template v-else>{{ seg.text }}</template>
-                    </template>
-                  </p>
-                </template>
-                <!-- Section -->
-                <template v-else-if="expanded.block?.type === 'section'">
-                  <div class="phrase-drawer-similar__block-heading">
-                    {{ expanded.block.title || expanded.block.text }}
-                  </div>
-                </template>
-                <!-- Transition or fallback -->
-                <template v-else>
-                  <p v-if="expanded.block?.text" class="phrase-drawer-similar__block-text">
-                    <template v-for="(seg, i) in getHighlightSegments(expanded.block.text, expanded.dictionary.value)" :key="i">
-                      <span v-if="seg.highlight" class="phrase-drawer-similar__word-highlight">{{ seg.text }}</span>
-                      <template v-else>{{ seg.text }}</template>
-                    </template>
-                  </p>
-                  <p v-else-if="expanded.block?.description" class="phrase-drawer-similar__block-text">
-                    <template v-for="(seg, i) in getHighlightSegments(expanded.block.description, expanded.dictionary.value)" :key="i">
-                      <span v-if="seg.highlight" class="phrase-drawer-similar__word-highlight">{{ seg.text }}</span>
-                      <template v-else>{{ seg.text }}</template>
-                    </template>
-                  </p>
-                </template>
-              </div>
+          <!-- Dictionary entry: phrase + translation + comment -->
+          <div class="phrase-drawer-similar__entry">
+            <div class="phrase-drawer-similar__value">{{ expanded.dictionary.value }}</div>
+            <div v-if="expanded.dictionary.translation" class="phrase-drawer-similar__translation">
+              {{ expanded.dictionary.translation }}
             </div>
-          </Transition>
-        </div>
+            <div
+              v-if="expanded.dictionary.comments?.length"
+              class="phrase-drawer-similar__comment"
+            >
+              {{ expanded.dictionary.comments?.join(', ') }}
+            </div>
+          </div>
+
+          <!-- Context block: collapsed by default, expand on click -->
+          <div v-if="hasBlockContent(expanded.block)" class="phrase-drawer-similar__block">
+            <div
+              class="phrase-drawer-similar__block-header"
+              @click="toggleExpanded(expanded.dictionary.id)"
+            >
+              <el-button
+                text
+                size="small"
+                :icon="isExpanded(expanded.dictionary.id) ? ArrowUp : ArrowDown"
+              >
+                {{ isExpanded(expanded.dictionary.id) ? hideContextLabel : showContextLabel }}
+              </el-button>
+            </div>
+            <Transition name="phrase-drawer-similar-expand">
+              <div
+                v-show="isExpanded(expanded.dictionary.id)"
+                class="phrase-drawer-similar__block-body-wrap"
+              >
+                <div
+                  class="phrase-drawer-similar__block-body"
+                  :class="blockBodyClass(expanded.block)"
+                >
+                  <!-- Dialogue -->
+                  <template v-if="expanded.block?.type === 'dialogue'">
+                    <div v-if="expanded.block.speaker" class="phrase-drawer-similar__block-speaker">
+                      {{ expanded.block.speaker }}
+                    </div>
+                    <div v-if="expanded.block.parenthetical" class="phrase-drawer-similar__block-parenthetical">
+                      ({{ expanded.block.parenthetical }})
+                    </div>
+                    <p v-if="expanded.block.text" class="phrase-drawer-similar__block-text">
+                      <template
+                        v-for="(seg, i) in getHighlightSegments(expanded.block.text, expanded.dictionary.value)"
+                        :key="i"
+                      >
+                        <span
+                          v-if="seg.highlight"
+                          class="phrase-drawer-similar__word-highlight"
+                        >{{ seg.text }}</span>
+                        <template v-else>{{ seg.text }}</template>
+                      </template>
+                    </p>
+                  </template>
+                  <!-- Action -->
+                  <template v-else-if="expanded.block?.type === 'action'">
+                    <p class="phrase-drawer-similar__block-text phrase-drawer-similar__block-text--action">
+                      <template
+                        v-for="(seg, i) in getHighlightSegments(expanded.block.text, expanded.dictionary.value)"
+                        :key="i"
+                      >
+                        <span
+                          v-if="seg.highlight"
+                          class="phrase-drawer-similar__word-highlight"
+                        >{{ seg.text }}</span>
+                        <template v-else>{{ seg.text }}</template>
+                      </template>
+                    </p>
+                  </template>
+                  <!-- Scene -->
+                  <template v-else-if="expanded.block?.type === 'scene'">
+                    <div v-if="expanded.block.title" class="phrase-drawer-similar__block-heading">
+                      {{ expanded.block.title }}
+                    </div>
+                    <p v-if="expanded.block.description" class="phrase-drawer-similar__block-text">
+                      <template
+                        v-for="(seg, i) in getHighlightSegments(expanded.block.description, expanded.dictionary.value)"
+                        :key="i"
+                      >
+                        <span
+                          v-if="seg.highlight"
+                          class="phrase-drawer-similar__word-highlight"
+                        >{{ seg.text }}</span>
+                        <template v-else>{{ seg.text }}</template>
+                      </template>
+                    </p>
+                  </template>
+                  <!-- Section -->
+                  <template v-else-if="expanded.block?.type === 'section'">
+                    <div class="phrase-drawer-similar__block-heading">
+                      {{ expanded.block.title || expanded.block.text }}
+                    </div>
+                  </template>
+                  <!-- Transition or fallback -->
+                  <template v-else>
+                    <p v-if="expanded.block?.text" class="phrase-drawer-similar__block-text">
+                      <template
+                        v-for="(seg, i) in getHighlightSegments(expanded.block.text, expanded.dictionary.value)"
+                        :key="i"
+                      >
+                        <span
+                          v-if="seg.highlight"
+                          class="phrase-drawer-similar__word-highlight"
+                        >{{ seg.text }}</span>
+                        <template v-else>{{ seg.text }}</template>
+                      </template>
+                    </p>
+                    <p
+                      v-else-if="expanded.block?.description"
+                      class="phrase-drawer-similar__block-text"
+                    >
+                      <template
+                        v-for="(seg, i) in getHighlightSegments(expanded.block.description, expanded.dictionary.value)"
+                        :key="i"
+                      >
+                        <span
+                          v-if="seg.highlight"
+                          class="phrase-drawer-similar__word-highlight"
+                        >{{ seg.text }}</span>
+                        <template v-else>{{ seg.text }}</template>
+                      </template>
+                    </p>
+                  </template>
+                </div>
+              </div>
+            </Transition>
+          </div>
+        </el-card>
       </li>
     </ul>
   </div>
@@ -229,11 +268,7 @@ function getHighlightSegments(fullText: string | null | undefined, highlightValu
 
 /* Card for each similar entry */
 .phrase-drawer-similar__card {
-  padding: 16px;
   border-radius: 12px;
-  background: var(--el-fill-color-light);
-  border: 1px solid var(--el-border-color-lighter);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 /* Work (movie/series) title */

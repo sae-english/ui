@@ -7,17 +7,15 @@
     <template #header>
       <div class="book-content__header-inner">
         <BackButton :label="t.bookContent.backToBooks" @click="goBack" />
-        <button
+        <IconActionButton
           v-if="bookmark"
-          type="button"
           class="book-content__bookmark-jump"
           :title="t.bookContent.goToBookmark"
           @click="goToBookmark"
-        >
-          <el-icon :size="18">
-            <Star />
-          </el-icon>
-        </button>
+          :icon="Star"
+          :icon-size="18"
+          type="text"
+        />
       </div>
     </template>
 
@@ -118,6 +116,7 @@ import PhraseAddButton from '@/components/script/PhraseAddButton.vue'
 import { useBookChapter } from '@/features/books/useBookChapter'
 import AsyncState from '@/components/ui/AsyncState.vue'
 import ContentPageFrame from '@/components/layout/ContentPageFrame.vue'
+import IconActionButton from '@/components/ui/IconActionButton.vue'
 
 const { navQuery } = useLanguage()
 const { t } = useI18n()

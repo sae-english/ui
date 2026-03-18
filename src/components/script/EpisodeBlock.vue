@@ -90,14 +90,16 @@
       body-style="padding: 16px 20px 14px"
     >
       <div v-if="showBookmarkButton" class="episode-block__toolbar">
-        <el-button
+        <IconActionButton
           class="episode-block__bookmark-btn"
-          :class="{ 'episode-block__bookmark-btn--active': isActiveBookmark }"
+          :active="isActiveBookmark"
+          active-class="episode-block__bookmark-btn--active"
           type="text"
           :icon="Star"
           circle
           :title="t.common.saveBookmark"
           @click.stop="handleBookmarkClick"
+          :icon-size="14"
         />
       </div>
       <el-text tag="p" class="episode-block__dialogue-text">
@@ -129,13 +131,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { ElMessage, ElButton } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { Star } from '@element-plus/icons-vue'
 import { useI18n } from '@/i18n'
 import { getQuoteSegments } from '@/utils/quoteSegments'
 import { upsertBookBookmark, getBookBookmarkLocation } from '@/features/books/api'
 import { useBookBookmarkStore } from '@/features/books/bookmarkStore'
 import type { TranscriptBlock } from '@/types/movie'
+import IconActionButton from '@/components/ui/IconActionButton.vue'
 
 const { t } = useI18n()
 const route = useRoute()
