@@ -1,5 +1,6 @@
 <template>
   <el-drawer
+    class="phrase-drawer"
     :model-value="visible"
     :title="t.phrase.drawerTitle"
     :direction="PHRASE_DRAWER_DIRECTION"
@@ -104,7 +105,7 @@ const phraseFormRules = computed(() => ({
 const form = ref<PhraseFormModel>({
   phrase: "",
   translation: "",
-  comment: "",
+  comments: [""],
 });
 
 const { width: windowWidth } = useWindowSize();
@@ -165,7 +166,7 @@ watch(
       form.value = {
         phrase: props.initialPhrase.trim(),
         translation: "",
-        comment: "",
+        comments: [""],
       };
       searchTerm.value = form.value.phrase;
       showForm.value = false;
@@ -246,14 +247,22 @@ function onTranslate() {
 function onSubmit() {
   const ctx = openContext.value;
   if (!ctx || !canSubmit.value) return;
+  const comments =
+    form.value.comments
+      ?.map((c) => c.trim())
+      .filter((c) => c.length > 0) ?? [];
   saveMutation.mutate({
     value: form.value.phrase.trim(),
     translation: form.value.translation.trim(),
     language: language.value === 'hy' ? 'ARMENIAN' : 'ENGLISH',
-    comment: form.value.comment?.trim(),
+    comments,
     contentKey: ctx.contentKey,
     contentType: ctx.contentType,
     blockId: ctx.blockId,
   });
 }
 </script>
+
+<style scoped>
+</style>
+

@@ -2,8 +2,8 @@
 
 :root {
   /* Typography */
-  --fe-font-heading: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --fe-font-body: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+  --fe-font-heading: "DM Sans", system-ui, -apple-system, sans-serif;
+  --fe-font-body: "Source Sans 3", system-ui, -apple-system, sans-serif;
   font-family: var(--fe-font-body);
   font-size: 18px;
   line-height: 1.6;
@@ -82,15 +82,26 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--fe-font-heading);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--fe-text-primary);
 }
-h1 { font-size: 2rem; line-height: 1.25; }
-h2 { font-size: 1.5rem; line-height: 1.3; }
-h3 { font-size: 1.2rem; line-height: 1.4; }
+h1 {
+  font-size: 2rem;
+  line-height: 1.25;
+}
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+h3 {
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
 
 button {
   border-radius: 10px;
@@ -119,6 +130,36 @@ button:focus-visible {
   max-width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+/* Generic layout helpers used across views */
+.layout-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.layout-main--narrow {
+  max-width: 720px;
+}
+
+.layout-loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 50vh;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .layout-main {
+    padding: 0 20px 36px;
+  }
 }
 
 html.dark {

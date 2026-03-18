@@ -5,28 +5,23 @@
     </el-header>
 
     <el-main class="episode__main">
-      <div v-if="loading" class="content-loader-wrap">
-        <ContentLoader :message="t.episode.loadingEpisode" />
-      </div>
-
-      <el-empty v-else-if="error" :description="t.episode.notFound">
-        <el-button type="primary" @click="goBack">{{ t.episode.toHome }}</el-button>
-      </el-empty>
-
-      <template v-else-if="transcript">
+      <AsyncState
+        :is-loading="loading"
+        :has-data="!!transcript"
+        :error-message="error ? t.episode.notFound : null"
+        :retry-label="t.episode.toHome"
+        :empty-description="t.episode.notFound"
+        :loading-message="t.episode.loadingEpisode"
+        loading-wrapper-class="content-loader-wrap"
+        @retry="goBack"
+      >
         <el-main class="episode__content">
-          <EpisodeHero
-            :episode-id="transcript.episodeId"
-            :title="transcript.title"
-          />
-          <PhraseAddButton
-            :content-key="episodeContentKey"
-            content-type="EPISODE"
-          >
+          <EpisodeHero :episode-id="transcript.episodeId" :title="transcript.title" />
+          <PhraseAddButton :content-key="episodeContentKey" content-type="EPISODE">
             <EpisodeScript :blocks="transcript.blocks" />
           </PhraseAddButton>
         </el-main>
-      </template>
+      </AsyncState>
     </el-main>
   </el-container>
 </template>
@@ -42,7 +37,7 @@ import {
   toEpisodeTranscript,
   type EpisodeTranscript,
 } from '@/services/api'
-import ContentLoader from '@/components/ui/ContentLoader.vue'
+import AsyncState from '@/components/ui/AsyncState.vue'
 import EpisodeHero from '@/components/script/EpisodeHero.vue'
 import EpisodeScript from '@/components/script/EpisodeScript.vue'
 import PhraseAddButton from '@/components/script/PhraseAddButton.vue'

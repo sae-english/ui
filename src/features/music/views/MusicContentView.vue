@@ -7,15 +7,15 @@
     </el-header>
 
     <el-main class="music-content__main">
-      <div v-if="query.isLoading.value" class="content-loader-wrap">
-        <ContentLoader :message="t.musicContent.loadingTrack" />
-      </div>
-
-      <el-empty v-else-if="query.isError.value || !track" :description="errorMessage">
-        <el-button type="primary" @click="goBack">{{ t.musicCatalog.retry }}</el-button>
-      </el-empty>
-
-      <template v-else>
+      <AsyncState
+        :is-loading="query.isLoading.value"
+        :has-data="!!track"
+        :error-message="(query.isError.value || !track) ? errorMessage : null"
+        :retry-label="t.musicCatalog.retry"
+        :loading-message="t.musicContent.loadingTrack"
+        loading-wrapper-class="content-loader-wrap"
+        @retry="goBack"
+      >
         <div class="music-content__content">
           <div class="music-content__hero">
             <h1 class="music-content__title">{{ track.name }}</h1>
@@ -32,7 +32,7 @@
             <EpisodeScript :blocks="blocks" :highlight-quotes="true" />
           </PhraseAddButton>
         </div>
-      </template>
+      </AsyncState>
     </el-main>
   </el-container>
 </template>
@@ -41,14 +41,14 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuery } from '@tanstack/vue-query'
-import { ElButton, ElContainer, ElHeader, ElMain, ElEmpty } from 'element-plus'
+import { ElContainer, ElHeader, ElMain } from 'element-plus'
 import BackButton from '@/components/ui/BackButton.vue'
-import ContentLoader from '@/components/ui/ContentLoader.vue'
 import EpisodeScript from '@/components/script/EpisodeScript.vue'
 import PhraseAddButton from '@/components/script/PhraseAddButton.vue'
 import { getMusicTrackById, musicBlockToTranscriptBlock } from '@/features/music/api'
 import type { TranscriptBlock } from '@/types/movie'
 import { useI18n } from '@/i18n'
+import AsyncState from '@/components/ui/AsyncState.vue'
 
 const { t } = useI18n()
 const route = useRoute()

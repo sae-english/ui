@@ -6,32 +6,49 @@
     />
 
     <el-main class="settings__content">
-      <div v-if="loading" class="settings__loading content-loader-wrap">
-        <ContentLoader :message="t.common.loading" :icon-size="36" />
-      </div>
-
-      <div v-else-if="error" class="settings__error">
-        <el-alert type="error" :description="error" show-icon />
-        <el-button type="primary" class="settings__retry" @click="load">
-          {{ t.dictionary.retry }}
-        </el-button>
-      </div>
-
-      <div v-else class="settings__card">
-        <div class="settings__row">
-          <div class="settings__label-wrap">
-            <span class="settings__label">{{ t.settings.telegramSending }}</span>
-            <el-text type="info" size="small" class="settings__hint">
-              {{ t.settings.telegramSendingHint }}
-            </el-text>
+      <AsyncState
+        :is-loading="loading"
+        :has-data="true"
+        :error-message="error"
+        :retry-label="t.dictionary.retry"
+        :loading-message="t.common.loading"
+        @retry="load"
+      >
+        <template #loading>
+          <div class="settings__loading content-loader-wrap">
+            <ContentLoader :message="t.common.loading" :icon-size="36" />
           </div>
-          <el-switch
-            :model-value="telegramSendingEnabled"
-            :loading="saving"
-            @update:model-value="onToggle"
-          />
-        </div>
-      </div>
+        </template>
+
+        <template #error="{ onRetry }">
+          <div class="settings__error">
+            <el-alert type="error" :description="error" show-icon />
+            <el-button type="primary" class="settings__retry" @click="onRetry">
+              {{ t.dictionary.retry }}
+            </el-button>
+          </div>
+        </template>
+
+        <el-card
+          class="settings__card"
+          shadow="never"
+          body-style="{ padding: '1.25rem 1.5rem' }"
+        >
+          <div class="settings__row">
+            <div class="settings__label-wrap">
+              <span class="settings__label">{{ t.settings.telegramSending }}</span>
+              <el-text type="info" size="small" class="settings__hint">
+                {{ t.settings.telegramSendingHint }}
+              </el-text>
+            </div>
+            <el-switch
+              :model-value="telegramSendingEnabled"
+              :loading="saving"
+              @update:model-value="onToggle"
+            />
+          </div>
+        </el-card>
+      </AsyncState>
     </el-main>
   </div>
 </template>
@@ -42,6 +59,7 @@ import { ElMessage } from 'element-plus'
 import { useI18n } from '@/i18n'
 import ContentLoader from '@/components/ui/ContentLoader.vue'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
+import AsyncState from '@/components/ui/AsyncState.vue'
 import {
   getTelegramSendingEnabled,
   setTelegramSendingEnabled,
@@ -98,10 +116,7 @@ onMounted(load)
   margin-top: 0.75rem;
 }
 .settings__card {
-  background: var(--fe-bg-card, #fff);
   border-radius: 8px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 .settings__row {
   display: flex;

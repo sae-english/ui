@@ -1,17 +1,30 @@
 <template>
-  <RouterLink v-if="to" :to="to" class="home-card home-card--clickable">
-    <el-icon class="home-card__icon"><component :is="icon" /></el-icon>
-    <h2 class="home-card__title">{{ title }}</h2>
-    <p class="home-card__desc">{{ description }}</p>
+  <RouterLink v-if="to" :to="to" class="home-card-link">
+    <el-card
+      class="home-card home-card--clickable"
+      shadow="hover"
+      :body-style="{ padding: '24px 28px' }"
+    >
+      <el-icon class="home-card__icon"><component :is="icon" /></el-icon>
+      <h2 class="home-card__title">{{ title }}</h2>
+      <p class="home-card__desc">{{ description }}</p>
+    </el-card>
   </RouterLink>
-  <div v-else class="home-card home-card--disabled">
-    <el-icon class="home-card__icon"><component :is="icon" /></el-icon>
-    <h2 class="home-card__title">{{ title }}</h2>
-    <p class="home-card__desc">{{ description }}</p>
+  <div v-else class="home-card-wrapper home-card-wrapper--disabled">
+    <el-card
+      class="home-card home-card--disabled"
+      shadow="never"
+      :body-style="{ padding: '24px 28px' }"
+    >
+      <el-icon class="home-card__icon"><component :is="icon" /></el-icon>
+      <h2 class="home-card__title">{{ title }}</h2>
+      <p class="home-card__desc">{{ description }}</p>
+    </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ElCard, ElIcon } from "element-plus";
 import type { RouteLocationRaw } from "vue-router";
 
 defineProps<{
@@ -23,16 +36,24 @@ defineProps<{
 </script>
 
 <style scoped>
+.home-card-link {
+  display: block;
+  text-decoration: none;
+  height: 100%;
+}
+
+.home-card-wrapper {
+  height: 100%;
+}
+
 .home-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 28px;
+  height: 100%;
   border-radius: 16px;
   border: 1px solid var(--fe-border);
   background: var(--fe-bg-card);
-  text-decoration: none;
-  color: inherit;
   transition:
     border-color var(--fe-transition-fast),
     background var(--fe-transition-fast),
@@ -55,13 +76,8 @@ defineProps<{
   color: var(--fe-accent);
 }
 
-.home-card--clickable:hover .home-card__arrow {
-  transform: translateX(4px);
-}
-
-.home-card--disabled {
+.home-card-wrapper--disabled {
   opacity: 0.7;
-  cursor: default;
 }
 
 .home-card__icon {
@@ -92,11 +108,5 @@ defineProps<{
   color: var(--fe-accent);
   margin-top: auto;
   transition: transform var(--fe-transition-fast);
-}
-
-@media (max-width: 600px) {
-  .home-card {
-    padding: 24px;
-  }
 }
 </style>

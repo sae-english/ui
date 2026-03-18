@@ -16,17 +16,16 @@
     </el-header>
 
     <el-main class="book-content__main">
-      <div v-if="query.isLoading.value" class="content-loader-wrap">
-        <ContentLoader :message="t.bookContent.loadingContent" />
-      </div>
-
-      <el-empty v-else-if="query.isError.value" :description="errorMessage">
-        <el-button type="primary" @click="goBack">{{
-          t.bookCatalog.retry
-        }}</el-button>
-      </el-empty>
-
-      <template v-else-if="hasLoadedOnce">
+      <AsyncState
+        :is-loading="query.isLoading.value"
+        :has-data="hasLoadedOnce"
+        :error-message="query.isError.value ? errorMessage : null"
+        :retry-label="t.bookCatalog.retry"
+        :empty-description="t.bookContent.contentNotFound"
+        :loading-message="t.bookContent.loadingContent"
+        loading-wrapper-class="content-loader-wrap"
+        @retry="goBack"
+      >
         <div class="book-content__content">
           <div class="book-content__hero">
             <h1 class="book-content__title">{{ firstPage?.name }}</h1>
@@ -83,9 +82,7 @@
           class="book-content__load-more"
           @load-more="query.fetchNextPage()"
         />
-      </template>
-
-      <el-empty v-else :description="t.bookContent.contentNotFound" />
+      </AsyncState>
     </el-main>
   </el-container>
 </template>
@@ -96,11 +93,11 @@ import { useRoute, useRouter } from "vue-router";
 import BackButton from "@/components/ui/BackButton.vue";
 import { useLanguage } from "@/composables/useLanguage";
 import { useI18n } from "@/i18n";
-import ContentLoader from "@/components/ui/ContentLoader.vue";
 import InfiniteScrollLoadMore from "@/components/ui/InfiniteScrollLoadMore.vue";
 import EpisodeScript from "@/components/script/EpisodeScript.vue";
 import PhraseAddButton from "@/components/script/PhraseAddButton.vue";
 import { useBookContent } from "@/features/books/useBookContent";
+import AsyncState from "@/components/ui/AsyncState.vue";
 
 const { navQuery } = useLanguage();
 const { t } = useI18n();

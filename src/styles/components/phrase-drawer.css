@@ -1,7 +1,12 @@
 /* Phrase drawer */
 
+.phrase-drawer .el-drawer__header {
+  margin-bottom: 0 !important;
+}
+
 .phrase-drawer__body {
-  padding-right: 4px;
+  /* Меньше отступа под заголовком drawer */
+  padding: 8px 4px 16px;
   display: flex;
   flex-direction: column;
   gap: 0;

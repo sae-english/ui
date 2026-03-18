@@ -1,31 +1,45 @@
 <template>
   <div class="dictionary">
-    <PageSectionHeader
-      :title="t.dictionary.title"
-      :subtitle="t.dictionary.subtitle"
-    />
+    <div class="dictionary__header">
+      <PageSectionHeader
+        :title="t.dictionary.title"
+        :subtitle="t.dictionary.subtitle"
+      />
+
+      <el-button
+        circle
+        type="primary"
+        class="dictionary__add-btn"
+        :title="t.phrase.drawerTitle"
+        @click="openAddDrawer"
+      >
+        <el-icon>
+          <DocumentAdd />
+        </el-icon>
+      </el-button>
+    </div>
 
     <el-main class="dictionary__content">
-      <div
-        v-if="query.isLoading.value && !hasLoadedOnce"
-        class="dictionary__loading content-loader-wrap"
+      <AsyncState
+        :is-loading="query.isLoading.value && !hasLoadedOnce"
+        :has-data="allEntries.length > 0"
+        :error-message="errorMessage || null"
+        :empty-description="t.dictionary.empty"
+        :retry-label="t.dictionary.retry"
+        :loading-message="t.dictionary.loading"
+        :loading-icon="Loading"
+        :loading-icon-size="36"
+        loading-wrapper-class="dictionary__loading content-loader-wrap"
+        @retry="query.refetch"
       >
-        <ContentLoader :message="t.dictionary.loading" :icon="Loading" :icon-size="36" />
-      </div>
+        <template #empty>
+          <el-empty :description="t.dictionary.empty">
+            <el-text type="info" size="small">
+              {{ t.dictionary.emptyHint }}
+            </el-text>
+          </el-empty>
+        </template>
 
-      <el-empty v-else-if="errorMessage" :description="errorMessage">
-        <el-button type="primary" @click="query.refetch">
-          {{ t.dictionary.retry }}
-        </el-button>
-      </el-empty>
-
-      <el-empty v-else-if="!allEntries.length" :description="t.dictionary.empty">
-        <el-text type="info" size="small">
-          {{ t.dictionary.emptyHint }}
-        </el-text>
-      </el-empty>
-
-      <template v-else>
         <ul class="dictionary__list">
           <li
             v-for="entry in allEntries"
@@ -45,7 +59,7 @@
           class="dictionary__load-more"
           @load-more="query.fetchNextPage()"
         />
-      </template>
+      </AsyncState>
     </el-main>
 
     <el-dialog
@@ -62,25 +76,35 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <PhraseDrawer
+      v-model:visible="drawerVisible"
+      :initial-phrase="drawerInitialPhrase"
+      :content-key="null"
+      :content-type="drawerContentType"
+      :block-id="null"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Loading } from '@element-plus/icons-vue'
+import { Loading, DocumentAdd } from '@element-plus/icons-vue'
 import { useInfiniteQuery } from '@tanstack/vue-query'
 import { useI18n } from '@/i18n'
 import { useLanguage } from '@/composables/useLanguage'
-import ContentLoader from '@/components/ui/ContentLoader.vue'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
 import DictionaryEntryCard from '@/features/dictionary/components/DictionaryEntryCard.vue'
+import AsyncState from '@/components/ui/AsyncState.vue'
 import {
   getDictionaryPage,
   deleteDictionaryEntry,
+  type DictionaryContentType,
   type DictionaryDto,
 } from '@/services/api'
 import InfiniteScrollLoadMore from '@/components/ui/InfiniteScrollLoadMore.vue'
+import PhraseDrawer from '@/components/script/PhraseDrawer.vue'
 
 const { t } = useI18n()
 const { language } = useLanguage()
@@ -122,6 +146,21 @@ const errorMessage = computed(() => {
   return ''
 })
 
+const drawerVisible = ref(false)
+const drawerInitialPhrase = ref('')
+// Dictionary entries created from the dictionary page don't have content context.
+// We still need to send some DictionaryContentType to backend; contentKey/blockId will be omitted.
+const drawerContentType: DictionaryContentType = 'MOVIE'
+
+function openAddDrawer() {
+  drawerInitialPhrase.value = ''
+  drawerVisible.value = true
+}
+
+watch(drawerVisible, (visible, prev) => {
+  if (prev && !visible) query.refetch()
+})
+
 function confirmDelete(entry: DictionaryDto) {
   entryToDelete.value = entry
   deleteDialogVisible.value = true
@@ -145,3 +184,27 @@ async function doDelete() {
   }
 }
 </script>
+
+<style scoped>
+.dictionary__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dictionary__add-btn {
+  margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .dictionary__header {
+    margin-bottom: 12px;
+  }
+
+  .dictionary__add-btn {
+    margin-top: 2px;
+  }
+}
+</style>

@@ -100,7 +100,7 @@ export interface DictionaryDto {
   id: number
   value: string
   translation: string
-  comment: string | null
+  comments: string[] | null
   contentKey: string | null
   contentType: DictionaryContentType | null
   blockId: string | null
@@ -138,7 +138,7 @@ export interface DictionaryRequestDto {
   value: string
   translation: string
   language?: string
-  comment?: string
+  comments?: string[]
   contentKey?: string | null
   contentType?: DictionaryContentType | null
   blockId?: string | null
@@ -182,7 +182,9 @@ export async function saveDictionaryEntry(
     value: payload.value?.trim() ?? '',
     translation: payload.translation?.trim() ?? '',
     language: payload.language ?? 'ENGLISH',
-    comment: payload.comment?.trim() || null,
+  }
+  if (payload.comments && payload.comments.length) {
+    body.comments = payload.comments.map((c) => c?.trim()).filter((c) => !!c)
   }
   if (payload.contentKey != null) body.contentKey = payload.contentKey
   if (payload.contentType != null) body.contentType = payload.contentType

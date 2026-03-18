@@ -4,7 +4,16 @@
       <div class="dictionary-entry-card__main">
         <span class="dictionary-entry-card__value">{{ entry.value }}</span>
         <span class="dictionary-entry-card__translation">{{ entry.translation }}</span>
-        <p v-if="entry.comment" class="dictionary-entry-card__comment">{{ entry.comment }}</p>
+        <div v-if="entry.comments?.length" class="dictionary-entry-card__divider" />
+        <ul v-if="entry.comments?.length" class="dictionary-entry-card__comments">
+          <li
+            v-for="(comment, idx) in entry.comments"
+            :key="idx"
+            class="dictionary-entry-card__comment-item"
+          >
+            {{ comment }}
+          </li>
+        </ul>
       </div>
       <div class="dictionary-entry-card__footer">
         <el-text type="info" size="small" class="dictionary-entry-card__date">
@@ -86,12 +95,34 @@ function formatDate(iso: string): string {
   margin-bottom: 4px;
 }
 
-.dictionary-entry-card__comment {
-  font-size: 0.95rem;
+.dictionary-entry-card__comments {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dictionary-entry-card__comment-item {
+  font-size: 0.9rem;
   color: var(--fe-text-muted);
   font-style: italic;
-  margin: 0;
   line-height: 1.4;
+  position: relative;
+  padding-left: 14px;
+}
+
+.dictionary-entry-card__comment-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.dictionary-entry-card__divider {
+  margin-top: 4px;
+  border-top: 1px dashed rgba(148, 163, 184, 0.4);
 }
 
 .dictionary-entry-card__footer {

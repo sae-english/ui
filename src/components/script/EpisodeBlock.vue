@@ -90,17 +90,15 @@
       body-style="padding: 16px 20px 14px"
     >
       <div v-if="showBookmarkButton" class="episode-block__toolbar">
-        <button
-          type="button"
+        <el-button
           class="episode-block__bookmark-btn"
           :class="{ 'episode-block__bookmark-btn--active': isActiveBookmark }"
+          type="text"
+          :icon="Star"
+          circle
           :title="t.common.saveBookmark"
           @click.stop="handleBookmarkClick"
-        >
-          <el-icon :size="14">
-            <Star />
-          </el-icon>
-        </button>
+        />
       </div>
       <el-text tag="p" class="episode-block__dialogue-text">
         <!-- Если есть spans (книга) — рендерим их, иначе старое поведение -->
@@ -131,7 +129,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElButton } from 'element-plus'
 import { Star } from '@element-plus/icons-vue'
 import { useI18n } from '@/i18n'
 import { getQuoteSegments } from '@/utils/quoteSegments'
@@ -233,24 +231,7 @@ function handleBookmarkClick() {
 }
 
 .episode-block__bookmark-btn {
-  border: none;
-  background: transparent;
-  color: var(--el-text-color-secondary);
-  cursor: pointer;
-  padding: 0;
-  font-size: 0.85rem;
-  line-height: 1;
   opacity: 0.6;
-  transition:
-    opacity 0.12s ease-out,
-    transform 0.08s ease-out,
-    color 0.12s ease-out;
-}
-
-.episode-block__bookmark-btn:hover {
-  opacity: 1;
-  transform: translateY(-1px);
-  color: var(--el-color-primary);
 }
 
 .episode-block__bookmark-btn--active {

@@ -6,41 +6,39 @@
     />
 
     <el-main class="catalog__content">
-      <div v-if="query.isLoading.value" class="catalog__loading content-loader-wrap">
-        <ContentLoader :message="t.musicCatalog.loading" />
-      </div>
-
-      <el-empty
-        v-else-if="query.isError.value || !tracks.length"
-        :description="errorMessage"
+      <AsyncState
+        :is-loading="query.isLoading.value"
+        :has-data="tracks.length > 0"
+        :error-message="errorMessage || null"
+        :empty-description="t.musicCatalog.noTracks"
+        :retry-label="t.musicCatalog.retry"
+        :loading-message="t.musicCatalog.loading"
+        loading-wrapper-class="catalog__loading content-loader-wrap"
+        @retry="query.refetch"
       >
-        <el-button type="primary" @click="() => query.refetch()">
-          {{ t.musicCatalog.retry }}
-        </el-button>
-      </el-empty>
-
-      <section v-else class="catalog__section">
-        <el-row :gutter="24" class="catalog__poster-list">
-          <el-col
-            v-for="item in tracks"
-            :key="item.id"
-            :xs="24"
-            :sm="12"
-            :md="8"
-            :lg="6"
-            class="catalog__poster-item"
-          >
-            <MusicTrackCard
-              :track="item"
-              :to="{
-                name: 'music-content',
-                params: { id: item.id },
-                query: $route.query,
-              }"
-            />
-          </el-col>
-        </el-row>
-      </section>
+        <section class="catalog__section">
+          <el-row :gutter="24" class="catalog__poster-list">
+            <el-col
+              v-for="item in tracks"
+              :key="item.id"
+              :xs="24"
+              :sm="12"
+              :md="8"
+              :lg="6"
+              class="catalog__poster-item"
+            >
+              <MusicTrackCard
+                :track="item"
+                :to="{
+                  name: 'music-content',
+                  params: { id: item.id },
+                  query: $route.query,
+                }"
+              />
+            </el-col>
+          </el-row>
+        </section>
+      </AsyncState>
     </el-main>
   </div>
 </template>
@@ -48,10 +46,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
-import { ElButton, ElEmpty, ElMain, ElRow, ElCol } from 'element-plus'
+import { ElMain, ElRow, ElCol } from 'element-plus'
 import { getMusicTracks } from '@/features/music/api'
 import MusicTrackCard from '@/features/music/components/MusicTrackCard.vue'
-import ContentLoader from '@/components/ui/ContentLoader.vue'
+import AsyncState from '@/components/ui/AsyncState.vue'
 import { useI18n } from '@/i18n'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
 

@@ -5,15 +5,16 @@
     </el-header>
 
     <el-main class="series-content__main">
-      <div v-if="loading" class="content-loader-wrap">
-        <ContentLoader :message="t.seriesContent.loadingEpisodes" />
-      </div>
-
-      <el-empty v-else-if="error" :description="error">
-        <el-button type="primary" @click="loadEpisodes">{{ t.seriesCatalog.retry }}</el-button>
-      </el-empty>
-
-      <template v-else-if="episodes.length > 0">
+      <AsyncState
+        :is-loading="loading"
+        :has-data="episodes.length > 0"
+        :error-message="error"
+        :retry-label="t.seriesCatalog.retry"
+        :empty-description="t.seriesContent.noEpisodes"
+        :loading-message="t.seriesContent.loadingEpisodes"
+        loading-wrapper-class="content-loader-wrap"
+        @retry="loadEpisodes"
+      >
         <section class="series-content__section">
           <h1 class="series-content__title">{{ seriesName }}</h1>
           <ul class="series-content__episode-list">
@@ -34,9 +35,7 @@
             </li>
           </ul>
         </section>
-      </template>
-
-      <el-empty v-else :description="t.seriesContent.noEpisodes" />
+      </AsyncState>
     </el-main>
   </el-container>
 </template>
@@ -46,7 +45,7 @@ import { computed, ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import BackButton from '@/components/ui/BackButton.vue'
-import ContentLoader from '@/components/ui/ContentLoader.vue'
+import AsyncState from '@/components/ui/AsyncState.vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
 import { getEpisodesByTitleId } from '@/features/series/api'

@@ -5,11 +5,13 @@
     </el-header>
 
     <el-main class="movie-content__main">
-      <div v-if="query.isLoading.value" class="content-loader-wrap">
-        <ContentLoader :message="t.movieContent.loadingScript" />
-      </div>
-
-      <template v-else-if="blocks.length > 0 || hasLoadedOnce">
+      <AsyncState
+        :is-loading="query.isLoading.value"
+        :has-data="blocks.length > 0 || hasLoadedOnce"
+        :empty-description="t.movieContent.contentNotFound"
+        :loading-message="t.movieContent.loadingScript"
+        loading-wrapper-class="content-loader-wrap"
+      >
         <el-main class="movie-content__content">
           <PhraseAddButton :content-key="contentKey" content-type="MOVIE">
             <EpisodeScript :blocks="blocks" />
@@ -22,9 +24,7 @@
           class="movie-content__load-more"
           @load-more="query.fetchNextPage()"
         />
-      </template>
-
-      <el-empty v-else :description="t.movieContent.contentNotFound" />
+      </AsyncState>
     </el-main>
   </el-container>
 </template>
@@ -42,11 +42,11 @@ import BackButton from "@/components/ui/BackButton.vue";
 import { useLanguage } from "@/composables/useLanguage";
 import { useI18n } from "@/i18n";
 import type { TranscriptBlock } from "@/types/movie";
-import ContentLoader from "@/components/ui/ContentLoader.vue";
 import InfiniteScrollLoadMore from "@/components/ui/InfiniteScrollLoadMore.vue";
 import EpisodeScript from "@/components/script/EpisodeScript.vue";
 import PhraseAddButton from "@/components/script/PhraseAddButton.vue";
 import { DEFAULT_PAGE_SIZE } from "@/constants/defaults";
+import AsyncState from "@/components/ui/AsyncState.vue";
 
 const route = useRoute();
 const router = useRouter();

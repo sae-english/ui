@@ -5,15 +5,16 @@
     </el-header>
 
     <el-main class="comedy-content__main">
-      <div v-if="loading" class="content-loader-wrap">
-        <ContentLoader :message="t.comedyContent.loadingScript" />
-      </div>
-
-      <el-empty v-else-if="error" :description="error">
-        <el-button type="primary" @click="goBack">{{ t.comedyCatalog.retry }}</el-button>
-      </el-empty>
-
-      <template v-else-if="special">
+      <AsyncState
+        :is-loading="loading"
+        :has-data="!!special"
+        :error-message="error"
+        :retry-label="t.comedyCatalog.retry"
+        :empty-description="t.comedyContent.contentNotFound"
+        :loading-message="t.comedyContent.loadingScript"
+        loading-wrapper-class="content-loader-wrap"
+        @retry="goBack"
+      >
         <div class="comedy-content__content">
           <div class="comedy-content__hero">
             <h1 class="comedy-content__title">{{ special.name }}</h1>
@@ -24,7 +25,7 @@
             <EpisodeScript :blocks="blocks" />
           </PhraseAddButton>
         </div>
-      </template>
+      </AsyncState>
     </el-main>
   </el-container>
 </template>
@@ -39,9 +40,9 @@ import { useI18n } from '@/i18n'
 import { getComedySpecialById, comedyBlockToTranscriptBlock } from '@/features/comedy/api'
 import type { ComedySpecialFullDto } from '@/features/comedy/types'
 import type { TranscriptBlock } from '@/types/movie'
-import ContentLoader from '@/components/ui/ContentLoader.vue'
 import EpisodeScript from '@/components/script/EpisodeScript.vue'
 import PhraseAddButton from '@/components/script/PhraseAddButton.vue'
+import AsyncState from '@/components/ui/AsyncState.vue'
 
 const route = useRoute()
 const router = useRouter()

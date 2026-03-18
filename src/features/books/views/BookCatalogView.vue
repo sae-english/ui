@@ -6,16 +6,19 @@
     />
 
     <el-main class="catalog__content">
-      <div v-if="loading" class="catalog__loading content-loader-wrap">
-        <ContentLoader :message="t.bookCatalog.loading" :icon="Loading" :icon-size="32" />
-      </div>
-
-      <el-empty v-else-if="error" :description="error">
-        <el-button type="primary" @click="loadBooks">{{ t.bookCatalog.retry }}</el-button>
-      </el-empty>
-
-      <template v-else>
-        <section v-if="books.length" class="catalog__section">
+      <AsyncState
+        :is-loading="loading"
+        :has-data="books.length > 0"
+        :error-message="error"
+        :empty-description="t.bookCatalog.noBooks"
+        :retry-label="t.bookCatalog.retry"
+        :loading-message="t.bookCatalog.loading"
+        :loading-icon="Loading"
+        :loading-icon-size="32"
+        loading-wrapper-class="catalog__loading content-loader-wrap"
+        @retry="loadBooks"
+      >
+        <section class="catalog__section">
           <h2 class="catalog__section-title">{{ t.bookCatalog.sectionBooks }}</h2>
           <el-row :gutter="24" class="catalog__poster-list">
             <el-col
@@ -31,9 +34,7 @@
             </el-col>
           </el-row>
         </section>
-
-        <el-empty v-else :description="t.bookCatalog.noBooks" />
-      </template>
+      </AsyncState>
     </el-main>
   </div>
 </template>
@@ -45,7 +46,7 @@ import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
-import ContentLoader from '@/components/ui/ContentLoader.vue'
+import AsyncState from '@/components/ui/AsyncState.vue'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
 import { getBooks } from '@/features/books/api'
 import type { BookDto } from '@/features/books/types'
