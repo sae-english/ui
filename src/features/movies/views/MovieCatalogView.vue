@@ -18,22 +18,20 @@
         loading-wrapper-class="catalog__loading content-loader-wrap"
         @retry="loadMovies"
       >
-        <section class="catalog__section">
-          <h2 class="catalog__section-title">{{ t.catalog.sectionMovies }}</h2>
-          <el-row :gutter="24" class="catalog__poster-list">
-            <el-col
-              v-for="movie in movies"
-              :key="movie.movieId"
-              :xs="12"
-              :sm="8"
-              :md="6"
-              :lg="4"
-              class="catalog__poster-item"
-            >
-              <MoviePosterCard :title="movie" @click="openMovie(movie)" />
-            </el-col>
-          </el-row>
-        </section>
+        <CatalogPosterGrid
+          :items="movies"
+          :item-key="(m) => m.movieId"
+          :section-title="t.catalog.sectionMovies"
+          :xs="12"
+          :sm="8"
+          :md="6"
+          :lg="4"
+          :gutter="24"
+        >
+          <template #item="{ item }">
+            <MoviePosterCard :title="item" @click="openMovie(item)" />
+          </template>
+        </CatalogPosterGrid>
       </AsyncState>
     </el-main>
   </div>
@@ -48,6 +46,7 @@ import { ElMessage } from "element-plus";
 import { Loading } from "@element-plus/icons-vue";
 import AsyncState from "@/components/ui/AsyncState.vue";
 import PageSectionHeader from "@/components/layout/PageSectionHeader.vue";
+import CatalogPosterGrid from "@/components/layout/CatalogPosterGrid.vue";
 import { getLimitedMovies } from "@/features/movies/api";
 import type { MovieDto } from "@/features/movies/types";
 import { CATALOG_MOVIES_LIMIT } from "@/constants/defaults";

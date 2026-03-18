@@ -18,22 +18,20 @@
         loading-wrapper-class="catalog__loading content-loader-wrap"
         @retry="loadSpecials"
       >
-        <section class="catalog__section">
-          <h2 class="catalog__section-title">{{ t.comedyCatalog.sectionSpecials }}</h2>
-          <el-row :gutter="24" class="catalog__poster-list">
-            <el-col
-              v-for="special in specials"
-              :key="special.id"
-              :xs="12"
-              :sm="8"
-              :md="6"
-              :lg="4"
-              class="catalog__poster-item"
-            >
-              <ComedySpecialCard :special="special" @click="openSpecial(special)" />
-            </el-col>
-          </el-row>
-        </section>
+        <CatalogPosterGrid
+          :items="specials"
+          :item-key="(sp) => sp.id"
+          :section-title="t.comedyCatalog.sectionSpecials"
+          :xs="12"
+          :sm="8"
+          :md="6"
+          :lg="4"
+          :gutter="24"
+        >
+          <template #item="{ item }">
+            <ComedySpecialCard :special="item" @click="openSpecial(item)" />
+          </template>
+        </CatalogPosterGrid>
       </AsyncState>
     </el-main>
   </div>
@@ -48,6 +46,7 @@ import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
+import CatalogPosterGrid from '@/components/layout/CatalogPosterGrid.vue'
 import { getComedySpecials } from '@/features/comedy/api'
 import type { ComedySpecialDto } from '@/features/comedy/types'
 import { CATALOG_COMEDY_LIMIT } from '@/constants/defaults'

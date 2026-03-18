@@ -18,22 +18,20 @@
         loading-wrapper-class="catalog__loading content-loader-wrap"
         @retry="loadSeries"
       >
-        <section class="catalog__section">
-          <h2 class="catalog__section-title">{{ t.seriesCatalog.sectionSeries }}</h2>
-          <el-row :gutter="24" class="catalog__poster-list">
-            <el-col
-              v-for="series in seriesList"
-              :key="series.titleId"
-              :xs="12"
-              :sm="8"
-              :md="6"
-              :lg="4"
-              class="catalog__poster-item"
-            >
-              <SeriesPosterCard :series="series" @click="openSeries(series)" />
-            </el-col>
-          </el-row>
-        </section>
+        <CatalogPosterGrid
+          :items="seriesList"
+          :item-key="(s) => s.titleId"
+          :section-title="t.seriesCatalog.sectionSeries"
+          :xs="12"
+          :sm="8"
+          :md="6"
+          :lg="4"
+          :gutter="24"
+        >
+          <template #item="{ item }">
+            <SeriesPosterCard :series="item" @click="openSeries(item)" />
+          </template>
+        </CatalogPosterGrid>
       </AsyncState>
     </el-main>
   </div>
@@ -48,6 +46,7 @@ import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
+import CatalogPosterGrid from '@/components/layout/CatalogPosterGrid.vue'
 import { getLimitedSeries } from '@/features/series/api'
 import type { SeriesDto } from '@/features/series/types'
 import { CATALOG_SERIES_LIMIT } from '@/constants/defaults'

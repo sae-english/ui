@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
+    "typecheck": "vue-tsc -b",
+    "build:ci": "sh -c \"npm run typecheck & tsc_pid=$!; vite build; vite_status=$?; wait $tsc_pid; exit $vite_status\"",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -16,28 +16,27 @@
         loading-wrapper-class="catalog__loading content-loader-wrap"
         @retry="query.refetch"
       >
-        <section class="catalog__section">
-          <el-row :gutter="24" class="catalog__poster-list">
-            <el-col
-              v-for="item in tracks"
-              :key="item.id"
-              :xs="24"
-              :sm="12"
-              :md="8"
-              :lg="6"
-              class="catalog__poster-item"
-            >
-              <MusicTrackCard
-                :track="item"
-                :to="{
-                  name: 'music-content',
-                  params: { id: item.id },
-                  query: $route.query,
-                }"
-              />
-            </el-col>
-          </el-row>
-        </section>
+        <CatalogPosterGrid
+          :items="tracks"
+          :item-key="(x) => x.id"
+          :section-title="null"
+          :xs="24"
+          :sm="12"
+          :md="8"
+          :lg="6"
+          :gutter="24"
+        >
+          <template #item="{ item }">
+            <MusicTrackCard
+              :track="item"
+              :to="{
+                name: 'music-content',
+                params: { id: item.id },
+                query: $route.query,
+              }"
+            />
+          </template>
+        </CatalogPosterGrid>
       </AsyncState>
     </el-main>
   </div>
@@ -46,12 +45,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
-import { ElMain, ElRow, ElCol } from 'element-plus'
+import { ElMain } from 'element-plus'
 import { getMusicTracks } from '@/features/music/api'
 import MusicTrackCard from '@/features/music/components/MusicTrackCard.vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
 import { useI18n } from '@/i18n'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
+import CatalogPosterGrid from '@/components/layout/CatalogPosterGrid.vue'
 
 const { t } = useI18n()
 
