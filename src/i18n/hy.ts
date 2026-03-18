@@ -173,6 +173,8 @@ export const hy: Translations = {
     subtitle: "Koghmany nerkayutyunner",
     telegramSending: "Banner yevser Telegram",
     telegramSendingHint: "Eranov barcrvelov bararanic bannery yevsven Telegram tvyalnerov.",
+    telegramSendingIntervalMinutes: "Telegrami arancq (minutner)",
+    telegramSendingIntervalHint: "Kaxordum e, teselov inchqan chox Telegram erkokhner@ garq@. Defolty 60 minut.",
     failedLoad: "Chkarogh enq barcrnel kaxordutyunnery",
     failedSave: "Chkarogh enq pahvel",
     saved: "Kaxordutyunnery pahvac e",

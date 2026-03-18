@@ -223,7 +223,7 @@ export async function translate(
 
 // --- Settings (backend: app_setting table) ---
 
-export type TelegramSendingSetting = { enabled: boolean }
+export type TelegramSendingSetting = { enabled: boolean; intervalMinutes: number }
 
 export async function getTelegramSendingEnabled(): Promise<TelegramSendingSetting> {
   const res = await apiFetch(`${baseUrl()}/api/settings/telegram-sending`)
@@ -236,6 +236,16 @@ export async function setTelegramSendingEnabled(enabled: boolean): Promise<Teleg
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ enabled }),
+  })
+  if (!res.ok) throw new Error('Failed to save settings')
+  return res.json()
+}
+
+export async function setTelegramSendingIntervalMinutes(minutes: number): Promise<TelegramSendingSetting> {
+  const res = await apiFetch(`${baseUrl()}/api/settings/telegram-sending`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ intervalMinutes: minutes }),
   })
   if (!res.ok) throw new Error('Failed to save settings')
   return res.json()

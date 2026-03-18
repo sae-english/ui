@@ -36,7 +36,9 @@
         >
           <div class="settings__row">
             <div class="settings__label-wrap">
-              <span class="settings__label">{{ t.settings.telegramSending }}</span>
+              <span class="settings__label">{{
+                t.settings.telegramSending
+              }}</span>
               <el-text type="info" size="small" class="settings__hint">
                 {{ t.settings.telegramSendingHint }}
               </el-text>
@@ -47,6 +49,26 @@
               @update:model-value="onToggle"
             />
           </div>
+
+          <div class="settings__row settings__row--mt">
+            <div class="settings__label-wrap">
+              <span class="settings__label">{{
+                t.settings.telegramSendingIntervalMinutes
+              }}</span>
+              <el-text type="info" size="small" class="settings__hint">
+                {{ t.settings.telegramSendingIntervalHint }}
+              </el-text>
+            </div>
+
+            <el-input-number
+              v-model="telegramSendingIntervalMinutes"
+              :min="1"
+              :disabled="!telegramSendingEnabled"
+              :step="1"
+              :precision="0"
+              @change="onIntervalChange"
+            />
+          </div>
         </el-card>
       </AsyncState>
     </el-main>
@@ -54,54 +76,74 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { useI18n } from '@/i18n'
-import ContentLoader from '@/components/ui/ContentLoader.vue'
-import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
-import AsyncState from '@/components/ui/AsyncState.vue'
+import { ref, onMounted } from "vue";
+import { ElMessage } from "element-plus";
+import { useI18n } from "@/i18n";
+import ContentLoader from "@/components/ui/ContentLoader.vue";
+import PageSectionHeader from "@/components/layout/PageSectionHeader.vue";
+import AsyncState from "@/components/ui/AsyncState.vue";
 import {
   getTelegramSendingEnabled,
   setTelegramSendingEnabled,
-} from '@/services/api'
+  setTelegramSendingIntervalMinutes,
+} from "@/services/api";
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const telegramSendingEnabled = ref(false)
-const loading = ref(true)
-const saving = ref(false)
-const error = ref<string | null>(null)
+const telegramSendingEnabled = ref(false);
+const telegramSendingIntervalMinutes = ref(60);
+const loading = ref(true);
+const saving = ref(false);
+const error = ref<string | null>(null);
 
 async function load() {
-  loading.value = true
-  error.value = null
+  loading.value = true;
+  error.value = null;
   try {
-    const data = await getTelegramSendingEnabled()
-    telegramSendingEnabled.value = data.enabled
+    const data = await getTelegramSendingEnabled();
+    telegramSendingEnabled.value = data.enabled;
+    telegramSendingIntervalMinutes.value = data.intervalMinutes;
   } catch (e) {
-    console.error(e)
-    error.value = t.value.settings.failedLoad
-    ElMessage.error(error.value)
+    console.error(e);
+    error.value = t.value.settings.failedLoad;
+    ElMessage.error(error.value);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 async function onToggle(enabled: boolean) {
-  saving.value = true
+  saving.value = true;
   try {
-    const data = await setTelegramSendingEnabled(enabled)
-    telegramSendingEnabled.value = data.enabled
-    ElMessage.success(t.value.settings.saved)
+    const data = await setTelegramSendingEnabled(enabled);
+    telegramSendingEnabled.value = data.enabled;
+    telegramSendingIntervalMinutes.value = data.intervalMinutes;
+    ElMessage.success(t.value.settings.saved);
   } catch (e) {
-    console.error(e)
-    ElMessage.error(t.value.settings.failedSave)
+    console.error(e);
+    ElMessage.error(t.value.settings.failedSave);
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 
-onMounted(load)
+async function onIntervalChange(minutes: number | null) {
+  if (!telegramSendingEnabled.value) return;
+  if (minutes == null) return;
+  saving.value = true;
+  try {
+    const data = await setTelegramSendingIntervalMinutes(minutes);
+    telegramSendingIntervalMinutes.value = data.intervalMinutes;
+    ElMessage.success(t.value.settings.saved);
+  } catch (e) {
+    console.error(e);
+    ElMessage.error(t.value.settings.failedSave);
+  } finally {
+    saving.value = false;
+  }
+}
+
+onMounted(load);
 </script>
 
 <style scoped>
@@ -123,6 +165,9 @@ onMounted(load)
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+}
+.settings__row--mt {
+  margin-top: 1rem;
 }
 .settings__label-wrap {
   flex: 1;

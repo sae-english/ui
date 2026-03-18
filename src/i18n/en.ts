@@ -174,6 +174,8 @@ const en = {
     subtitle: "Application preferences",
     telegramSending: "Send words to Telegram",
     telegramSendingHint: "When enabled, words from the dictionary are sent to your Telegram on a schedule.",
+    telegramSendingIntervalMinutes: "Telegram interval (minutes)",
+    telegramSendingIntervalHint: "Controls how often Telegram notifications are sent. Default is 60 minutes.",
     failedLoad: "Failed to load settings",
     failedSave: "Failed to save",
     saved: "Settings saved",
