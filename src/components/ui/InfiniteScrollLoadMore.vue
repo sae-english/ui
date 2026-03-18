@@ -43,8 +43,8 @@ const sentinelRef = ref<HTMLElement | null>(null);
 
 const canLoadMore = computed(() => props.hasNextPage && !props.isFetchingNextPage);
 
-const loadingLabel = computed(() => props.loadingLabel ?? t.common.loading);
-const buttonLabel = computed(() => props.buttonLabel ?? t.common.loadMore);
+const loadingLabel = computed(() => props.loadingLabel ?? t.value.common.loading);
+const buttonLabel = computed(() => props.buttonLabel ?? t.value.common.loadMore);
 
 function requestLoadMore() {
   if (!canLoadMore.value) return;

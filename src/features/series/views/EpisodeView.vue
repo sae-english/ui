@@ -16,9 +16,9 @@
         @retry="goBack"
       >
         <el-main class="episode__content">
-          <EpisodeHero :episode-id="transcript.episodeId" :title="transcript.title" />
+          <EpisodeHero :episode-id="transcript!.episodeId" :title="transcript!.title" />
           <PhraseAddButton :content-key="episodeContentKey" content-type="EPISODE">
-            <EpisodeScript :blocks="transcript.blocks" />
+            <EpisodeScript :blocks="transcript!.blocks" />
           </PhraseAddButton>
         </el-main>
       </AsyncState>

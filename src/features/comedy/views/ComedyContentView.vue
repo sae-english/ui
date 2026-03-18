@@ -17,11 +17,11 @@
       >
         <div class="comedy-content__content">
           <div class="comedy-content__hero">
-            <h1 class="comedy-content__title">{{ special.name }}</h1>
-            <p class="comedy-content__meta">{{ special.performer }} · {{ special.year }}</p>
-            <p v-if="special.description" class="comedy-content__desc">{{ special.description }}</p>
+            <h1 class="comedy-content__title">{{ special!.name }}</h1>
+            <p class="comedy-content__meta">{{ special!.performer }} · {{ special!.year }}</p>
+            <p v-if="special!.description" class="comedy-content__desc">{{ special!.description }}</p>
           </div>
-          <PhraseAddButton :content-key="special.contentKey" content-type="COMEDY">
+          <PhraseAddButton :content-key="special!.contentKey" content-type="COMEDY">
             <EpisodeScript :blocks="blocks" />
           </PhraseAddButton>
         </div>

@@ -18,17 +18,17 @@
       >
         <div class="music-content__content">
           <div class="music-content__hero">
-            <h1 class="music-content__title">{{ track.name }}</h1>
+            <h1 class="music-content__title">{{ track!.name }}</h1>
             <p class="music-content__meta">
-              <span v-if="track.performer">{{ track.performer }}</span>
-              <span v-if="track.year">· {{ track.year }}</span>
+              <span v-if="track!.performer">{{ track!.performer }}</span>
+              <span v-if="track!.year">· {{ track!.year }}</span>
             </p>
-            <p v-if="track.description" class="music-content__desc">
-              {{ track.description }}
+            <p v-if="track!.description" class="music-content__desc">
+              {{ track!.description }}
             </p>
           </div>
 
-          <PhraseAddButton :content-key="track.contentKey" content-type="ALBUM">
+          <PhraseAddButton :content-key="track!.contentKey" content-type="ALBUM">
             <EpisodeScript :blocks="blocks" :highlight-quotes="true" />
           </PhraseAddButton>
         </div>

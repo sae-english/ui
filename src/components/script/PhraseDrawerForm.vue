@@ -36,7 +36,7 @@
     <el-form-item :label="commentLabel">
       <div class="phrase-drawer-form__comments">
         <div
-          v-for="(c, index) in form.comments"
+          v-for="(_, index) in form.comments"
           :key="index"
           class="phrase-drawer-form__comment-row"
         >

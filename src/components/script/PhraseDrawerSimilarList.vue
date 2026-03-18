@@ -28,8 +28,11 @@
           <div v-if="expanded.dictionary.translation" class="phrase-drawer-similar__translation">
             {{ expanded.dictionary.translation }}
           </div>
-          <div v-if="expanded.dictionary.comment" class="phrase-drawer-similar__comment">
-            {{ expanded.dictionary.comment }}
+          <div
+            v-if="expanded.dictionary.comments?.length"
+            class="phrase-drawer-similar__comment"
+          >
+            {{ expanded.dictionary.comments?.join(', ') }}
           </div>
         </div>
 
