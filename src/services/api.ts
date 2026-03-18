@@ -108,6 +108,12 @@ export interface DictionaryDto {
   updatedAt: string
 }
 
+export interface DictionaryPageDto {
+  entries: DictionaryDto[]
+  nextId: number | null
+  hasMore: boolean
+}
+
 /** Content block from backend (same shape as in movie content pages). */
 export interface ContentBlockDto {
   type?: string | null
@@ -142,6 +148,20 @@ export async function getDictionaryEntries(language?: string): Promise<Dictionar
   const search = language ? `?language=${encodeURIComponent(language)}` : ''
   const res = await apiFetch(dictionaryApiUrl(search))
   if (!res.ok) throw new Error('Failed to load dictionary')
+  return res.json()
+}
+
+export async function getDictionaryPage(params: {
+  language: string
+  after?: number | null
+  limit?: number
+}): Promise<DictionaryPageDto> {
+  const search = new URLSearchParams()
+  search.set('language', params.language)
+  if (params.after != null) search.set('after', String(params.after))
+  if (params.limit != null) search.set('limit', String(params.limit))
+  const res = await apiFetch(dictionaryApiUrl(`/pages?${search.toString()}`))
+  if (!res.ok) throw new Error('Failed to load dictionary page')
   return res.json()
 }
 

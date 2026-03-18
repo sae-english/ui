@@ -6,32 +6,46 @@
     />
 
     <el-main class="dictionary__content">
-      <div v-if="loading" class="dictionary__loading content-loader-wrap">
+      <div
+        v-if="query.isLoading.value && !hasLoadedOnce"
+        class="dictionary__loading content-loader-wrap"
+      >
         <ContentLoader :message="t.dictionary.loading" :icon="Loading" :icon-size="36" />
       </div>
 
-      <el-empty v-else-if="error" :description="error">
-        <el-button type="primary" @click="loadEntries">{{ t.dictionary.retry }}</el-button>
+      <el-empty v-else-if="errorMessage" :description="errorMessage">
+        <el-button type="primary" @click="query.refetch">
+          {{ t.dictionary.retry }}
+        </el-button>
       </el-empty>
 
-      <el-empty v-else-if="!entries.length" :description="t.dictionary.empty">
+      <el-empty v-else-if="!allEntries.length" :description="t.dictionary.empty">
         <el-text type="info" size="small">
           {{ t.dictionary.emptyHint }}
         </el-text>
       </el-empty>
 
-      <ul v-else class="dictionary__list">
-        <li
-          v-for="entry in entries"
-          :key="entry.id"
-          class="dictionary__item"
-        >
-          <DictionaryEntryCard
-            :entry="entry"
-            @delete="confirmDelete(entry)"
-          />
-        </li>
-      </ul>
+      <template v-else>
+        <ul class="dictionary__list">
+          <li
+            v-for="entry in allEntries"
+            :key="entry.id"
+            class="dictionary__item"
+          >
+            <DictionaryEntryCard
+              :entry="entry"
+              @delete="confirmDelete(entry)"
+            />
+          </li>
+        </ul>
+
+        <InfiniteScrollLoadMore
+          :has-next-page="query.hasNextPage.value"
+          :is-fetching-next-page="query.isFetchingNextPage.value"
+          class="dictionary__load-more"
+          @load-more="query.fetchNextPage()"
+        />
+      </template>
     </el-main>
 
     <el-dialog
@@ -52,26 +66,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
+import { useInfiniteQuery } from '@tanstack/vue-query'
 import { useI18n } from '@/i18n'
 import { useLanguage } from '@/composables/useLanguage'
 import ContentLoader from '@/components/ui/ContentLoader.vue'
 import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
 import DictionaryEntryCard from '@/features/dictionary/components/DictionaryEntryCard.vue'
 import {
-  getDictionaryEntries,
+  getDictionaryPage,
   deleteDictionaryEntry,
   type DictionaryDto,
 } from '@/services/api'
+import InfiniteScrollLoadMore from '@/components/ui/InfiniteScrollLoadMore.vue'
 
 const { t } = useI18n()
 const { language } = useLanguage()
 
-const entries = ref<DictionaryDto[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
 const deleteDialogVisible = ref(false)
 const entryToDelete = ref<DictionaryDto | null>(null)
 const deleting = ref(false)
@@ -80,20 +93,34 @@ const deleteConfirmMessage = computed(() =>
   t.value.dictionary.deleteMessage.replace('{{value}}', entryToDelete.value?.value ?? ''),
 )
 
-async function loadEntries() {
-  loading.value = true
-  error.value = null
-  try {
-    const langParam = language.value === 'hy' ? 'ARMENIAN' : 'ENGLISH'
-    entries.value = await getDictionaryEntries(langParam)
-  } catch (e) {
-    console.error(e)
-    error.value = t.value.dictionary.failedLoad
-    ElMessage.error(error.value)
-  } finally {
-    loading.value = false
-  }
-}
+const langParam = computed(() => (language.value === 'hy' ? 'ARMENIAN' : 'ENGLISH'))
+
+const query = useInfiniteQuery({
+  queryKey: computed(() => ['dictionary', langParam.value] as const),
+  queryFn: async ({ pageParam }) => {
+    const page = await getDictionaryPage({
+      language: langParam.value,
+      after: pageParam ?? null,
+      limit: 10,
+    })
+    return page
+  },
+  initialPageParam: null as number | null,
+  getNextPageParam: (lastPage) =>
+    lastPage.hasMore && lastPage.nextId != null ? lastPage.nextId : undefined,
+})
+
+const allEntries = computed<DictionaryDto[]>(() => {
+  const pages = query.data.value?.pages ?? []
+  return pages.flatMap((p) => p.entries ?? [])
+})
+
+const hasLoadedOnce = computed(() => (query.data.value?.pages?.length ?? 0) > 0)
+
+const errorMessage = computed(() => {
+  if (query.isError.value) return t.value.dictionary.failedLoad
+  return ''
+})
 
 function confirmDelete(entry: DictionaryDto) {
   entryToDelete.value = entry
@@ -106,7 +133,7 @@ async function doDelete() {
   deleting.value = true
   try {
     await deleteDictionaryEntry(entry.id)
-    entries.value = entries.value.filter((e) => e.id !== entry.id)
+    await query.refetch()
     deleteDialogVisible.value = false
     entryToDelete.value = null
     ElMessage.success(t.value.dictionary.deleted)
@@ -117,6 +144,4 @@ async function doDelete() {
     deleting.value = false
   }
 }
-
-onMounted(loadEntries)
 </script>
