@@ -165,6 +165,20 @@ export async function getDictionaryPage(params: {
   return res.json()
 }
 
+/**
+ * Test-mode helper.
+ * Calls backend's `findNextForTesting(...)` and returns the next dictionary entry (or `null`).
+ * Expected endpoint: GET /api/dictionary/next-for-testing?language=ENGLISH|ARMENIAN
+ */
+export async function findNextForTesting(language: string): Promise<DictionaryDto | null> {
+  const res = await apiFetch(
+    dictionaryApiUrl(`/next-for-testing?language=${encodeURIComponent(language)}`),
+  )
+  if (!res.ok) throw new Error('Failed to load next dictionary entry for testing')
+  const data = (await res.json()) as DictionaryDto | null
+  return data ?? null
+}
+
 /** Search dictionary by value (case-insensitive contains). Returns expanded entries. GET /api/dictionary/search/expanded?q=... */
 export async function searchDictionaryByValue(query: string): Promise<ExpandedDictionaryDto[]> {
   const q = query?.trim() ?? ''

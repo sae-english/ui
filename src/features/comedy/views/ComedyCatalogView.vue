@@ -1,16 +1,16 @@
 <template>
-  <CatalogLayout :title="t.comedyCatalog.title" :subtitle="t.comedyCatalog.subtitle">
+  <CatalogLayout>
     <AsyncState
-      :is-loading="loading"
+      :is-loading="query.isLoading.value"
       :has-data="specials.length > 0"
-      :error-message="error"
+      :error-message="query.isError.value ? t.comedyCatalog.errorLoadSpecials : null"
       :empty-description="t.comedyCatalog.noSpecials"
       :retry-label="t.comedyCatalog.retry"
       :loading-message="t.comedyCatalog.loading"
       :loading-icon="Loading"
       :loading-icon-size="32"
       loading-wrapper-class="catalog__loading content-loader-wrap"
-      @retry="loadSpecials"
+      @retry="query.refetch"
     >
       <CatalogPosterGrid
         :items="specials"
@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuery } from '@tanstack/vue-query'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
-import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
 import CatalogLayout from '@/components/layout/CatalogLayout.vue'
@@ -48,23 +48,11 @@ import ComedySpecialCard from '@/features/comedy/components/ComedySpecialCard.vu
 const router = useRouter()
 const { navQuery } = useLanguage()
 const { t } = useI18n()
-const specials = ref<ComedySpecialDto[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
-
-async function loadSpecials() {
-  loading.value = true
-  error.value = null
-  try {
-    specials.value = await getComedySpecials(CATALOG_COMEDY_LIMIT)
-  } catch (e) {
-    console.error(e)
-    error.value = t.value.comedyCatalog.errorLoadSpecials
-    ElMessage.error(error.value)
-  } finally {
-    loading.value = false
-  }
-}
+const query = useQuery({
+  queryKey: ['comedy-catalog', CATALOG_COMEDY_LIMIT],
+  queryFn: () => getComedySpecials(CATALOG_COMEDY_LIMIT),
+})
+const specials = computed<ComedySpecialDto[]>(() => query.data.value ?? [])
 
 function openSpecial(special: ComedySpecialDto) {
   router.push({
@@ -75,5 +63,4 @@ function openSpecial(special: ComedySpecialDto) {
   })
 }
 
-onMounted(loadSpecials)
 </script>

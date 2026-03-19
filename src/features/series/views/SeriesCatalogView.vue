@@ -1,16 +1,16 @@
 <template>
-  <CatalogLayout :title="t.seriesCatalog.title" :subtitle="t.seriesCatalog.subtitle">
+  <CatalogLayout>
     <AsyncState
-      :is-loading="loading"
+      :is-loading="query.isLoading.value"
       :has-data="seriesList.length > 0"
-      :error-message="error"
+      :error-message="query.isError.value ? t.seriesCatalog.errorLoadSeries : null"
       :empty-description="t.seriesCatalog.noSeries"
       :retry-label="t.seriesCatalog.retry"
       :loading-message="t.seriesCatalog.loading"
       :loading-icon="Loading"
       :loading-icon-size="32"
       loading-wrapper-class="catalog__loading content-loader-wrap"
-      @retry="loadSeries"
+      @retry="query.refetch"
     >
       <CatalogPosterGrid
         :items="seriesList"
@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuery } from '@tanstack/vue-query'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
-import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
 import CatalogPosterGrid from '@/components/layout/CatalogPosterGrid.vue'
@@ -48,23 +48,11 @@ import SeriesPosterCard from '@/features/series/components/SeriesPosterCard.vue'
 const router = useRouter()
 const { navQuery } = useLanguage()
 const { t } = useI18n()
-const seriesList = ref<SeriesDto[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
-
-async function loadSeries() {
-  loading.value = true
-  error.value = null
-  try {
-    seriesList.value = await getLimitedSeries(CATALOG_SERIES_LIMIT)
-  } catch (e) {
-    console.error(e)
-    error.value = t.value.seriesCatalog.errorLoadSeries
-    ElMessage.error(error.value)
-  } finally {
-    loading.value = false
-  }
-}
+const query = useQuery({
+  queryKey: ['series-catalog', CATALOG_SERIES_LIMIT],
+  queryFn: () => getLimitedSeries(CATALOG_SERIES_LIMIT),
+})
+const seriesList = computed<SeriesDto[]>(() => query.data.value ?? [])
 
 function openSeries(series: SeriesDto) {
   router.push({
@@ -75,5 +63,4 @@ function openSeries(series: SeriesDto) {
   })
 }
 
-onMounted(loadSeries)
 </script>

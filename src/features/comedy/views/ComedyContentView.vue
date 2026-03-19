@@ -9,14 +9,14 @@
     </template>
 
     <AsyncState
-      :is-loading="loading"
+      :is-loading="query.isLoading.value"
       :has-data="!!special"
-      :error-message="error"
+      :error-message="query.isError.value ? t.comedyContent.failedLoadScript : null"
       :retry-label="t.comedyCatalog.retry"
       :empty-description="t.comedyContent.contentNotFound"
       :loading-message="t.comedyContent.loadingScript"
       loading-wrapper-class="content-loader-wrap"
-      @retry="goBack"
+      @retry="query.refetch"
     >
       <div class="comedy-content__content">
         <div class="comedy-content__hero">
@@ -33,9 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { useQuery } from '@tanstack/vue-query'
 import BackButton from '@/components/ui/BackButton.vue'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
@@ -57,9 +57,12 @@ const id = computed(() => {
   return typeof p === 'string' ? parseInt(p, 10) : Number(p)
 })
 
-const special = ref<ComedySpecialFullDto | null>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
+const query = useQuery({
+  queryKey: computed(() => ['comedy-special', id.value] as const),
+  enabled: computed(() => Number.isFinite(id.value) && id.value > 0),
+  queryFn: () => getComedySpecialById(id.value),
+})
+const special = computed<ComedySpecialFullDto | null>(() => query.data.value ?? null)
 
 const blocks = computed<TranscriptBlock[]>(() => {
   const s = special.value
@@ -67,30 +70,10 @@ const blocks = computed<TranscriptBlock[]>(() => {
   return s.content.map(comedyBlockToTranscriptBlock)
 })
 
-async function loadSpecial() {
-  const sid = id.value
-  if (!sid || isNaN(sid)) return
-  loading.value = true
-  error.value = null
-  try {
-    special.value = await getComedySpecialById(sid)
-    if (!special.value) error.value = t.value.comedyContent.contentNotFound
-  } catch (e) {
-    console.error(e)
-    error.value = t.value.comedyContent.failedLoadScript
-    ElMessage.error(error.value)
-  } finally {
-    loading.value = false
-  }
-}
-
 function goBack() {
   router.push({
     name: 'comedy-catalog',
     query: navQuery(),
   })
 }
-
-onMounted(loadSpecial)
-watch(id, () => loadSpecial())
 </script>

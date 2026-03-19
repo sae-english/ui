@@ -1,8 +1,12 @@
-import { computed, nextTick, onMounted, watch } from 'vue'
+import { computed, nextTick, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuery } from '@tanstack/vue-query'
 import { ElMessage } from 'element-plus'
-import { getBookChapter, bookBlockToTranscriptBlock } from '@/features/books/api'
+import {
+  getBookChapter,
+  getBookBookmarkLocation,
+  bookBlockToTranscriptBlock,
+} from '@/features/books/api'
 import type { BookContentBlockDto, BookChapterDto, BookTocItem } from '@/features/books/types'
 import type { TranscriptBlock } from '@/types/movie'
 import { useI18n } from '@/i18n'
@@ -104,13 +108,17 @@ export function useBookChapter() {
     return bookmarkStore.byBookId[id] ?? null
   })
 
-  onMounted(() => {
+  const bookmarkQuery = useQuery({
+    queryKey: computed(() => ['book-bookmark-location', bookId.value] as const),
+    enabled: computed(() => !!bookId.value && !isNaN(bookId.value)),
+    queryFn: () => getBookBookmarkLocation(bookId.value),
+  })
+
+  watchEffect(() => {
+    const loc = bookmarkQuery.data.value
     const id = bookId.value
-    if (id && !isNaN(id)) {
-      bookmarkStore.loadBookmark(id).catch((err) => {
-        console.error('Failed to load book bookmark', err)
-      })
-    }
+    if (!loc || !id || isNaN(id)) return
+    bookmarkStore.setBookmark(id, loc.blockId, loc.sectionId)
   })
 
   // При смене главы поднимаем скролл к началу страницы

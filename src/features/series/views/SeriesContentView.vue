@@ -9,14 +9,14 @@
     </template>
 
     <AsyncState
-      :is-loading="loading"
+      :is-loading="query.isLoading.value"
       :has-data="episodes.length > 0"
-      :error-message="error"
+      :error-message="query.isError.value ? t.seriesContent.errorLoadEpisodes : null"
       :retry-label="t.seriesCatalog.retry"
       :empty-description="t.seriesContent.noEpisodes"
       :loading-message="t.seriesContent.loadingEpisodes"
       loading-wrapper-class="content-loader-wrap"
-      @retry="loadEpisodes"
+      @retry="query.refetch"
     >
       <section class="series-content__section">
         <h1 class="series-content__title">{{ seriesName }}</h1>
@@ -43,9 +43,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { useQuery } from '@tanstack/vue-query'
 import BackButton from '@/components/ui/BackButton.vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
 import ContentPageFrame from '@/components/layout/ContentPageFrame.vue'
@@ -69,32 +69,16 @@ const seriesName = computed(() => {
   return state?.series?.name ?? ''
 })
 
-const episodes = ref<EpisodeListDto[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
-
-async function loadEpisodes() {
-  const id = seriesId.value
-  if (!id || isNaN(id)) return
-  loading.value = true
-  error.value = null
-  try {
-    episodes.value = await getEpisodesByTitleId(id)
-  } catch (e) {
-    console.error(e)
-    error.value = t.value.seriesContent.errorLoadEpisodes
-    ElMessage.error(error.value)
-  } finally {
-    loading.value = false
-  }
-}
+const query = useQuery({
+  queryKey: computed(() => ['series-episodes', seriesId.value] as const),
+  enabled: computed(() => Number.isFinite(seriesId.value) && seriesId.value > 0),
+  queryFn: () => getEpisodesByTitleId(seriesId.value),
+})
+const episodes = computed<EpisodeListDto[]>(() => query.data.value ?? [])
 
 function goBack() {
   router.push({ name: 'series-catalog', query: navQuery() })
 }
-
-onMounted(loadEpisodes)
-watch(seriesId, loadEpisodes)
 </script>
 
 <style scoped>

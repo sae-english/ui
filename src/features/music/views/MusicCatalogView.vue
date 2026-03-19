@@ -1,5 +1,5 @@
 <template>
-  <CatalogLayout :title="t.musicCatalog.title" :subtitle="t.musicCatalog.subtitle">
+  <CatalogLayout>
     <AsyncState
       :is-loading="query.isLoading.value"
       :has-data="tracks.length > 0"

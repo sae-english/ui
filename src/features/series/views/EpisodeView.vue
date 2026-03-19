@@ -9,9 +9,9 @@
     </template>
 
     <AsyncState
-      :is-loading="loading"
+      :is-loading="query.isLoading.value"
       :has-data="!!transcript"
-      :error-message="error ? t.episode.notFound : null"
+      :error-message="query.isError.value ? t.episode.notFound : null"
       :retry-label="t.episode.toHome"
       :empty-description="t.episode.notFound"
       :loading-message="t.episode.loadingEpisode"
@@ -29,9 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed } from 'vue'
+import { useQuery } from '@tanstack/vue-query'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import BackButton from '@/components/ui/BackButton.vue'
 import { useI18n } from '@/i18n'
 import {
@@ -54,33 +54,19 @@ const episodeId = computed(() => {
   return typeof id === 'string' ? parseInt(id, 10) : Number(id)
 })
 
-const transcript = ref<EpisodeTranscript | null>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
-const episodeContentKey = ref<string | null>(null)
+const query = useQuery({
+  queryKey: computed(() => ['episode', episodeId.value] as const),
+  enabled: computed(() => Number.isFinite(episodeId.value) && episodeId.value > 0),
+  queryFn: () => getEpisodeById(episodeId.value),
+})
 
-async function loadEpisode() {
-  const id = episodeId.value
-  if (!id || isNaN(id)) return
-  loading.value = true
-  error.value = null
-  try {
-    const dto = await getEpisodeById(id)
-    episodeContentKey.value = dto.contentKey ?? null
-    transcript.value = toEpisodeTranscript(dto)
-  } catch (e) {
-    console.error(e)
-    error.value = t.value.episode.failedLoadEpisode
-    ElMessage.error(error.value)
-  } finally {
-    loading.value = false
-  }
-}
+const transcript = computed<EpisodeTranscript | null>(() => {
+  const dto = query.data.value
+  return dto ? toEpisodeTranscript(dto) : null
+})
+const episodeContentKey = computed(() => query.data.value?.contentKey ?? null)
 
 function goBack() {
   router.back()
 }
-
-onMounted(loadEpisode)
-watch(episodeId, loadEpisode)
 </script>

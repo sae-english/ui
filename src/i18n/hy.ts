@@ -111,6 +111,13 @@ export const hy: Translations = {
   dictionary: {
     title: "Bararan",
     subtitle: "Banner yev bavakanner vor pahvac en kardalov",
+    testMode: {
+      title: "Test mode",
+      subtitle: "Cardy tap areq, vor tesneq targmanutyuny",
+      empty: "Testi hamar barer chkan.",
+      failedLoad: "Chkarogh enq barcrnel testi bariy.",
+      nextWord: "Hajord bar",
+    },
     loading: "Barcrume...",
     retry: "Krknel",
     empty: "Bararany datark e",

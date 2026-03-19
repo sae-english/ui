@@ -4,6 +4,7 @@ import HomeView from '@/features/home/views/HomeView.vue'
 import MovieCatalogView from '@/features/movies/views/MovieCatalogView.vue'
 import MovieContentView from '@/features/movies/views/MovieContentView.vue'
 import DictionaryView from '@/features/dictionary/views/DictionaryView.vue'
+import DictionaryTestModeView from '@/features/dictionary/views/DictionaryTestModeView.vue'
 import SeriesCatalogView from '@/features/series/views/SeriesCatalogView.vue'
 import SeriesContentView from '@/features/series/views/SeriesContentView.vue'
 import EpisodeView from '@/features/series/views/EpisodeView.vue'
@@ -26,16 +27,37 @@ const routes: RouteRecordRaw[] = [
     path: '/dictionary',
     name: 'dictionary',
     component: DictionaryView,
+    meta: {
+      pageHeaderTitleKey: 'dictionary.title',
+      pageHeaderSubtitleKey: 'dictionary.subtitle',
+    },
+  },
+  {
+    path: '/dictionary/test',
+    name: 'dictionary-test',
+    component: DictionaryTestModeView,
+    meta: {
+      pageHeaderTitleKey: 'dictionary.testMode.title',
+      pageHeaderSubtitleKey: 'dictionary.testMode.subtitle',
+    },
   },
   {
     path: '/settings',
     name: 'settings',
     component: SettingsView,
+    meta: {
+      pageHeaderTitleKey: 'settings.title',
+      pageHeaderSubtitleKey: 'settings.subtitle',
+    },
   },
   {
     path: '/movies',
     name: 'catalog',
     component: MovieCatalogView,
+    meta: {
+      pageHeaderTitleKey: 'catalog.title',
+      pageHeaderSubtitleKey: 'catalog.subtitle',
+    },
   },
   {
     path: '/movies/:id',
@@ -56,11 +78,19 @@ const routes: RouteRecordRaw[] = [
     path: '/series',
     name: 'series-catalog',
     component: SeriesCatalogView,
+    meta: {
+      pageHeaderTitleKey: 'seriesCatalog.title',
+      pageHeaderSubtitleKey: 'seriesCatalog.subtitle',
+    },
   },
   {
     path: '/comedy',
     name: 'comedy-catalog',
     component: ComedyCatalogView,
+    meta: {
+      pageHeaderTitleKey: 'comedyCatalog.title',
+      pageHeaderSubtitleKey: 'comedyCatalog.subtitle',
+    },
   },
   {
     path: '/comedy/:id/content',
@@ -81,6 +111,10 @@ const routes: RouteRecordRaw[] = [
     path: '/music',
     name: 'music-catalog',
     component: MusicCatalogView,
+    meta: {
+      pageHeaderTitleKey: 'musicCatalog.title',
+      pageHeaderSubtitleKey: 'musicCatalog.subtitle',
+    },
   },
   {
     path: '/music/:id',
@@ -92,6 +126,10 @@ const routes: RouteRecordRaw[] = [
     path: '/books',
     name: 'book-catalog',
     component: BookCatalogView,
+    meta: {
+      pageHeaderTitleKey: 'bookCatalog.title',
+      pageHeaderSubtitleKey: 'bookCatalog.subtitle',
+    },
   },
   {
     path: '/books/:id/content',

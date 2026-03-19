@@ -1,16 +1,16 @@
 <template>
-  <CatalogLayout :title="t.bookCatalog.title" :subtitle="t.bookCatalog.subtitle">
+  <CatalogLayout>
     <AsyncState
-      :is-loading="loading"
+      :is-loading="query.isLoading.value"
       :has-data="books.length > 0"
-      :error-message="error"
+      :error-message="query.isError.value ? t.bookCatalog.errorLoadBooks : null"
       :empty-description="t.bookCatalog.noBooks"
       :retry-label="t.bookCatalog.retry"
       :loading-message="t.bookCatalog.loading"
       :loading-icon="Loading"
       :loading-icon-size="32"
       loading-wrapper-class="catalog__loading content-loader-wrap"
-      @retry="loadBooks"
+      @retry="query.refetch"
     >
       <CatalogPosterGrid
         :items="books"
@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuery } from '@tanstack/vue-query'
 import { useLanguage } from '@/composables/useLanguage'
 import { useI18n } from '@/i18n'
-import { ElMessage } from 'element-plus'
 import { Loading } from '@element-plus/icons-vue'
 import AsyncState from '@/components/ui/AsyncState.vue'
 import CatalogLayout from '@/components/layout/CatalogLayout.vue'
@@ -48,23 +48,11 @@ import BookCard from '@/features/books/components/BookCard.vue'
 const router = useRouter()
 const { navQuery } = useLanguage()
 const { t } = useI18n()
-const books = ref<BookDto[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
-
-async function loadBooks() {
-  loading.value = true
-  error.value = null
-  try {
-    books.value = await getBooks(CATALOG_BOOKS_LIMIT)
-  } catch (e) {
-    console.error(e)
-    error.value = t.value.bookCatalog.errorLoadBooks
-    ElMessage.error(error.value)
-  } finally {
-    loading.value = false
-  }
-}
+const query = useQuery({
+  queryKey: ['books-catalog', CATALOG_BOOKS_LIMIT],
+  queryFn: () => getBooks(CATALOG_BOOKS_LIMIT),
+})
+const books = computed<BookDto[]>(() => query.data.value ?? [])
 
 function openBook(book: BookDto) {
   router.push({
@@ -75,5 +63,4 @@ function openBook(book: BookDto) {
   })
 }
 
-onMounted(loadBooks)
 </script>

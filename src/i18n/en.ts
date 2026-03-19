@@ -112,6 +112,13 @@ const en = {
   dictionary: {
     title: "Dictionary",
     subtitle: "Words and phrases saved while reading",
+    testMode: {
+      title: "Test mode",
+      subtitle: "Tap card to flip and reveal translation",
+      empty: "No words for testing.",
+      failedLoad: "Failed to load test word.",
+      nextWord: "Next word",
+    },
     loading: "Loading...",
     retry: "Retry",
     empty: "Dictionary is empty",

@@ -1,11 +1,6 @@
 <template>
   <div class="dictionary">
     <div class="dictionary__header">
-      <PageSectionHeader
-        :title="t.dictionary.title"
-        :subtitle="t.dictionary.subtitle"
-      />
-
       <el-button
         circle
         type="primary"
@@ -40,6 +35,14 @@
           </el-empty>
         </template>
 
+        <el-button
+          type="primary"
+          class="dictionary__test-btn"
+          @click="goToTestMode"
+        >
+          Test mode
+        </el-button>
+
         <ul class="dictionary__list">
           <li
             v-for="entry in allEntries"
@@ -70,8 +73,10 @@
     >
       <p>{{ deleteConfirmMessage }}</p>
       <template #footer>
-        <el-button @click="deleteDialogVisible = false">{{ t.dictionary.cancel }}</el-button>
-        <el-button type="danger" :loading="deleting" @click="doDelete">
+        <el-button @click="deleteDialogVisible = false">{{
+          t.dictionary.cancel
+        }}</el-button>
+        <el-button type="danger" :loading="deleteMutation.isPending.value" @click="doDelete">
           {{ t.dictionary.delete }}
         </el-button>
       </template>
@@ -88,122 +93,142 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Loading, DocumentAdd } from '@element-plus/icons-vue'
-import { useInfiniteQuery } from '@tanstack/vue-query'
-import { useWindowSize } from '@vueuse/core'
-import { useI18n } from '@/i18n'
-import { useLanguage } from '@/composables/useLanguage'
-import PageSectionHeader from '@/components/layout/PageSectionHeader.vue'
-import DictionaryEntryCard from '@/features/dictionary/components/DictionaryEntryCard.vue'
-import AsyncState from '@/components/ui/AsyncState.vue'
+import { computed, ref, watch } from "vue";
+import { ElMessage } from "element-plus";
+import { Loading, DocumentAdd } from "@element-plus/icons-vue";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
+import { useWindowSize } from "@vueuse/core";
+import { useRouter } from "vue-router";
+import { useI18n } from "@/i18n";
+import { useLanguage } from "@/composables/useLanguage";
+import DictionaryEntryCard from "@/features/dictionary/components/DictionaryEntryCard.vue";
+import AsyncState from "@/components/ui/AsyncState.vue";
 import {
   getDictionaryPage,
   deleteDictionaryEntry,
   type DictionaryContentType,
   type DictionaryDto,
-} from '@/services/api'
-import InfiniteScrollLoadMore from '@/components/ui/InfiniteScrollLoadMore.vue'
-import PhraseDrawer from '@/components/script/PhraseDrawer.vue'
+} from "@/services/api";
+import InfiniteScrollLoadMore from "@/components/ui/InfiniteScrollLoadMore.vue";
+import PhraseDrawer from "@/components/script/PhraseDrawer.vue";
 
-const { t } = useI18n()
-const { language } = useLanguage()
-const { width: windowWidth } = useWindowSize()
+const { t } = useI18n();
+const { language } = useLanguage();
+const { width: windowWidth } = useWindowSize();
+const router = useRouter();
+const queryClient = useQueryClient();
 
-const deleteDialogVisible = ref(false)
-const entryToDelete = ref<DictionaryDto | null>(null)
-const deleting = ref(false)
+const deleteDialogVisible = ref(false);
+const entryToDelete = ref<DictionaryDto | null>(null);
 
 const deleteConfirmMessage = computed(() =>
-  t.value.dictionary.deleteMessage.replace('{{value}}', entryToDelete.value?.value ?? ''),
-)
+  t.value.dictionary.deleteMessage.replace(
+    "{{value}}",
+    entryToDelete.value?.value ?? "",
+  ),
+);
 
-const langParam = computed(() => (language.value === 'hy' ? 'ARMENIAN' : 'ENGLISH'))
+const langParam = computed(() =>
+  language.value === "hy" ? "ARMENIAN" : "ENGLISH",
+);
 
 const query = useInfiniteQuery({
-  queryKey: computed(() => ['dictionary', langParam.value] as const),
+  queryKey: computed(() => ["dictionary", langParam.value] as const),
   queryFn: async ({ pageParam }) => {
     const page = await getDictionaryPage({
       language: langParam.value,
       after: pageParam ?? null,
       limit: 10,
-    })
-    return page
+    });
+    return page;
   },
   initialPageParam: null as number | null,
   getNextPageParam: (lastPage) =>
     lastPage.hasMore && lastPage.nextId != null ? lastPage.nextId : undefined,
-})
+});
 
 const allEntries = computed<DictionaryDto[]>(() => {
-  const pages = query.data.value?.pages ?? []
-  return pages.flatMap((p) => p.entries ?? [])
-})
+  const pages = query.data.value?.pages ?? [];
+  return pages.flatMap((p) => p.entries ?? []);
+});
 
-const hasLoadedOnce = computed(() => (query.data.value?.pages?.length ?? 0) > 0)
+const hasLoadedOnce = computed(
+  () => (query.data.value?.pages?.length ?? 0) > 0,
+);
 
 const errorMessage = computed(() => {
-  if (query.isError.value) return t.value.dictionary.failedLoad
-  return ''
-})
+  if (query.isError.value) return t.value.dictionary.failedLoad;
+  return "";
+});
 
-const drawerVisible = ref(false)
-const drawerInitialPhrase = ref('')
+const drawerVisible = ref(false);
+const drawerInitialPhrase = ref("");
 // Dictionary entries created from the dictionary page don't have content context.
 // We still need to send some DictionaryContentType to backend; contentKey/blockId will be omitted.
-const drawerContentType: DictionaryContentType = 'MOVIE'
+const drawerContentType: DictionaryContentType = "MOVIE";
 
 const deleteDialogWidth = computed(() => {
-  if (windowWidth.value <= 360) return '320px'
-  if (windowWidth.value <= 420) return '360px'
-  return '400px'
-})
+  if (windowWidth.value <= 360) return "320px";
+  if (windowWidth.value <= 420) return "360px";
+  return "400px";
+});
+
+function goToTestMode() {
+  router.push({ name: "dictionary-test" });
+}
 
 function openAddDrawer() {
-  drawerInitialPhrase.value = ''
-  drawerVisible.value = true
+  drawerInitialPhrase.value = "";
+  drawerVisible.value = true;
 }
 
 watch(drawerVisible, (visible, prev) => {
-  if (prev && !visible) query.refetch()
-})
+  if (prev && !visible) query.refetch();
+});
 
 function confirmDelete(entry: DictionaryDto) {
-  entryToDelete.value = entry
-  deleteDialogVisible.value = true
+  entryToDelete.value = entry;
+  deleteDialogVisible.value = true;
 }
 
 async function doDelete() {
-  const entry = entryToDelete.value
-  if (!entry) return
-  deleting.value = true
+  const entry = entryToDelete.value;
+  if (!entry) return;
   try {
-    await deleteDictionaryEntry(entry.id)
-    await query.refetch()
-    deleteDialogVisible.value = false
-    entryToDelete.value = null
-    ElMessage.success(t.value.dictionary.deleted)
+    await deleteMutation.mutateAsync(entry.id);
+    deleteDialogVisible.value = false;
+    entryToDelete.value = null;
+    ElMessage.success(t.value.dictionary.deleted);
   } catch (e) {
-    console.error(e)
-    ElMessage.error(t.value.dictionary.failedDelete)
-  } finally {
-    deleting.value = false
+    console.error(e);
+    ElMessage.error(t.value.dictionary.failedDelete);
   }
 }
+
+const deleteMutation = useMutation({
+  mutationFn: (id: number) => deleteDictionaryEntry(id),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["dictionary"] });
+  },
+});
 </script>
 
 <style scoped>
 .dictionary__header {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-end;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .dictionary__add-btn {
   margin-top: 6px;
+}
+
+.dictionary__test-btn {
+  display: block;
+  margin: 0 auto 16px;
 }
 
 @media (max-width: 600px) {

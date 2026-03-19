@@ -1,8 +1,12 @@
-import { computed, nextTick, onMounted, watch } from 'vue'
+import { computed, nextTick, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import { useInfiniteQuery } from '@tanstack/vue-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/vue-query'
 import { ElMessage } from 'element-plus'
-import { getBookContentPage, bookBlockToTranscriptBlock } from '@/features/books/api'
+import {
+  getBookContentPage,
+  getBookBookmarkLocation,
+  bookBlockToTranscriptBlock,
+} from '@/features/books/api'
 import { useBookBookmarkStore } from '@/features/books/bookmarkStore'
 import type { BookContentPageDto, BookTocItem } from '@/features/books/types'
 import type { TranscriptBlock } from '@/types/movie'
@@ -65,13 +69,20 @@ export function useBookContent() {
     return bookmarkStore.byBookId[bookId] ?? null
   })
 
-  onMounted(() => {
+  const bookmarkQuery = useQuery({
+    queryKey: computed(() => ['book-bookmark-location', id.value] as const),
+    enabled: computed(() => {
+      const bookId = id.value
+      return !!bookId && !isNaN(bookId)
+    }),
+    queryFn: () => getBookBookmarkLocation(id.value),
+  })
+
+  watchEffect(() => {
+    const loc = bookmarkQuery.data.value
     const bookId = id.value
-    if (bookId && !isNaN(bookId)) {
-      bookmarkStore.loadBookmark(bookId).catch((err) => {
-        console.error('Failed to load book bookmark', err)
-      })
-    }
+    if (!loc || !bookId || isNaN(bookId)) return
+    bookmarkStore.setBookmark(bookId, loc.blockId, loc.sectionId)
   })
 
   // После первой загрузки пытаемся проскроллить к hash, если он есть

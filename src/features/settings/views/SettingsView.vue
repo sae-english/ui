@@ -1,18 +1,13 @@
 <template>
   <div class="settings">
-    <PageSectionHeader
-      :title="t.settings.title"
-      :subtitle="t.settings.subtitle"
-    />
-
     <el-main class="settings__content">
       <AsyncState
-        :is-loading="loading"
+        :is-loading="query.isLoading.value"
         :has-data="true"
-        :error-message="error"
+        :error-message="query.isError.value ? t.settings.failedLoad : null"
         :retry-label="t.dictionary.retry"
         :loading-message="t.common.loading"
-        @retry="load"
+        @retry="query.refetch"
       >
         <template #loading>
           <div class="settings__loading content-loader-wrap">
@@ -45,7 +40,8 @@
             </div>
             <el-switch
               :model-value="telegramSendingEnabled"
-              :loading="saving"
+              :loading="toggleMutation.isPending.value"
+              :disabled="toggleMutation.isPending.value || intervalMutation.isPending.value"
               @update:model-value="onToggle"
             />
           </div>
@@ -63,7 +59,7 @@
             <el-input-number
               v-model="telegramSendingIntervalMinutes"
               :min="1"
-              :disabled="!telegramSendingEnabled"
+              :disabled="!telegramSendingEnabled || intervalMutation.isPending.value || toggleMutation.isPending.value"
               :step="1"
               :precision="0"
               @change="onIntervalChange"
@@ -76,11 +72,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { watchEffect, ref } from "vue";
 import { ElMessage } from "element-plus";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { useI18n } from "@/i18n";
 import ContentLoader from "@/components/ui/ContentLoader.vue";
-import PageSectionHeader from "@/components/layout/PageSectionHeader.vue";
 import AsyncState from "@/components/ui/AsyncState.vue";
 import {
   getTelegramSendingEnabled,
@@ -89,61 +85,63 @@ import {
 } from "@/services/api";
 
 const { t } = useI18n();
+const queryClient = useQueryClient();
 
 const telegramSendingEnabled = ref(false);
 const telegramSendingIntervalMinutes = ref(60);
-const loading = ref(true);
-const saving = ref(false);
-const error = ref<string | null>(null);
 
-async function load() {
-  loading.value = true;
-  error.value = null;
-  try {
+const query = useQuery({
+  queryKey: ["settings", "telegram-sending"],
+  queryFn: async () => {
     const data = await getTelegramSendingEnabled();
-    telegramSendingEnabled.value = data.enabled;
-    telegramSendingIntervalMinutes.value = data.intervalMinutes;
-  } catch (e) {
-    console.error(e);
-    error.value = t.value.settings.failedLoad;
-    ElMessage.error(error.value);
-  } finally {
-    loading.value = false;
-  }
-}
+    return data;
+  },
+});
 
-async function onToggle(enabled: boolean) {
-  saving.value = true;
-  try {
-    const data = await setTelegramSendingEnabled(enabled);
+const toggleMutation = useMutation({
+  mutationFn: (enabled: boolean) => setTelegramSendingEnabled(enabled),
+  onSuccess: (data) => {
+    queryClient.setQueryData(["settings", "telegram-sending"], data);
     telegramSendingEnabled.value = data.enabled;
     telegramSendingIntervalMinutes.value = data.intervalMinutes;
     ElMessage.success(t.value.settings.saved);
-  } catch (e) {
+  },
+  onError: (e) => {
     console.error(e);
     ElMessage.error(t.value.settings.failedSave);
-  } finally {
-    saving.value = false;
-  }
+  },
+});
+
+const intervalMutation = useMutation({
+  mutationFn: (minutes: number) => setTelegramSendingIntervalMinutes(minutes),
+  onSuccess: (data) => {
+    queryClient.setQueryData(["settings", "telegram-sending"], data);
+    telegramSendingEnabled.value = data.enabled;
+    telegramSendingIntervalMinutes.value = data.intervalMinutes;
+    ElMessage.success(t.value.settings.saved);
+  },
+  onError: (e) => {
+    console.error(e);
+    ElMessage.error(t.value.settings.failedSave);
+  },
+});
+
+watchEffect(() => {
+  const data = query.data.value;
+  if (!data) return;
+  telegramSendingEnabled.value = data.enabled;
+  telegramSendingIntervalMinutes.value = data.intervalMinutes;
+});
+
+async function onToggle(enabled: boolean) {
+  await toggleMutation.mutateAsync(enabled);
 }
 
 async function onIntervalChange(minutes: number | null) {
   if (!telegramSendingEnabled.value) return;
   if (minutes == null) return;
-  saving.value = true;
-  try {
-    const data = await setTelegramSendingIntervalMinutes(minutes);
-    telegramSendingIntervalMinutes.value = data.intervalMinutes;
-    ElMessage.success(t.value.settings.saved);
-  } catch (e) {
-    console.error(e);
-    ElMessage.error(t.value.settings.failedSave);
-  } finally {
-    saving.value = false;
-  }
+  await intervalMutation.mutateAsync(minutes);
 }
-
-onMounted(load);
 </script>
 
 <style scoped>

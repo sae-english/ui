@@ -8,7 +8,12 @@
       <div class="dictionary-entry-card__main">
         <span class="dictionary-entry-card__value">{{ entry.value }}</span>
         <span class="dictionary-entry-card__translation">{{ entry.translation }}</span>
-        <div v-if="entry.comments?.length" class="dictionary-entry-card__divider" />
+        <el-divider
+          v-if="entry.comments?.length"
+          class="dictionary-entry-card__divider"
+          border-style="solid"
+          :style="{ margin: '4px 0' }"
+        />
         <ul v-if="entry.comments?.length" class="dictionary-entry-card__comments">
           <li
             v-for="(comment, idx) in entry.comments"
@@ -118,9 +123,9 @@ function formatDate(iso: string): string {
   top: 0;
 }
 
-.dictionary-entry-card__divider {
-  margin-top: 4px;
-  border-top: 1px dashed rgba(148, 163, 184, 0.4);
+.dictionary-entry-card__divider :deep(.el-divider__line) {
+  border-top-color: var(--el-border-color-lighter);
+  border-top-style: solid;
 }
 
 .dictionary-entry-card__footer {
