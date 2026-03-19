@@ -17,7 +17,7 @@
 
         <template #error="{ onRetry }">
           <div class="settings__error">
-            <el-alert type="error" :description="error" show-icon />
+            <el-alert type="error" :description="t.settings.failedLoad" show-icon />
             <el-button type="primary" class="settings__retry" @click="onRetry">
               {{ t.dictionary.retry }}
             </el-button>
