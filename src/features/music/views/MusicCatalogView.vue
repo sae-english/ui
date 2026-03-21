@@ -19,6 +19,7 @@
         :md="8"
         :lg="6"
         :gutter="24"
+        stretch-items
       >
         <template #item="{ item }">
           <MusicTrackCard

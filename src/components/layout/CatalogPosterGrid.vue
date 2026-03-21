@@ -13,6 +13,7 @@
         :md="md"
         :lg="lg"
         class="catalog__poster-item"
+        :class="{ 'catalog__poster-item--stretch': stretchItems }"
       >
         <slot name="item" :item="item" />
       </el-col>
@@ -31,10 +32,13 @@ const props = withDefaults(
     md: number
     lg: number
     gutter?: number
+    /** Stretch items to equal height within each row (e.g. text cards). */
+    stretchItems?: boolean
   }>(),
   {
     gutter: 24,
     sectionTitle: null,
+    stretchItems: false,
   },
 )
 </script>
